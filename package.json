@@ -1,0 +1,19 @@
+{
+  "name": "@sveltejs/site-kit",
+  "version": "1.0.0",
+  "description": "Styles and components for use in *.svelte.dev websites",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sveltejs/site-kit.git"
+  },
+  "author": "Rich Harris",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sveltejs/site-kit/issues"
+  },
+  "homepage": "https://github.com/sveltejs/site-kit#readme"
+}
