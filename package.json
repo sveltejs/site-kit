@@ -2,7 +2,7 @@
   "name": "@sveltejs/site-kit",
   "version": "1.0.0",
   "description": "Styles and components for use in *.svelte.dev websites",
-  "main": "index.js",
+  "module": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sveltejs/site-kit/issues"
   },
-  "homepage": "https://github.com/sveltejs/site-kit#readme"
+  "homepage": "https://github.com/sveltejs/site-kit#readme",
+  "devDependencies": {
+    "svelte": "^3.1.0"
+  }
 }
