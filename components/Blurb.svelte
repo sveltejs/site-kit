@@ -40,6 +40,7 @@
 	}
 
 	.box :global(.learn-more) {
+		display: block;
 		position: relative;
 		text-align: right;
 		margin-top: auto;
@@ -51,7 +52,7 @@
 		text-decoration: underline;
 	}
 
-	.box :global(.learn-more)::after, .cta a::after {
+	.box :global(.learn-more)::after, .box :global(.cta) :global(a)::after {
 		content: '';
 		position: absolute;
 		display: block;
