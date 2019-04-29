@@ -295,6 +295,8 @@
 
 	.content :global(pre) {
 		margin: 0 0 2em 0;
+		width: 800px;
+		max-width: 100%;
 	}
 
 	.content :global(.icon) {
@@ -313,7 +315,7 @@
 
 	section > :global(.code-block) > :global(pre) {
 		display: inline-block;
-		background: var(--back-api);
+		/* background: var(--back-api); */
 		color: white;
 		padding: .3rem .8rem;
 		margin: 0;
