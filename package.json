@@ -22,5 +22,10 @@
   "dependencies": {
     "@sindresorhus/slugify": "^0.9.1",
     "golden-fleece": "^1.0.9"
-  }
+  },
+  "files": [
+    "index.mjs",
+    "components",
+    "utils"
+  ]
 }
