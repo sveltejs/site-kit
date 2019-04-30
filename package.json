@@ -25,6 +25,7 @@
   },
   "files": [
     "index.mjs",
+    "base.css",
     "components",
     "utils"
   ]
