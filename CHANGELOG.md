@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.0.2
+
+* Various CSS tweaks
+
 ## 1.0.1
 
 * Add `base.css` to `pkg.files`
