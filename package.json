@@ -1,6 +1,6 @@
 {
   "name": "@sveltejs/site-kit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Styles and components for use in *.svelte.dev websites",
   "module": "index.mjs",
   "scripts": {

@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.0.3
+
+* Missing sidebar text
+
 ## 1.0.2
 
 * Various CSS tweaks
