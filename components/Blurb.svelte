@@ -63,6 +63,12 @@
 		background: url(/icons/arrow-right.svg);
 	}
 
+	.how {
+		/* needed to prevent the <pre> from
+		   breaking the grid layout */
+		min-width: 0;
+	}
+
 	.how :global(.cta) :global(a) {
 		display: inline-block;
 		text-align: right;
