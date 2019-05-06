@@ -1,9 +1,14 @@
 import slugify from '@sindresorhus/slugify';
 
+export const SLUG_PRESERVE_UNICODE = false;
+export const SLUG_SEPARATOR = '_';
+
 /* url-safe processor */
 
-export const urlsafeSlugProcessor = (string, { separator }) =>
-	slugify(string, {
+export const urlsafeSlugProcessor = (string, opts) => {
+	const { separator = SLUG_SEPARATOR } = opts || {};
+
+	return slugify(string, {
 		customReplacements: [	// runs before any other transformations
 			['$', 'DOLLAR'], // `$destroy` & co
 			['-', 'DASH'], // conflicts with `separator`
@@ -14,6 +19,7 @@ export const urlsafeSlugProcessor = (string, { separator }) =>
 	})
 	.replace(/DOLLAR/g, '$')
 	.replace(/DASH/g, '-');
+}
 
 /* unicode-preserver processor */
 
@@ -22,8 +28,10 @@ const unicodeRegex = /\p{Letter}/u;
 const isNonAlphaNumUnicode =
 	string => !alphaNumRegex.test(string) && unicodeRegex.test(string);
 
-export const unicodeSafeProcessor = (string, { separator }) =>
-	string.split('')
+export const unicodeSafeProcessor = (string, opts) => {
+	const { separator = SLUG_SEPARATOR } = opts || {};
+
+	return string.split('')
 	.reduce((accum, char, index, array) => {
 		const type = isNonAlphaNumUnicode(char) ? 'pass' : 'process';
 
@@ -53,10 +61,14 @@ export const unicodeSafeProcessor = (string, { separator }) =>
 		return accum;
 	}, [])
 	.join(separator);
+}
 
 /* session processor */
 
-export const make_session_slug_processor = ({ preserve_unicode, separator }) => {
+export const make_session_slug_processor = ({
+	preserve_unicode = SLUG_PRESERVE_UNICODE,
+	separator = SLUG_SEPARATOR
+}) => {
 	const processor = preserve_unicode ? unicodeSafeProcessor : urlsafeSlugProcessor;
 	const seen = new Set();
 

@@ -1,6 +1,9 @@
 import {strict as assert} from 'assert';
-import {urlsafeSlugProcessor, unicodeSafeProcessor} from '../../src/utils/slug';
-import {SLUG_SEPARATOR as _} from '../../config';
+import {
+	urlsafeSlugProcessor,
+	unicodeSafeProcessor,
+	SLUG_SEPARATOR as _
+} from '../../utils/slug';
 
 describe('slug', () => {
 	describe('urlsafeSlugProcessor', () => {
