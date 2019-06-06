@@ -361,7 +361,7 @@
 				<span class="offset-anchor" id={section.slug}></span>
 				<a href="docs#{section.slug}" class="anchor" aria-hidden></a>
 
-				{section.metadata.title}
+				{@html section.metadata.title}
 				<small>
 					<a href='https://github.com/sveltejs/svelte/edit/master/site/content/docs/{section.file}' title='edit this section'>
 						<Icon name='edit' /></a>
