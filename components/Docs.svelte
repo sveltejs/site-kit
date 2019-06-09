@@ -182,6 +182,10 @@
 			grid-template-columns: calc(50% - 0.5em) calc(50% - 0.5em);
 			grid-gap: 1em;
 		}
+
+		.content :global(.side-by-side) :global(.code) {
+			padding: 1em 0;
+		}
 	}
 
 	.content h2 {
@@ -235,7 +239,7 @@
 
 		.content :global(h5) :global(.anchor),
 		.content :global(h6) :global(.anchor) {
-			top: 0.5em;
+			top: 0.2em;
 		}
 	}
 
@@ -258,25 +262,31 @@
 	.content :global(h3 > code) {
 		border-radius: 0 0 0 0;
 		border: none;
-		font-size: var(--h4);
-		line-height: 1.2;
+		font-size: inherit;
 	}
 
 
 	.content :global(h4),
 	.content :global(h4 > code) {
+		font-family: inherit;
 		font-weight: 600;
-		font-size: var(--h4);
+		font-size: 2.4rem;
 		color: var(--second);
 		margin: 6.4rem 0 1.6rem 0;
 		padding-left: 0;
 		background: transparent;
 		line-height: 1;
 		padding: 0;
+		top: 0;
+	}
+
+	.content :global(h4 > em) {
+		opacity: 0.7;
 	}
 
 	.content :global(h5) {
-		font-size: 2rem;
+		font-size: 2.4rem;
+		margin: 2em 0 0.5em 0;
 	}
 
 	.content :global(code) {
@@ -295,7 +305,7 @@
 
 	.content :global(pre) {
 		margin: 0 0 2em 0;
-		width: 800px;
+		width: 100%;
 		max-width: 100%;
 	}
 
@@ -331,6 +341,10 @@
 		max-width: var(--linemax)
 	}
 
+	section :global(p) {
+		margin: 1em 0;
+	}
+
 	small {
 		font-size: var(--h5);
 		float: right;
@@ -354,7 +368,7 @@
 	}
 </style>
 
-<div bind:this={container} class='content listify'>
+<div bind:this={container} class="content listify">
 	{#each sections as section}
 		<section data-id={section.slug}>
 			<h2>
@@ -363,7 +377,7 @@
 
 				{@html section.metadata.title}
 				<small>
-					<a href='https://github.com/sveltejs/svelte/edit/master/site/content/docs/{section.file}' title='edit this section'>
+					<a href="https://github.com/sveltejs/svelte/edit/master/site/content/docs/{section.file}" title="edit this section">
 						<Icon name='edit' /></a>
 				</small>
 			</h2>
