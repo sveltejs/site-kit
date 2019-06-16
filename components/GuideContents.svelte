@@ -109,7 +109,7 @@
 	{#each sections as section}
 		<li>
 			<a class="section" class:active="{section.slug === active_section}" href="docs#{section.slug}">
-				{section.metadata.title}
+				{@html section.metadata.title}
 
 				{#if section.slug === active_section}
 					<div class="icon-container">
@@ -126,7 +126,7 @@
 					href="docs#{subsection.slug}"
 					data-level="{subsection.level}"
 				>
-					{subsection.title}
+					{@html subsection.title}
 
 					{#if subsection.slug === active_section}
 						<div class="icon-container">
