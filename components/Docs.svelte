@@ -5,6 +5,7 @@
 	import { getFragment } from '../utils/navigation';
 
 	export let project = 'svelte';
+	export let dir = 'docs';
 	export let sections;
 	let active_section;
 
@@ -378,7 +379,7 @@
 
 				{@html section.metadata.title}
 				<small>
-					<a href="https://github.com/sveltejs/{project}/edit/master/site/content/docs/{section.file}" title="edit this section">
+					<a href="https://github.com/sveltejs/{project}/edit/master/site/content/{dir}/{section.file}" title="edit this section">
 						<Icon name='edit' />
 					</a>
 				</small>

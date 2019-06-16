@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.1.1
+
+* Add `dir` prop to Docs
+
 ## 1.1.0
 
 * Add `project` prop to Docs component
