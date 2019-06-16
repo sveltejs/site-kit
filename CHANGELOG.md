@@ -1,5 +1,10 @@
 # @sveltejs/site-kit changelog
 
+## 1.1.0
+
+* Add `project` prop to Docs component
+* Use HTML tags for doc titles
+
 ## 1.0.4
 
 * Prevent `<pre>` in homepage blurb breaking grid layout
