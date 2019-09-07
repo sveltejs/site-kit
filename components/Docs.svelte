@@ -375,6 +375,8 @@
 		<section data-id={section.slug}>
 			<h2>
 				<span class="offset-anchor" id={section.slug}></span>
+
+				<!-- svelte-ignore a11y-missing-content -->
 				<a href="docs#{section.slug}" class="anchor" aria-hidden></a>
 
 				{@html section.metadata.title}
