@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.1.2
+
+* Squelch a11y warning
+
 ## 1.1.1
 
 * Add `dir` prop to Docs
