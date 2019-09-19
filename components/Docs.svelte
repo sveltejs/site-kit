@@ -4,8 +4,11 @@
 	import Icon from './Icon.svelte';
 	import { getFragment } from '../utils/navigation';
 
+	export let owner = 'sveltejs';
 	export let project = 'svelte';
+	export let path = '/site/content';
 	export let dir = 'docs';
+	export let edit_title = 'edit this section';
 	export let sections;
 	let active_section;
 
@@ -381,7 +384,7 @@
 
 				{@html section.metadata.title}
 				<small>
-					<a href="https://github.com/sveltejs/{project}/edit/master/site/content/{dir}/{section.file}" title="edit this section">
+					<a href="https://github.com/{owner}/{project}/edit/master{path}/{dir}/{section.file}" title="{edit_title}">
 						<Icon name='edit' />
 					</a>
 				</small>
