@@ -6,6 +6,8 @@
 	export let segment;
 	export let page;
 	export let logo;
+	export let home = 'Home';
+	export let home_title = 'Homepage';
 
 	const current = writable(null);
 	setContext('nav', current);
@@ -240,9 +242,9 @@
 			rel="prefetch"
 			href="."
 			class="home"
-			title="Homepage"
+			title="{home_title}"
 			style="background-image: url({logo})"
-		>Home</a>
+		>{home}</a>
 
 		{#if open}
 			<div class="modal-background hide-if-desktop" on:click="{() => open = false}"></div>
@@ -255,7 +257,7 @@
 			on:mouseenter="{() => open = true}"
 			on:mouseleave="{() => open = false}"
 		>
-			<li class="hide-if-desktop" class:active="{!segment}"><a rel="prefetch" href=".">Home</a></li>
+			<li class="hide-if-desktop" class:active="{!segment}"><a rel="prefetch" href=".">{home}</a></li>
 			<slot></slot>
 		</ul>
 	</nav>
