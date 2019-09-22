@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.1.4
+
+* i18n changes
+
 ## 1.1.3
 
 * Fix iOS styles
