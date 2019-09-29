@@ -13,18 +13,25 @@
 	setContext('nav', current);
 
 	let open = false;
-	let visible = true;
+	let fixed = false;
+	let top = 0;
 
 	// hide nav whenever we navigate
 	page.subscribe(() => {
 		open = false;
 	});
 
+	function open_menu() {
+		open = true;
+		fixed = true;
+		top = 0;
+	}
+
 	function intercept_touchstart(event) {
 		if (!open) {
 			event.preventDefault();
 			event.stopPropagation();
-			open = true;
+			open_menu();
 		}
 	}
 
@@ -34,15 +41,46 @@
 		hash_changed = true;
 	}
 
+	let header;
+	let header_height;
+	onMount(() => {
+		header_height = header.offsetHeight;
+	});
+
 	let last_scroll = 0;
 	function handle_scroll() {
+		if (open) {
+			return;
+		}
+
+		if (hash_changed) {
+			fixed = false;
+			top = 0;
+			hash_changed = false;
+			return;
+		}
+
 		const scroll = window.pageYOffset;
-		if (!hash_changed) {
-			visible = (scroll < 50 || scroll < last_scroll);
+
+		if (last_scroll > scroll) {
+			const visible = (top + header_height) >= scroll;
+
+			if (!visible && !fixed) {
+				// Position menu absolute just above the viewport when scrolling
+				// up to have it scroll into place.
+				top = Math.max(scroll - header_height, 0); // Prevent negative value caused by scroll bouncing.
+			} else if (top >= scroll) {
+				// Position menu fixed when scrolled into place.
+				fixed = true;
+				top = 0;
+			}
+		} else if(fixed && scroll > 0) { // Ignore negative scroll caused by scroll bouncing.
+			// Position menu absolute at top of viewport to have it scroll out when scrolling down.
+			fixed = false;
+			top = scroll;
 		}
 
 		last_scroll = scroll;
-		hash_changed = false;
 	}
 
 	$: $current = segment;
@@ -50,7 +88,7 @@
 
 <style>
 	header {
-		position: fixed;
+		position: absolute;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -63,21 +101,15 @@
 		font-family: var(--font);
 		z-index: 100;
 		user-select: none;
-		transform: translate(0,calc(-100% - 1rem));
-		transition: transform 0.2s;
 	}
 
-	header.visible {
-		transform: none;
+	header.fixed {
+		position: fixed;
 	}
 
 	nav {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100vw;
+		width: 100%;
 		height: var(--nav-h);
-		padding: 0 var(--side-nav) 0 var(--side-nav);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -236,7 +268,7 @@
 
 <svelte:window on:hashchange={handle_hashchange} on:scroll={handle_scroll} />
 
-<header class:visible="{visible || open}">
+<header bind:this={header} class:fixed="{fixed}" style="top:{top}px;">
 	<nav>
 		<a
 			rel="prefetch"
@@ -254,7 +286,7 @@
 			class="primary"
 			class:open
 			on:touchstart|capture={intercept_touchstart}
-			on:mouseenter="{() => open = true}"
+			on:mouseenter="{open_menu}"
 			on:mouseleave="{() => open = false}"
 		>
 			<li class="hide-if-desktop" class:active="{!segment}"><a rel="prefetch" href=".">{home}</a></li>
