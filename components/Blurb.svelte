@@ -75,6 +75,7 @@
 		background-color: var(--prime);
 		padding: 0.5em 1.8em 0.5em 1em;
 		border-radius: var(--border-r);
+		border: none;
 		color: white;
 		position: relative;
 	}
