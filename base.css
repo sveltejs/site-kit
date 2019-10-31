@@ -127,7 +127,10 @@ a {
 }
 
 a:hover, a:active { color: var(--flash) }
-a:focus { outline: none }
+a:focus {
+	outline: 2px solid var(--prime);
+	padding-top: 2px;
+}
 
 /*
 -----------------------------------------------
