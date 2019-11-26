@@ -482,5 +482,5 @@ input[type="checkbox"]::after {
 }
 
 input[type="checkbox"]:checked::after {
-	left: calc(100% - 9px);
+	left: calc(100% - 1em + 2px);
 }
