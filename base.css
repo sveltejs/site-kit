@@ -232,9 +232,6 @@ button {
 	cursor: pointer;
 }
 
-button:focus,
-.btn:focus { outline: 0 }
-
 button[disabled],
 .btn[disabled],
 .btn:hover[disabled] {
