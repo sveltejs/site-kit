@@ -3,7 +3,8 @@
 	import GuideContents from './GuideContents.svelte'; // TODO rename
 	import Icon from './Icon.svelte';
 	import { getFragment } from '../utils/navigation';
-
+	
+	export let gitserviceurl = 'https://github.com';
 	export let owner = 'sveltejs';
 	export let project = 'svelte';
 	export let path = '/site/content';
@@ -384,7 +385,7 @@
 
 				{@html section.metadata.title}
 				<small>
-					<a href="https://github.com/{owner}/{project}/edit/master{path}/{dir}/{section.file}" title="{edit_title}">
+					<a href="{gitserviceurl}/{owner}/{project}/edit/master{path}/{dir}/{section.file}" title="{edit_title}">
 						<Icon name='edit' />
 					</a>
 				</small>
