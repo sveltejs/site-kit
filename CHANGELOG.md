@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.1.5
+
+* Allow Svelte syntax highlighting in code blocks ([#12](https://github.com/sveltejs/site-kit/pull/12))
+
 ## 1.1.4
 
 * i18n changes
