@@ -57,9 +57,9 @@
 		position: absolute;
 		display: block;
 		right: 0;
-		top: 0.35em;
-		width: 1em;
-		height: 1em;
+		top: 0;
+		width: 1.25em;
+		height: 1.25em;
 		background: url(/icons/arrow-right.svg);
 	}
 
