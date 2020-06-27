@@ -127,7 +127,6 @@ a {
 }
 
 a:hover, a:active { color: var(--flash) }
-a:focus { outline: none }
 
 /*
 -----------------------------------------------
@@ -232,9 +231,6 @@ button {
 	color: currentColor;
 	cursor: pointer;
 }
-
-button:focus,
-.btn:focus { outline: 0 }
 
 button[disabled],
 .btn[disabled],
