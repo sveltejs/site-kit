@@ -57,10 +57,11 @@
 		position: absolute;
 		display: block;
 		right: 0;
-		top: 0;
-		width: 1.25em;
-		height: 1.25em;
+		top: 0.3em;
+		width: 1em;
+		height: 1em;
 		background: url(/icons/arrow-right.svg);
+		background-size: 100% 100%;
 	}
 
 	.how {
