@@ -1,5 +1,14 @@
 # @sveltejs/site-kit changelog
 
+## 1.2.0
+
+* Add `noopener noreferrer` to links ([#6](https://github.com/sveltejs/site-kit/pull/6))
+* Fix blurb layout bug ([#9](https://github.com/sveltejs/site-kit/pull/9))
+* Fix REPL toggle CSS ([#14](https://github.com/sveltejs/site-kit/pull/14))
+* Preserve outlines on focus ([#15](https://github.com/sveltejs/site-kit/pull/15))
+* Fix size of arrow in blurb ([#18](https://github.com/sveltejs/site-kit/pull/18))
+* Expose `title` prop on `<NavItem>` ([#17](https://github.com/sveltejs/site-kit/pull/17))
+
 ## 1.1.5
 
 * Allow Svelte syntax highlighting in code blocks ([#12](https://github.com/sveltejs/site-kit/pull/12))
