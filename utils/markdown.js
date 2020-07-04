@@ -40,7 +40,8 @@ export const langs = {
 	html: 'markup',
 	sv: 'svelte',
 	js: 'javascript',
-	css: 'css'
+	css: 'css',
+	diff: 'diff'
 };
 
 
