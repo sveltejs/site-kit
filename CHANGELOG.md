@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.2.1
+
+* Add `diff` language
+
 ## 1.2.0
 
 * Add `noopener noreferrer` to links ([#6](https://github.com/sveltejs/site-kit/pull/6))
