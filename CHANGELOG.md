@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.2.2
+
+* Use `dir` prop to `<Docs>` component in constructing nav links
+
 ## 1.2.1
 
 * Add `diff` language
