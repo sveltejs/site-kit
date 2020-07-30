@@ -6,6 +6,7 @@
 	export let active_section = null;
 	export let show_contents;
 	export let prevent_sidebar_scroll = false;
+	export let dir;
 
 	let ul;
 
@@ -108,7 +109,7 @@
 >
 	{#each sections as section}
 		<li>
-			<a class="section" class:active="{section.slug === active_section}" href="docs#{section.slug}">
+			<a class="section" class:active="{section.slug === active_section}" href="{dir}#{section.slug}">
 				{@html section.metadata.title}
 
 				{#if section.slug === active_section}
@@ -123,7 +124,7 @@
 				<a
 					class="subsection"
 					class:active="{subsection.slug === active_section}"
-					href="docs#{subsection.slug}"
+					href="{dir}#{subsection.slug}"
 					data-level="{subsection.level}"
 				>
 					{@html subsection.title}

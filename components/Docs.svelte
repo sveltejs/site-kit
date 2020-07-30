@@ -380,7 +380,7 @@
 				<span class="offset-anchor" id={section.slug}></span>
 
 				<!-- svelte-ignore a11y-missing-content -->
-				<a href="docs#{section.slug}" class="anchor" aria-hidden></a>
+				<a href="{dir}#{section.slug}" class="anchor" aria-hidden></a>
 
 				{@html section.metadata.title}
 				<small>
@@ -397,7 +397,7 @@
 
 <aside bind:this={aside} class="sidebar-container" class:open={show_contents}>
 	<div class="sidebar" on:click="{() => show_contents = false}"> <!-- scroll container -->
-		<GuideContents {sections} {active_section} {show_contents} />
+		<GuideContents {sections} {active_section} {show_contents} {dir} />
 	</div>
 
 	<button on:click="{() => show_contents = !show_contents}">
