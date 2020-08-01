@@ -288,6 +288,10 @@
 	.content :global(h4 > em) {
 		opacity: 0.7;
 	}
+	
+	.content :global(h4 > .anchor) {
+		top: 0;
+	}
 
 	.content :global(h5) {
 		font-size: 2.4rem;
