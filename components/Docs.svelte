@@ -233,6 +233,11 @@
 		border: none !important; /* TODO get rid of linkify */
 	}
 
+	.content :global(h2 > .anchor),
+	.content :global(h3 > .anchor) {
+		top: 0.75em;
+	}
+
 	@media (min-width: 768px) {
 		.content :global(h2):hover :global(.anchor),
 		.content :global(h3):hover :global(.anchor),
@@ -244,7 +249,7 @@
 
 		.content :global(h5) :global(.anchor),
 		.content :global(h6) :global(.anchor) {
-			top: 0.2em;
+			top: 0.25em;
 		}
 	}
 
@@ -288,9 +293,9 @@
 	.content :global(h4 > em) {
 		opacity: 0.7;
 	}
-	
+
 	.content :global(h4 > .anchor) {
-		top: 0;
+		top: 0.05em;
 	}
 
 	.content :global(h5) {
