@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.2.4
+
+* Fix anchor placements ([#28](https://github.com/sveltejs/site-kit/pull/28))
+
 ## 1.2.3
 
 * Fix iOS input styles ([#23](https://github.com/sveltejs/site-kit/pull/23))
