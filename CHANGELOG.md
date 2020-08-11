@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.2.3
+
+* Fix iOS input styles ([#23](https://github.com/sveltejs/site-kit/pull/23))
+
 ## 1.2.2
 
 * Use `dir` prop to `<Docs>` component in constructing nav links
