@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.2.5
+
+* Fix menu scrolling behaviour ([#29](https://github.com/sveltejs/site-kit/pull/29))
+
 ## 1.2.4
 
 * Fix anchor placements ([#28](https://github.com/sveltejs/site-kit/pull/28))
