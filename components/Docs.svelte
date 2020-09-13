@@ -32,7 +32,7 @@
 		let last_id = getFragment();
 
 		const onscroll = () => {
-			const top = -window.scrollY;
+			const { top } = container.getBoundingClientRect();
 
 			let i = anchors.length;
 			while (i--) {
