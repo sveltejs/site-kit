@@ -62,6 +62,7 @@
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-weight: 600;
+		user-select: none;
 	}
 
 	.subsection {
@@ -69,6 +70,7 @@
 		font-size: 1.6rem;
 		font-family: var(--font);
 		padding: 0 0 0.6em 0;
+		user-select: none;
 	}
 
 	.section:hover,
