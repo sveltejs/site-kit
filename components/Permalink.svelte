@@ -1,7 +1,7 @@
 <script>
-  export let href;
+	export let href;
 </script>
 
 <a {href} class="anchor">
-  <span class="visually-hidden">permalink</span>
+	<span class="visually-hidden">permalink</span>
 </a>
