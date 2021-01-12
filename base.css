@@ -139,9 +139,6 @@ body {
 	font: 300 var(--h4)/var(--lh) var(--font);
 	background-color: var(--back);
 	color: var(--text);
-
-	/* default spacing of Overpass is a bit too airy */
-	/* letter-spacing: -.013em; */
 }
 
 h1, h2, h3, h4, h5, h6, blockquote {
@@ -150,7 +147,6 @@ h1, h2, h3, h4, h5, h6, blockquote {
 	color: var(--heading);
 }
 
-/* h1, h2, h3, h4, h5, h6 { font-weight: 600 } */
 h6 { font-size: var(--h6) }
 h5 { font-size: var(--h5) }
 h4 { font-size: var(--h4) }
@@ -261,7 +257,6 @@ button > svg,
 	vertical-align: middle;
 	white-space: nowrap;
 	display: inline-block;
-	zoom: 1;
 	border: none transparent;
 	font: var(--h4) var(--btn-font);
 	border-radius: var(--border-r);
@@ -315,8 +310,6 @@ a.no-underline {
 	border-bottom: none;
 	padding: 0;
 }
-
-/* a:hover:not(.disabled) > .icon { stroke: var(--flash) } */
 
 /*  lists ---------------------------------- */
 .listify ol,
@@ -432,7 +425,6 @@ table code, table span {
 
 /*	inputs --------------------------------- */
 input[type="checkbox"] {
-	/* display: block; */
 	position: relative;
 	height: 1em;
 	width: calc(100% - 0.6em);
@@ -457,7 +449,6 @@ input[type="checkbox"]::before {
 	top: 0;
 	left: 0;
 	background: var(--second);
-	/* box-sizing: border-box; */
 	box-sizing: content-box;
 }
 
