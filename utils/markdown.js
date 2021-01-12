@@ -60,3 +60,10 @@ export function link_renderer (href, title, text) {
 
 	return `<a href="${href}"${target_attr}${title_attr} rel="noopener noreferrer">${text}</a>`;
 }
+
+export function permalink(href) {
+	return `
+		<a href="${href}" class="anchor">
+			<span class="visually-hidden">permalink</span>
+		</a>`;
+}

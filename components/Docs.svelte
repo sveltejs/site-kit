@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import GuideContents from './GuideContents.svelte'; // TODO rename
 	import Icon from './Icon.svelte';
+	import Permalink from './Permalink.svelte';
 	import { getFragment } from '../utils/navigation';
 
 	export let owner = 'sveltejs';
@@ -230,7 +231,6 @@
 		left: -1.3em;
 		opacity: 0;
 		transition: opacity 0.2s;
-		border: none !important; /* TODO get rid of linkify */
 	}
 
 	.content :global(h2 > .anchor),
@@ -239,6 +239,7 @@
 	}
 
 	@media (min-width: 768px) {
+		.content :global(.anchor:focus),
 		.content :global(h2):hover :global(.anchor),
 		.content :global(h3):hover :global(.anchor),
 		.content :global(h4):hover :global(.anchor),
@@ -367,10 +368,6 @@
 		cursor: pointer;
 	}
 
-	/* no linkify on these */
-	small a        { all: unset }
-	small a:before { all: unset }
-
 	section :global(blockquote) {
 		color: hsl(204, 100%, 50%);
 		border: 2px solid var(--flash);
@@ -388,10 +385,9 @@
 			<h2>
 				<span class="offset-anchor" id={section.slug}></span>
 
-				<!-- svelte-ignore a11y-missing-content -->
-				<a href="{dir}#{section.slug}" class="anchor" aria-hidden></a>
-
 				{@html section.metadata.title}
+				<Permalink href="{dir}#{section.slug}" />
+				
 				<small>
 					<a href="https://github.com/{owner}/{project}/edit/master{path}/{dir}/{section.file}" title="{edit_title}">
 						<Icon name='edit' />
