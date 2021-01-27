@@ -102,5 +102,11 @@
 		<symbol id="chevron" class="icon" viewBox="0 0 24 24">
 			<path d="M2,7 L12,17 L20,7"/>
 		</symbol>
+
+		<symbol id="rss" class="icon" viewBox="0 0 24 24">
+			<path d="M4 11a9 9 0 0 1 9 9"/>
+			<path d="M4 4a16 16 0 0 1 16 16"/>
+			<circle cx="5" cy="19" r="1"/>
+		</symbol>
 	</svg>
 </div>
