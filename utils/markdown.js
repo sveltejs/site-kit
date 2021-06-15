@@ -7,10 +7,14 @@ export function extract_frontmatter(markdown) {
 
 	const metadata = {};
 	frontMatter.split('\n').forEach(pair => {
+		// split on the colon
 		const colonIndex = pair.indexOf(':');
-		metadata[pair.slice(0, colonIndex).trim()] = pair
-			.slice(colonIndex + 1)
-			.trim();
+		let value = pair.slice(colonIndex + 1).trim();
+		// if surrounded by double quotes then remove those quotes
+		if (value && value.charAt(0) === '"' && value.charAt(value.length - 1) === '"') {
+			value = value.substring(1, value.length - 1);
+		}
+		metadata[pair.slice(0, colonIndex).trim()] = value;
 	});
 
 	return { metadata, content };

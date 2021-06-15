@@ -4,7 +4,7 @@
   "description": "Styles and components for use in *.svelte.dev websites",
   "module": "index.mjs",
   "scripts": {
-    "testunit": "mocha -r esm test/unit/**"
+    "test": "mocha -r esm test/unit/**"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   "homepage": "https://github.com/sveltejs/site-kit#readme",
   "devDependencies": {
     "esm": "^3.2.25",
-    "mocha": "^6.2.0",
+    "mocha": "^8.3.0",
     "svelte": "^3.9.2"
   },
   "dependencies": {
