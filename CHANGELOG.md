@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.3.0
+
+* Support quoted Markdown frontmatter ([#44](https://github.com/sveltejs/site-kit/pull/44))
+
 ## 1.2.5
 
 * Fix menu scrolling behaviour ([#29](https://github.com/sveltejs/site-kit/pull/29))
