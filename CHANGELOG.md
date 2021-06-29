@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.4.0
+
+* Expose `pkg.module` and `pkg.svelte` ([#46](https://github.com/sveltejs/site-kit/pull/46))
+
 ## 1.3.0
 
 * Support quoted Markdown frontmatter ([#44](https://github.com/sveltejs/site-kit/pull/44))
