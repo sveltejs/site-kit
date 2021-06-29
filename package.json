@@ -2,7 +2,7 @@
   "name": "@sveltejs/site-kit",
   "version": "1.3.0",
   "description": "Styles and components for use in *.svelte.dev websites",
-  "module": "index.mjs",
+  "module": "index.js",
   "scripts": {
     "test": "mocha -r esm test/unit/**"
   },
@@ -26,7 +26,7 @@
     "golden-fleece": "^1.0.9"
   },
   "files": [
-    "index.mjs",
+    "index.js",
     "base.css",
     "components",
     "utils"
