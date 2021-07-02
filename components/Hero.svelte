@@ -15,18 +15,18 @@
 		max-width: 120rem;
 	}
 
-	h3 { color: var(--text) }
+	p { color: var(--text) }
 
 	.hero {
 		margin: 10rem auto;
 	}
 
-	.hero h3, .logotype {
+	.hero p, .logotype {
 		position: relative;
 		left: 1.6rem;
 	}
 
-	.hero h3 {
+	.hero p {
 		font-size: 2rem;
 	}
 
@@ -39,7 +39,7 @@
 			height: 6rem;
 		}
 
-		.hero h3 {
+		.hero p {
 			font-size: var(--h3);
 		}
 	}
@@ -49,7 +49,7 @@
 			margin: 15rem auto;
 		}
 
-		.hero h3, .logotype {
+		.hero p, .logotype {
 			left: 3rem;
 		}
 	}
@@ -59,5 +59,5 @@
 
 <section class="hero">
 	<img alt="{title} logotype" class="logotype" src={logotype}>
-	<h3>{tagline}</h3>
+	<p>{tagline}</p>
 </section>
