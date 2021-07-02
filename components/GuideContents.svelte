@@ -10,34 +10,62 @@
 
 	let ul;
 
+	const min = 200;
+	const padding = min / 2;
+
 	afterUpdate(() => {
-		// bit of a hack — prevent sidebar scrolling if
-		// TOC is open on mobile, or scroll came from within sidebar
-		if (prevent_sidebar_scroll || show_contents && window.innerWidth < 832) return;
-
-		const active = ul.querySelector('.active');
-
-		if (active) {
-			const { top, bottom } = active.getBoundingClientRect();
-
-			const min = 200;
-			const max = window.innerHeight - 200;
-
-			if (top > max) {
-				ul.parentNode.scrollBy({
-					top: top - max,
-					left: 0,
-					behavior: 'smooth'
-				});
-			} else if (bottom < min) {
-				ul.parentNode.scrollBy({
-					top: bottom - min,
-					left: 0,
-					behavior: 'smooth'
-				});
-			}
+		// bit of a hack — prevent sidebar scrolling if
+		// scroll came from within sidebar
+		if (prevent_sidebar_scroll) return;
+		
+		if ( window.innerWidth > 831) {
+			desktopScroll();
+		} else if (show_contents) {
+			// waiting for the TOC to open
+			setTimeout(() => {
+				mobileScroll();
+			}, 500);
 		}
 	});
+	
+	const desktopScroll = () => {
+		const {top, bottom, max} = getActiveDimensions();
+		if (!top) return;
+		
+		if (top > max) {
+			scrollBy(top - max);
+		} else if (bottom < min) {
+			scrollBy(bottom - min);
+		}
+	};
+	
+	const mobileScroll = () => {
+		const {top, max} = getActiveDimensions();
+		if (!top) return;
+		
+		if (top + padding < min) {
+			scrollBy(top - min);
+		} else if (top - padding > max) {
+			scrollBy(top - max);
+		}
+	};
+			
+	const getActiveDimensions = () => {
+		const active = ul.querySelector(".active") 
+		if (!active) return false;
+		
+		const { top, bottom } = active.getBoundingClientRect();
+
+		return { top, bottom, max: window.innerHeight - min};
+	};
+	
+	const scrollBy = (top) => {
+		ul.parentNode.scrollBy({
+			top: top,
+			left: 0,
+			behavior: "smooth"
+		});
+	}
 </script>
 
 <style>
