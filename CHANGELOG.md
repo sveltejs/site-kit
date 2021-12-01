@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 1.4.1
+
+* Use `rel="external"` on external `<NavItem>`s ([#47](https://github.com/sveltejs/site-kit/pull/47))
+
 ## 1.4.0
 
 * Expose `pkg.module` and `pkg.svelte` ([#46](https://github.com/sveltejs/site-kit/pull/46))
