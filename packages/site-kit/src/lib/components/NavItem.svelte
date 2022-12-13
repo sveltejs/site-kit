@@ -1,7 +1,13 @@
 <script>
-	export let href = null;
-	export let external = null;
-	export let title = null;
+	/** @type {string} */
+	export let href;
+
+	/** @type {string} */
+	export let external;
+
+	/** @type {string} */
+	export let title;
+
 	export let selected = undefined;
 </script>
 
