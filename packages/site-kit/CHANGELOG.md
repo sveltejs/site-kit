@@ -1,5 +1,13 @@
 # @sveltejs/site-kit changelog
 
+## 3.0.1
+
+- Make everything `position: relative` by default
+
+## 3.0.0
+
+- Overhaul
+
 ## 2.1.4
 
 - Decouple from SvelteKit ([#390](https://github.com/sveltejs/sites/pull/390))

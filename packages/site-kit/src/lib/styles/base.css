@@ -19,6 +19,7 @@ body {
 }
 
 * {
+	position: relative;
 	box-sizing: inherit;
 	margin: 0;
 	padding: 0;
@@ -34,7 +35,6 @@ ol {
 }
 
 a {
-	position: relative;
 	text-decoration: none;
 	cursor: pointer;
 	color: inherit;
@@ -69,7 +69,6 @@ h3,
 h4,
 h5,
 h6 {
-	position: relative;
 	font-weight: 400;
 	line-height: 1.35;
 	color: var(--sk-text-1);
@@ -87,7 +86,6 @@ kbd {
 }
 
 code {
-	position: relative;
 	border-radius: 0.3em;
 	white-space: nowrap;
 	color: var(--sk-text-2);
@@ -119,7 +117,6 @@ pre code {
 
 /*	opinionated styles --------------------- */
 blockquote {
-	position: relative;
 	margin: 1.6rem 0 2.4rem;
 	padding: 2rem 2.4rem 1.8rem 2.4rem;
 	max-width: var(--sk-line-max-width);
@@ -150,7 +147,6 @@ button[disabled] {
 }
 
 button > svg {
-	position: relative;
 	top: -0.1rem;
 	width: 2rem !important;
 	height: 2rem !important;
@@ -159,7 +155,6 @@ button > svg {
 
 /*  links ------------------------------------- */
 a {
-	position: relative;
 	padding: 0 0 1px 0;
 	color: var(--sk-theme-1);
 }

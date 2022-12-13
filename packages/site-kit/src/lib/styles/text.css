@@ -32,10 +32,6 @@
 	background: var(--sk-back-4);
 }
 
-.text .code-block {
-	position: relative;
-}
-
 .text pre {
 	margin: 1em 0;
 	width: 100%;
@@ -98,11 +94,6 @@
 
 .text pre.language-diff code {
 	color: var(--sk-code-diff-base);
-}
-
-.language-diff .inserted,
-.language-diff .deleted {
-	position: relative;
 }
 
 .language-diff .inserted {
