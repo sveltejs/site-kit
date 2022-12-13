@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 3.0.3
+
+- Change blockquote styles
+
 ## 3.0.2
 
 - Undo last change, which fails for bewildering reasons
