@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 3.0.2
+
+- Undo last change, which fails for bewildering reasons
+
 ## 3.0.1
 
 - Make everything `position: relative` by default
