@@ -291,7 +291,7 @@
 	border: 1px solid var(--sk-theme-1);
 	border-radius: var(--sk-border-radius);
 	padding: 1rem;
-	filter: drop-shadow(0 0 6px hsla(15, 100%, 50%, 0.2));
+	filter: drop-shadow(2px 2px 6px hsla(15, 100%, 50%, 0.2));
 }
 
 .text blockquote :first-child {
