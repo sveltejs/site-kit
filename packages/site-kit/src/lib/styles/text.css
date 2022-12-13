@@ -286,10 +286,12 @@
 }
 
 .text blockquote {
-	color: var(--sk-text-translucent);
-	background-color: rgba(255, 62, 0, 0.2);
-	border-left: 4px solid #ff3e00;
+	background: var(--sk-back-1);
+	color: var(--sk-text-1);
+	border: 1px solid var(--sk-theme-1);
+	border-radius: var(--sk-border-radius);
 	padding: 1rem;
+	filter: drop-shadow(2px 2px 6px hsla(15, 100%, 50%, 0.2));
 }
 
 .text blockquote :first-child {
@@ -298,15 +300,6 @@
 
 .text blockquote :last-child {
 	margin-bottom: 0;
-}
-
-.text blockquote code {
-	background: var(--sk-back-translucent);
-	color: var(--sk-text-1);
-}
-
-.text blockquote pre code {
-	background: transparent;
 }
 
 .text section a:hover {
