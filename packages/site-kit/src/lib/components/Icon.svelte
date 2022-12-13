@@ -16,7 +16,6 @@
 
 <style>
 	.icon {
-		position: relative;
 		overflow: hidden;
 		vertical-align: middle;
 		-o-object-fit: contain;

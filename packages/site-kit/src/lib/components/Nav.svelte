@@ -139,7 +139,6 @@
 	}
 
 	ul {
-		position: relative;
 		width: 100%;
 		padding: 0;
 		margin: 0;
@@ -169,7 +168,6 @@
 
 	@media (max-width: 800px) {
 		ul {
-			position: relative;
 			display: none;
 			width: 100%;
 			background: var(--back);
