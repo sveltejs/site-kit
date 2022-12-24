@@ -15,9 +15,11 @@
 		inset-inline-start: 0;
 		transform: translateY(-999px);
 		z-index: 1000; /* 1 more than the banner z-index */
+		opacity: 0;
 	}
 
 	a:focus {
 		transform: translateY(0%);
+		opacity: 1;
 	}
 </style>
