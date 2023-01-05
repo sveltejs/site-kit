@@ -1,5 +1,9 @@
 # @sveltejs/site-kit changelog
 
+## 3.1.0
+
+- Remove space for top banner ([#57](https://github.com/sveltejs/site-kit/pull/57))
+
 ## 3.0.3
 
 - Change blockquote styles
