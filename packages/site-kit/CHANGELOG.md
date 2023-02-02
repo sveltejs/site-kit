@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.2.1
+
+### Patch Changes
+
+- 179d5dc: Fix publishDir
+
 ## 3.2.0
 
 ### Minor Changes
