@@ -21,6 +21,7 @@ importers:
       svelte: 3.55.1
       typescript: 4.9.5
       vite: 4.0.4
+    publishDirectory: package
 
 packages:
 
