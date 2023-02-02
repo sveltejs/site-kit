@@ -1,6 +1,7 @@
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	kit: {}
+	kit: {},
+	package: { emitTypes: true, exports: () => true },
 };
 
 export default config;
