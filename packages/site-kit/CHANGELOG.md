@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.2.0
+
+### Minor Changes
+
+- 295e194: Add Blurb component(barebones), update dependencies, and export components from index.js
+
 ## 3.1.0
 
 - Remove space for top banner ([#57](https://github.com/sveltejs/site-kit/pull/57))
