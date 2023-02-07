@@ -49,21 +49,12 @@
 	<div
 		class="modal-background hide-if-desktop"
 		on:click={() => (open = false)}
+		on:keydown={(e) => e.key === ' ' && (open = false)}
 	/>
 {/if}
 
-<nav
-	class:visible={visible || open}
-	class:open
-	bind:this={nav}
-	aria-label="Primary"
->
-	<a
-		href="/"
-		class="nav-spot home"
-		title={home_title}
-		style="background-image: url({logo})"
-	>
+<nav class:visible={visible || open} class:open bind:this={nav} aria-label="Primary">
+	<a href="/" class="nav-spot home" title={home_title} style="background-image: url({logo})">
 		{home}
 	</a>
 
@@ -191,11 +182,7 @@
 			left: var(--sk-page-padding-side);
 			width: calc(100% - 2 * var(--sk-page-padding-side));
 			height: 1px;
-			background: radial-gradient(
-				circle at center,
-				rgba(0, 0, 0, 0.1),
-				rgba(0, 0, 0, 0.05)
-			);
+			background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
 		}
 
 		ul.external::after {
