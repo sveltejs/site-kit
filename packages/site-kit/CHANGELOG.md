@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.2.2
+
+### Patch Changes
+
+- 8d1661d: Fix accessibility bug
+
 ## 3.2.1
 
 ### Patch Changes
