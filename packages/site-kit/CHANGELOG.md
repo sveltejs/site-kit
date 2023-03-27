@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.3.2
+
+### Patch Changes
+
+- 22c98a8: fix: add svelte and sveltekit as peerDeps
+
 ## 3.3.1
 
 ### Patch Changes
