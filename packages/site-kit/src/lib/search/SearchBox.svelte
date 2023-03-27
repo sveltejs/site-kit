@@ -5,7 +5,7 @@
 	import { searching, query, recent } from './stores.js';
 	import { focusable_children, trap } from '$lib/actions/focus.js';
 	import SearchResults from './SearchResults.svelte';
-	import SearchWorker from './search.worker.js?worker';
+	import SearchWorker from './search-worker.js?worker';
 
 	let modal;
 
