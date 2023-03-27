@@ -1,9 +1,9 @@
 <script>
 	import { onMount } from 'svelte';
-	import Icon from '$lib/components/Icon.svelte';
+	import Icon from '../components/Icon.svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { searching, query, recent } from './stores.js';
-	import { focusable_children, trap } from '$lib/actions/focus.js';
+	import { focusable_children, trap } from '../actions/focus.js';
 	import SearchResults from './SearchResults.svelte';
 	import SearchWorker from './search-worker.js?worker';
 

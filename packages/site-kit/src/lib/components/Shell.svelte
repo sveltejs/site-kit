@@ -1,8 +1,8 @@
 <script>
 	import { browser } from '$app/environment';
 	import { navigating } from '$app/stores';
-	import SearchBox from '$lib/search/SearchBox.svelte';
-	import '$lib/styles/index.css';
+	import SearchBox from '../search/SearchBox.svelte';
+	import '../styles/index.css';
 	import Icons from './Icons.svelte';
 	import PreloadingIndicator from './PreloadingIndicator.svelte';
 	import SkipLink from './SkipLink.svelte';
