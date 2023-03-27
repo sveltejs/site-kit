@@ -1,22 +1,28 @@
 <script>
-	/** @type {string} */
-	export let href;
+	/** @type {string | undefined} */
+	export let href = undefined;
 
-	/** @type {string} */
-	export let external;
+	/** @type {string | undefined} */
+	export let external = undefined;
 
-	/** @type {string} */
-	export let title;
+	/** @type {string | undefined} */
+	export let title = undefined;
 
 	export let selected = undefined;
 </script>
 
 {#if external}
-	<li><a href={external} {title} rel="external"><slot /></a></li>
+	<li>
+		<a href={external} {title} rel="external">
+			<span class="large"><slot /></span>
+			<span class="small"><slot name="small" /></span>
+		</a>
+	</li>
 {:else}
 	<li>
 		<a aria-current={selected} {href} {title}>
-			<slot />
+			<span class="large"><slot /></span>
+			<span class="small"><slot name="small" /></span>
 		</a>
 	</li>
 {/if}
@@ -33,5 +39,23 @@
 
 	[aria-current] {
 		color: var(--sk-theme-1);
+	}
+
+	.small {
+		display: inline;
+	}
+
+	.large {
+		display: none;
+	}
+
+	@media (min-width: 800px) {
+		.small {
+			display: none;
+		}
+
+		.large {
+			display: inline;
+		}
 	}
 </style>
