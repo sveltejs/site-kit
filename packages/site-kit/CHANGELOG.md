@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.3.3
+
+### Patch Changes
+
+- f31eefc: fix: remove $lib aliases for now
+
 ## 3.3.2
 
 ### Patch Changes
