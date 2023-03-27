@@ -1,5 +1,12 @@
 # @sveltejs/site-kit changelog
 
+## 3.3.0
+
+### Minor Changes
+
+- 72a9a1b: feat: add shell component and adjust related components
+- ba90252: feat: add actions and search for reuse
+
 ## 3.2.2
 
 ### Patch Changes
