@@ -1,7 +1,7 @@
 <script>
+	import { page } from '$app/stores';
 	import Icon from './Icon.svelte';
 
-	export let page;
 	export let logo;
 	export let home = 'Home';
 	export let home_title = 'Homepage';
