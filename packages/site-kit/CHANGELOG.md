@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.3.1
+
+### Patch Changes
+
+- d749be7: fix: adjust import path
+
 ## 3.3.0
 
 ### Minor Changes
