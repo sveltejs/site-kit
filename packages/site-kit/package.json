@@ -29,5 +29,9 @@
 	"publishConfig": {
 		"access": "public",
 		"directory": "package"
+	},
+	"peerDependencies": {
+		"svelte": "^3.54.0",
+		"@sveltejs/kit": "^1.0.0"
 	}
 }
