@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.3.6
+
+### Patch Changes
+
+- bf48152: fix: import name
+
 ## 3.3.5
 
 ### Patch Changes
