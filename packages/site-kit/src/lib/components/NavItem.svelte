@@ -15,14 +15,16 @@
 	<li>
 		<a href={external} {title} rel="external">
 			<span class="large"><slot /></span>
-			<span class="small"><slot name="small" /></span>
+			<!-- if no slot="small" given, fall back to using content from large -->
+			<span class="small"><slot name="small"><slot /></slot></span>
 		</a>
 	</li>
 {:else}
 	<li>
 		<a aria-current={selected} {href} {title}>
 			<span class="large"><slot /></span>
-			<span class="small"><slot name="small" /></span>
+			<!-- if no slot="small" given, fall back to using content from large -->
+			<span class="small"><slot name="small"><slot /></slot></span>
 		</a>
 	</li>
 {/if}

@@ -1,7 +1,5 @@
 <script>
-	import { browser } from '$app/environment';
 	import { navigating } from '$app/stores';
-	import SearchBox from '../search/SearchBox.svelte';
 	import '../styles/index.css';
 	import Icons from './Icons.svelte';
 	import PreloadingIndicator from './PreloadingIndicator.svelte';
@@ -31,10 +29,6 @@
 	<div style:--sk-banner-bottom-height={banner_bottom_height}>
 		<slot name="banner-bottom" {banner_bottom_height} />
 	</div>
-{/if}
-
-{#if browser}
-	<SearchBox />
 {/if}
 
 <style>
