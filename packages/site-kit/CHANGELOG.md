@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.3.5
+
+### Patch Changes
+
+- e054c00: fix: generate d.ts files for .js files
+
 ## 3.3.4
 
 ### Patch Changes
