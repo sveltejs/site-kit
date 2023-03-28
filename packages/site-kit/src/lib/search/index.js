@@ -4,9 +4,9 @@ export { default as SearchResults } from './SearchResults.svelte';
 export { init, inited, lookup, search } from './search.js';
 
 /**
- * @typedef {import('./types').Block} Block
+ * @typedef {import('./types.js').Block} Block
  */
 
 /**
- * @typedef {import('./types').Tree} Tree
+ * @typedef {import('./types.js').Tree} Tree
  */
