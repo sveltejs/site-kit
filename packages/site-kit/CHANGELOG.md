@@ -1,5 +1,13 @@
 # @sveltejs/site-kit changelog
 
+## 3.3.4
+
+### Patch Changes
+
+- 497e1df: fix: use default slot content as fallback for NavItem small view
+- 497e1df: chore: provide barrel exports for components, search and actions
+- 497e1df: fix: remove SearchBox from Shell for broader reuse
+
 ## 3.3.3
 
 ### Patch Changes
