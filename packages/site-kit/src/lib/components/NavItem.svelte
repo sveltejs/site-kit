@@ -1,3 +1,6 @@
+<!-- @component
+Simple item component for use within `Nav`
+-->
 <script>
 	/** @type {string | undefined} */
 	export let href = undefined;
@@ -8,6 +11,7 @@
 	/** @type {string | undefined} */
 	export let title = undefined;
 
+	/** @type {any}*/
 	export let selected = undefined;
 </script>
 

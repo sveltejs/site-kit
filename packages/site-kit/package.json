@@ -22,6 +22,7 @@
 	"devDependencies": {
 		"@sveltejs/kit": "^1.3.10",
 		"@sveltejs/package": "^1.0.2",
+		"flexsearch": "^0.7.31",
 		"svelte": "^3.55.1",
 		"typescript": "^4.9.5",
 		"vite": "^4.0.4"

@@ -1,3 +1,6 @@
+<!-- @component
+Simple separator component for use within `Nav`
+-->
 <li aria-hidden="true"><span class="separator" /></li>
 
 <style>

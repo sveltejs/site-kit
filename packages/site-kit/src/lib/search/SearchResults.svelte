@@ -1,3 +1,6 @@
+<!--@component
+Renders a list of search results
+-->
 <script>
 	import SearchResultList from './SearchResultList.svelte';
 

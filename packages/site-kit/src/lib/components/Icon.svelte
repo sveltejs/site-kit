@@ -1,12 +1,12 @@
-<!--
------------------------------------------------
-	svg icon
-	- https://github.com/jacobmischka/svelte-feather-icon
-	- https://feathericons.com/
------------------------------------------------
+<!--@component
+use an svg icon that was provided through `Icons.svelte` from
+- https://github.com/jacobmischka/svelte-feather-icon
+- https://feathericons.com/
 -->
 <script>
+	/** @type {string} */
 	export let name;
+	/** @type {string | number} */
 	export let size = 20;
 </script>
 

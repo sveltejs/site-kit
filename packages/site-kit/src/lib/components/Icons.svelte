@@ -1,3 +1,6 @@
+<!--@component
+Provides a list of svg icons that can be referenced through the `Icon` component
+-->
 <div style="display: none">
 	<!-- wrapper div allows use of innerHTML -->
 	<svg>

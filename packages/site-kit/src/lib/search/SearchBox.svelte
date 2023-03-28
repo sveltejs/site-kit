@@ -1,3 +1,7 @@
+<!-- @component
+Renders a search box as an overlay that can be used to search the documentation.
+It appears when the user clicks on the `Search` component or presses the corresponding keyboard shortcut.
+-->
 <script>
 	import { onMount } from 'svelte';
 	import Icon from '../components/Icon.svelte';
@@ -7,11 +11,15 @@
 	import SearchResults from './SearchResults.svelte';
 	import SearchWorker from './search-worker.js?worker';
 
+	/** @type {HTMLElement} */
 	let modal;
 
+	/** @type {any} */
 	let search = null;
+	/** @type {any[]} */
 	let recent_searches = [];
 
+	/** @type {Worker} */
 	let worker;
 	let ready = false;
 
@@ -137,11 +145,13 @@
 				autofocus
 				on:keydown={(e) => {
 					if (e.key === 'Enter') {
-						modal.querySelector('a[data-has-node]')?.click();
+						/** @type {HTMLElement | undefined} */ (
+							modal.querySelector('a[data-has-node]')
+						)?.click();
 					}
 				}}
 				on:input={(e) => {
-					$query = e.target.value;
+					$query = e.currentTarget.value;
 				}}
 				value={$query}
 				placeholder="Search"

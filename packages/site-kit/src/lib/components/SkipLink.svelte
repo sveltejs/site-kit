@@ -1,4 +1,8 @@
+<!--@component
+Accessibility helper component to skip to the main content
+-->
 <script>
+	/** @type {string} */
 	export let href;
 </script>
 

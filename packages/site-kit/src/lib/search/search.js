@@ -3,9 +3,10 @@ import flexsearch from 'flexsearch';
 // @ts-expect-error
 const Index = /** @type {import('flexsearch').Index} */ (flexsearch.Index) ?? flexsearch;
 
+/** If the search is already initialized */
 export let inited = false;
 
-/** @type {import('flexsearch').Index[]} */
+/** @type {import('flexsearch').Index<any>[]} */
 let indexes;
 
 /** @type {Map<string, import('./types').Block>} */
@@ -14,7 +15,10 @@ const map = new Map();
 /** @type {Map<string, string>} */
 const hrefs = new Map();
 
-/** @param {import('./types').Block[]} blocks */
+/**
+ * Initialize the search index
+ * @param {import('./types').Block[]} blocks
+ */
 export function init(blocks) {
 	if (inited) return;
 
@@ -43,8 +47,9 @@ export function init(blocks) {
 }
 
 /**
+ * Search for a given query in the existing index
  * @param {string} query
- * @returns {import('./types').Block[]}
+ * @returns {import('./types').Tree[]}
  */
 export function search(query) {
 	const escaped = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
@@ -53,10 +58,10 @@ export function search(query) {
 	const blocks = indexes
 		.flatMap((index) => index.search(query))
 		.map(lookup)
-		.map((block, rank) => ({ block, rank }))
+		.map((block, rank) => ({ block: /** @type{import('./types').Block} */ (block), rank }))
 		.sort((a, b) => {
-			const a_title_matches = regex.test(a.block.breadcrumbs.at(-1));
-			const b_title_matches = regex.test(b.block.breadcrumbs.at(-1));
+			const a_title_matches = regex.test(/** @type {string} */ (a.block.breadcrumbs.at(-1)));
+			const b_title_matches = regex.test(/** @type {string} */ (b.block.breadcrumbs.at(-1)));
 
 			// massage the order a bit, so that title matches
 			// are given higher priority
@@ -73,7 +78,10 @@ export function search(query) {
 	return results;
 }
 
-/** @param {string} href */
+/**
+ * Get a block with details by its href
+ * @param {string} href
+ */
 export function lookup(href) {
 	return map.get(href);
 }
@@ -81,6 +89,7 @@ export function lookup(href) {
 /**
  * @param {string[]} breadcrumbs
  * @param {import('./types').Block[]} blocks
+ * @returns {import('./types').Tree}
  */
 function tree(breadcrumbs, blocks) {
 	const depth = breadcrumbs.length;
@@ -99,8 +108,8 @@ function tree(breadcrumbs, blocks) {
 
 	return {
 		breadcrumbs,
-		href: hrefs.get(breadcrumbs.join('::')),
-		node,
+		href: /** @type {string} */ (hrefs.get(breadcrumbs.join('::'))),
+		node: /** @type {import('./types').Block} */ (node),
 		children: child_parts.map((part) => tree([...breadcrumbs, part], descendants))
 	};
 }

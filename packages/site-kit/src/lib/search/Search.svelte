@@ -1,3 +1,6 @@
+<!-- @component
+Renders a search widget which when clicked (or the corresponding keyboard shortcut is pressed) opens a search overlay.
+-->
 <script>
 	import { browser } from '$app/environment';
 	import { searching, query } from './stores.js';
@@ -10,8 +13,8 @@
 		value={q}
 		on:input={(e) => {
 			$searching = true;
-			$query = e.target.value;
-			e.target.value = '';
+			$query = e.currentTarget.value;
+			e.currentTarget.value = '';
 		}}
 		on:mousedown|preventDefault={() => ($searching = true)}
 		on:touchend|preventDefault={() => ($searching = true)}

@@ -1,3 +1,6 @@
+<!-- @component
+The main shell of the application. It provides a slot for the top navigation, the main content, and the bottom banner.
+-->
 <script>
 	import { navigating } from '$app/stores';
 	import '../styles/index.css';
@@ -5,7 +8,13 @@
 	import PreloadingIndicator from './PreloadingIndicator.svelte';
 	import SkipLink from './SkipLink.svelte';
 
+	/**
+	 * Height of the bottom banner. If '0px', the banner is not visible.
+	 */
 	export let banner_bottom_height = '0px';
+	/**
+	 * Whether the navigation is visible.
+	 */
 	export let nav_visible = true;
 </script>
 

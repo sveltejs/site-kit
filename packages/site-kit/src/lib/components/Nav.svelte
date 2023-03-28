@@ -1,13 +1,18 @@
+<!-- @component
+Top navigation bar for the application. It provides a slot for the left side, the right side, and the center.
+-->
 <script>
 	import { page } from '$app/stores';
 	import Icon from './Icon.svelte';
 
+	/** @type {string} */
 	export let logo;
 	export let home = 'Home';
 	export let home_title = 'Homepage';
 
 	let open = false;
 	let visible = true;
+	/** @type {HTMLElement} */
 	let nav;
 
 	// hide nav whenever we navigate
