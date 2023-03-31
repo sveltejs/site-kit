@@ -144,7 +144,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 			<input
 				autofocus
 				on:keydown={(e) => {
-					if (e.key === 'Enter') {
+					if (e.key === 'Enter' && !e.isComposing) {
 						/** @type {HTMLElement | undefined} */ (
 							modal.querySelector('a[data-has-node]')
 						)?.click();
