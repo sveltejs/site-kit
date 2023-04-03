@@ -111,8 +111,8 @@
 		--sk-code-tags: var(--code-function);
 		--sk-code-important: var(--code-string);
 		--sk-code-diff-base: hsla(0, 0%, 100%, 0.4);
-		--sk-code-diff-inserted: hsl(120, 100%, 35%);
-		--sk-code-diff-removed: hsl(2, 80%, 47%);
+		--sk-code-diff-inserted: hsl(120, 46%, 48%);
+		--sk-code-diff-removed: hsl(2, 64%, 52%);
 	}
 }
 
