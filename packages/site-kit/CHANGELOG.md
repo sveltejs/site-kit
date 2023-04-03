@@ -1,5 +1,12 @@
 # @sveltejs/site-kit changelog
 
+## 3.3.7
+
+### Patch Changes
+
+- d47bd2c: fix: component docs, fix some type issues
+- cb01ce4: Make dark mode diff code style easier on eyes
+
 ## 3.3.6
 
 ### Patch Changes
