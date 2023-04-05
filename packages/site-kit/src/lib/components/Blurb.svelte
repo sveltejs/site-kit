@@ -2,7 +2,6 @@
 	import Section from './Section.svelte';
 </script>
 
-<!-- TODO: CSS Vars -->
 <Section --background="var(--sk-back-1)">
 	<div class="grid">
 		{#if $$slots.one}
@@ -22,31 +21,42 @@
 				<slot name="three" />
 			</div>
 		{/if}
-
-		{#if $$slots.four}
-			<div>
-				<slot name="four" />
-			</div>
-		{/if}
-
-		{#if $$slots.five}
-			<div>
-				<slot name="five" />
-			</div>
-		{/if}
 	</div>
-
-	{#if $$slots.six}
-		<div>
-			<slot name="six" />
-		</div>
-	{/if}
 </Section>
 
 <style>
 	.grid {
+		--columns: 1;
+
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(var(--columns), 1fr);
 		grid-gap: 1rem;
+	}
+
+	.grid :global(h2) {
+		font-size: var(--sk-text-xl);
+		line-height: 1.2;
+	}
+
+	.grid {
+		display: grid;
+		gap: 1em;
+		margin: 0 0 4rem 0;
+	}
+
+	.grid:last-child {
+		margin-bottom: 0;
+	}
+
+	@media (min-width: 900px) {
+		.grid :global(h2) {
+			font-size: var(--sk-text-xxl);
+		}
+
+		.grid {
+			--columns: 3;
+
+			gap: 7rem;
+		}
 	}
 </style>
