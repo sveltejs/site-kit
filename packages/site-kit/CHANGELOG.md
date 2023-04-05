@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 3.4.0
+
+### Minor Changes
+
+- 68591be: Add TryTerminal component
+
 ## 3.3.7
 
 ### Patch Changes
