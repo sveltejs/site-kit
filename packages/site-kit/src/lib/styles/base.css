@@ -12,7 +12,7 @@ body {
 	font-family: var(--sk-font);
 	line-height: 1.5;
 	color: var(--sk-text-2);
-	background-color: var(--back);
+	background-color: var(--sk-back-1);
 	width: 100%;
 	tab-size: 2;
 	-moz-tab-size: 2;
