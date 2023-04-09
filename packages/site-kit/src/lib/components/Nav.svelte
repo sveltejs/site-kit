@@ -245,9 +245,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		nav {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
+			display: grid;
+			grid-template-columns: 1fr auto 1fr;
+			/* align-items: center; */
+			/* justify-content: space-between; */
 		}
 
 		ul {
@@ -268,7 +269,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		ul.external {
-			width: 30rem;
 			padding: 0 var(--sk-page-padding-side) 0 0;
 			justify-content: end;
 		}
