@@ -162,7 +162,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		text-indent: -9999px;
 		background-position: calc(var(--sk-page-padding-side) - 1rem) 50%;
 		background-repeat: no-repeat;
-		background-size: auto 70%;
+		background-size: auto 50%;
 	}
 
 	button {
