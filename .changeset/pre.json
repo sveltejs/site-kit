@@ -5,6 +5,7 @@
     "@sveltejs/site-kit": "3.4.0"
   },
   "changesets": [
-    "funny-bears-teach"
+    "funny-bears-teach",
+    "shiny-pants-watch"
   ]
 }

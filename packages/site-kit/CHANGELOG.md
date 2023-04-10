@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 4.0.0-next.1
+
+### Minor Changes
+
+- faff260: Ship media queries alongside classes on body
+
 ## 4.0.0-next.0
 
 ### Major Changes
