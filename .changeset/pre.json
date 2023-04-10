@@ -4,5 +4,7 @@
   "initialVersions": {
     "@sveltejs/site-kit": "3.4.0"
   },
-  "changesets": []
+  "changesets": [
+    "funny-bears-teach"
+  ]
 }

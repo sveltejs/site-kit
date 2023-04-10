@@ -1,5 +1,13 @@
 # @sveltejs/site-kit changelog
 
+## 4.0.0-next.0
+
+### Major Changes
+
+- 6c04846: Dark mode toggle, dark mode styles changed as well
+
+  This is a breaking change because svelte.dev and kit.svelte.dev rely on variables changing based on `@media (prefers-color-scheme: dark)`, and the variables belonging to `:root` rather than `body`
+
 ## 3.4.0
 
 ### Minor Changes
