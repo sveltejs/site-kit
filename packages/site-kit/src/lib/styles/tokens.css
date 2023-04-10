@@ -1,3 +1,8 @@
+/*
+
+!IMPORTANT: The tokens for light and dark mode are duplicated, if you change a token for dark mode, you should change that for the other dark mode too
+
+*/
 :root {
 	--sk-back-h: 206;
 	--selection-color: hsla(204, 100%, 63%, 0.3);
