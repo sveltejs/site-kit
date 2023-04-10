@@ -30,6 +30,8 @@
 
 @media only screen and (prefers-color-scheme: dark) {
 	:root {
+		color-scheme: dark;
+
 		--sk-back-3-hsl: 0, 0%, 14%;
 		--sk-back-1: hsl(0, 0%, 10%);
 		--sk-back-2: hsl(0, 0%, 18%);
@@ -68,6 +70,8 @@
 	}
 
 	body.light {
+		color-scheme: light;
+
 		--sk-back-3-hsl: 206, 64%, 98%;
 		--sk-back-1: hsl(0, 0%, 100%);
 		--sk-back-2: hsl(0, 0%, 100%); /* same as sk-back-1 in light mode, different in dark mode */
@@ -125,6 +129,8 @@
 
 @media screen and (prefers-color-scheme: light) {
 	:root {
+		color-scheme: light;
+
 		--sk-back-3-hsl: 206, 64%, 98%;
 		--sk-back-1: hsl(0, 0%, 100%);
 		--sk-back-2: hsl(0, 0%, 100%); /* same as sk-back-1 in light mode, different in dark mode */
@@ -165,6 +171,8 @@
 	}
 
 	body.dark {
+		color-scheme: dark;
+
 		--sk-back-3-hsl: 0, 0%, 14%;
 		--sk-back-1: hsl(0, 0%, 10%);
 		--sk-back-2: hsl(0, 0%, 18%);

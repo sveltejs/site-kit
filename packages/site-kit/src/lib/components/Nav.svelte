@@ -86,7 +86,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<Separator />
 
 		<div class="appearance">
-			<span class="caption">Color Scheme</span>
+			<span class="caption">Theme</span>
 			<ThemeToggle />
 		</div>
 	</ul>
@@ -177,7 +177,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		height: 100%;
 		align-items: center;
 		margin-left: 0.75rem;
-		transform: translateY(2px);
+		/* transform: translateY(2px); */
 	}
 
 	.appearance .caption {
@@ -228,9 +228,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			justify-content: space-between;
 			align-items: center;
 			margin: 10px 0 0;
-			padding: 1rem 0.75rem;
+			padding: 1rem 1.25rem;
 			background: var(--sk-back-3);
-			border-radius: 0.5rem;
+			border-radius: 3.5rem;
 		}
 
 		.appearance .caption {
