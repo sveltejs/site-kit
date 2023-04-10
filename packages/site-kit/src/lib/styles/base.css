@@ -113,8 +113,7 @@ pre code {
 }
 
 ::selection {
-	background: var(--sk-theme-3);
-	color: white;
+	background: var(--selection-color);
 }
 
 /*	opinionated styles --------------------- */
