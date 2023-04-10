@@ -3,7 +3,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 -->
 <script>
 	import { page } from '$app/stores';
+	import { ThemeToggle } from '$lib/theme';
 	import Icon from './Icon.svelte';
+	import Separator from './Separator.svelte';
 
 	/** @type {string} */
 	export let logo;
@@ -12,6 +14,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	let open = false;
 	let visible = true;
+
 	/** @type {HTMLElement} */
 	let nav;
 
@@ -65,7 +68,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	<button
 		aria-label="Toggle menu"
-		aria-expanded={open.toString()}
+		aria-expanded={open}
 		class="menu-toggle"
 		class:open
 		on:click={() => (open = !open)}
@@ -79,6 +82,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	<ul class="external">
 		<slot name="nav-right" />
+
+		<Separator />
+
+		<div class="appearance">
+			<span class="caption">Color Scheme</span>
+			<ThemeToggle />
+		</div>
 	</ul>
 </nav>
 
@@ -147,7 +157,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	.home {
-		width: 30rem;
 		height: var(--sk-nav-height);
 		display: flex;
 		text-indent: -9999px;
@@ -161,6 +170,21 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		top: calc(var(--sk-nav-height) / 2 - 1rem);
 		right: var(--sk-page-padding-side);
 		line-height: 1;
+	}
+
+	.appearance {
+		display: flex;
+		height: 100%;
+		align-items: center;
+		margin-left: 0.75rem;
+		transform: translateY(2px);
+	}
+
+	.appearance .caption {
+		display: none;
+		font-size: var(--sk-text-xs);
+		line-height: 1;
+		margin-right: 0.5rem;
 	}
 
 	@media (max-width: 800px) {
@@ -199,6 +223,19 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			bottom: calc(-1 * var(--shadow-height));
 			background: var(--shadow-gradient);
 		}
+
+		.appearance {
+			justify-content: space-between;
+			align-items: center;
+			margin: 10px 0 0;
+			padding: 1rem 0.75rem;
+			background: var(--sk-back-3);
+			border-radius: 0.5rem;
+		}
+
+		.appearance .caption {
+			display: block;
+		}
 	}
 
 	@media (min-width: 800px) {
@@ -207,9 +244,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		nav {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
+			display: grid;
+			grid-template-columns: 1fr auto 1fr;
+			/* align-items: center; */
+			/* justify-content: space-between; */
 		}
 
 		ul {
@@ -230,7 +268,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		ul.external {
-			width: 30rem;
 			padding: 0 var(--sk-page-padding-side) 0 0;
 			justify-content: end;
 		}

@@ -22,6 +22,9 @@ importers:
       svelte:
         specifier: ^3.55.1
         version: 3.55.1
+      svelte-local-storage-store:
+        specifier: ^0.4.0
+        version: 0.4.0(svelte@3.55.1)
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -2085,6 +2088,15 @@ packages:
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
     peerDependencies:
       svelte: '>=3.19.0'
+    dependencies:
+      svelte: 3.55.1
+    dev: true
+
+  /svelte-local-storage-store@0.4.0(svelte@3.55.1):
+    resolution: {integrity: sha512-ctPykTt4S3BE5bF0mfV0jKiUR1qlmqLvnAkQvYHLeb9wRyO1MdIFDVI23X+TZEFleATHkTaOpYZswIvf3b2tWA==}
+    engines: {node: '>=0.14'}
+    peerDependencies:
+      svelte: ^3.48.0
     dependencies:
       svelte: 3.55.1
     dev: true

@@ -1,6 +1,6 @@
 @import './base.css';
 
-:root {
+body {
 	--shiki-color-text: var(--sk-code-base);
 	--shiki-color-background: var(--sk-back-3);
 	--shiki-token-constant: var(--sk-code-base);
