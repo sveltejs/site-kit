@@ -157,7 +157,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	.home {
-		width: 30rem;
 		height: var(--sk-nav-height);
 		display: flex;
 		text-indent: -9999px;
