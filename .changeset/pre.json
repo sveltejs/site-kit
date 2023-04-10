@@ -1,0 +1,8 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "@sveltejs/site-kit": "3.4.0"
+  },
+  "changesets": []
+}
