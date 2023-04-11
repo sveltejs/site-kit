@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 4.0.1
+
+### Patch Changes
+
+- 05fb5f7: Include svelte-local-storage-store as dependency
+
 ## 4.0.0
 
 ### Major Changes
