@@ -167,7 +167,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		text-decoration: none;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		font-size: 2rem;
+		font-size: 1.8rem;
 		color: var(--sk-text-4);
 	}
 
