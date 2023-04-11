@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 4.0.2
+
+### Patch Changes
+
+- 5f7d368: Fix: Don't hide navbar's home text label
+
 ## 4.0.1
 
 ### Patch Changes
