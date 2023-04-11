@@ -7,9 +7,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import Icon from './Icon.svelte';
 	import Separator from './Separator.svelte';
 
-	/** @type {string} */
-	export let logo;
-	export let home = 'Home';
 	export let home_title = 'Homepage';
 
 	let open = false;
@@ -62,8 +59,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 {/if}
 
 <nav class:visible={visible || open} class:open bind:this={nav} aria-label="Primary">
-	<a href="/" class="nav-spot home" title={home_title} style="background-image: url({logo})">
-		{home}
+	<a href="/" class="nav-spot home" title={home_title}>
+		<slot name="home" />
 	</a>
 
 	<button
@@ -86,7 +83,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<Separator />
 
 		<div class="appearance">
-			<span class="caption">Color Scheme</span>
+			<span class="caption">Theme</span>
 			<ThemeToggle />
 		</div>
 	</ul>
@@ -154,15 +151,28 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	ul :global(a) {
 		color: var(--sk-text-2);
+		line-height: 1;
 	}
 
 	.home {
 		height: var(--sk-nav-height);
 		display: flex;
-		text-indent: -9999px;
+		background-image: url(../branding/svelte-logo.svg);
 		background-position: calc(var(--sk-page-padding-side) - 1rem) 50%;
 		background-repeat: no-repeat;
 		background-size: auto 70%;
+		align-items: center;
+		padding-left: calc(var(--sk-page-padding-side) + 4rem);
+		text-decoration: none;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		font-size: 1.8rem;
+		color: var(--sk-text-4);
+	}
+
+	.home :global(strong) {
+		color: var(--sk-text-1);
+		font-weight: inherit;
 	}
 
 	button {
@@ -177,7 +187,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		height: 100%;
 		align-items: center;
 		margin-left: 0.75rem;
-		transform: translateY(2px);
+		/* transform: translateY(2px); */
 	}
 
 	.appearance .caption {
@@ -187,7 +197,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		margin-right: 0.5rem;
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 799px) {
 		ul {
 			position: relative;
 			display: none;
@@ -228,13 +238,17 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			justify-content: space-between;
 			align-items: center;
 			margin: 10px 0 0;
-			padding: 1rem 0.75rem;
+			padding: 1rem 1.25rem;
 			background: var(--sk-back-3);
-			border-radius: 0.5rem;
+			border-radius: 3.5rem;
 		}
 
 		.appearance .caption {
 			display: block;
+		}
+
+		.home :global(span :not(strong)) {
+			display: none;
 		}
 	}
 
