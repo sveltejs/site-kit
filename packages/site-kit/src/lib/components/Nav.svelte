@@ -7,7 +7,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import Icon from './Icon.svelte';
 	import Separator from './Separator.svelte';
 
-	export let home = 'Home';
+	// export let home = 'Home';
 	export let home_title = 'Homepage';
 
 	let open = false;
@@ -152,6 +152,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	ul :global(a) {
 		color: var(--sk-text-2);
+		line-height: 1;
 	}
 
 	.home {
@@ -167,7 +168,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		font-size: 2rem;
-		color: var(--sk-text-3);
+		color: var(--sk-text-4);
 	}
 
 	.home :global(strong) {
