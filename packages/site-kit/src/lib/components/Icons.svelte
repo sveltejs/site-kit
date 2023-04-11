@@ -103,15 +103,13 @@ Provides a list of svg icons that can be referenced through the `Icon` component
 					stroke-linejoin="round"
 				/>
 				<path
-					d="M2 3H18V15H8.5L6.5 17L4.5 15H2V3Z"
+					d="M2 3H18V15H8.5L6.5 17L4.5 15H2V3 M5 10L5 12L10 12L10 10  M5 6L5 9L13 9L13 6Z"
 					fill="currentColor"
 					stroke="currentColor"
 					stroke-width="1.5"
 					stroke-linecap="round"
 					stroke-linejoin="round"
 				/>
-				<path d="M6 11H9" stroke="white" stroke-width="1.5" stroke-linecap="round" />
-				<path d="M6 7H12" stroke="white" stroke-width="1.5" stroke-linecap="round" />
 			</g>
 		</symbol>
 
