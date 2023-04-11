@@ -7,7 +7,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import Icon from './Icon.svelte';
 	import Separator from './Separator.svelte';
 
-	// export let home = 'Home';
 	export let home_title = 'Homepage';
 
 	let open = false;
