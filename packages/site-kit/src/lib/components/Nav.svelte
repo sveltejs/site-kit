@@ -246,10 +246,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		.appearance .caption {
 			display: block;
 		}
-
-		.home :global(span :not(strong)) {
-			display: none;
-		}
 	}
 
 	@media (min-width: 800px) {
