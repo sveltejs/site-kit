@@ -167,7 +167,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		font-size: 2rem;
-		color: #bbb;
+		color: var(--sk-text-3);
 	}
 
 	.home :global(strong) {
@@ -245,6 +245,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		.appearance .caption {
 			display: block;
+		}
+
+		.home :global(span :not(strong)) {
+			display: none;
 		}
 	}
 
