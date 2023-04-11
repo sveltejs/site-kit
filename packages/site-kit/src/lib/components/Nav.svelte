@@ -197,7 +197,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		margin-right: 0.5rem;
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 799px) {
 		ul {
 			position: relative;
 			display: none;
