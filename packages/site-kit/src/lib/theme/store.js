@@ -6,7 +6,7 @@ import { persisted } from 'svelte-local-storage-store';
  */
 
 /** @type {import('svelte/store').Writable<Theme>} */
-export const theme = persisted('sveltekit:theme', {
+export const theme = persisted('svelte:theme', {
 	preference: 'system',
 	current: browser
 		? window.matchMedia('(prefers-color-scheme: dark)').matches
