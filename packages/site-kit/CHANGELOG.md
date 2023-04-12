@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 4.1.0
+
+### Minor Changes
+
+- 13e760d: Add TSToggle
+
 ## 4.0.2
 
 ### Patch Changes
