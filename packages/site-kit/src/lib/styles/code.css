@@ -63,5 +63,5 @@ pre.twoslash .error-behind {
 }
 
 pre.twoslash data-lsp {
-	border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+	border-bottom: 1px dotted var(--sk-back-5);
 }
