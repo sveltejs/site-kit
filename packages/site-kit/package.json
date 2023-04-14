@@ -96,24 +96,5 @@
 	},
 	"files": [
 		"dist"
-	],
-	"typesVersions": {
-		">=4.0": {
-			"actions": [
-				"./dist/actions/index.d.ts"
-			],
-			"components": [
-				"./dist/components/index.d.ts"
-			],
-			"components/home": [
-				"./dist/components/home/index.d.ts"
-			],
-			"search": [
-				"./dist/search/index.d.ts"
-			],
-			"theme": [
-				"./dist/theme/index.d.ts"
-			]
-		}
-	}
+	]
 }
