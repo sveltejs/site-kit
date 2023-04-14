@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 4.1.1
+
+### Patch Changes
+
+- f25e098: Make twoslash hint underlines visible in dark mode too
+
 ## 4.1.0
 
 ### Minor Changes
