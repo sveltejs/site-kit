@@ -2,8 +2,8 @@
 Renders a search widget which when clicked (or the corresponding keyboard shortcut is pressed) opens a search overlay.
 -->
 <script>
-	import { browser } from '$app/environment';
-	import { searching, query } from './stores.js';
+	import { BROWSER } from 'esm-env';
+	import { query, searching } from './stores.js';
 
 	export let q = '';
 </script>
@@ -25,7 +25,7 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 		spellcheck="false"
 	/>
 
-	{#if browser}
+	{#if BROWSER}
 		<div class="shortcut">
 			<kbd>{navigator.platform === 'MacIntel' ? '⌘' : 'Ctrl'}</kbd> <kbd>K</kbd>
 		</div>

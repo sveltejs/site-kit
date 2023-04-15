@@ -19,6 +19,7 @@
 	},
 	"homepage": "https://github.com/sveltejs/site-kit#readme",
 	"dependencies": {
+		"esm-env": "^1.0.0",
 		"svelte-local-storage-store": "^0.4.0"
 	},
 	"devDependencies": {
