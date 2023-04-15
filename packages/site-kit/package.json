@@ -42,10 +42,6 @@
 			"default": "./dist/actions/index.js"
 		},
 		"./branding/svelte-logo.svg": "./dist/branding/svelte-logo.svg",
-		"./components/home": {
-			"types": "./dist/components/home/index.d.ts",
-			"default": "./dist/components/home/index.js"
-		},
 		"./components": {
 			"types": "./dist/components/index.d.ts",
 			"default": "./dist/components/index.js"
@@ -60,39 +56,12 @@
 			"types": "./dist/search/index.d.ts",
 			"default": "./dist/search/index.js"
 		},
-		"./search/search-worker": {
-			"types": "./dist/search/search-worker.d.ts",
-			"default": "./dist/search/search-worker.js"
-		},
-		"./search/search": {
-			"types": "./dist/search/search.d.ts",
-			"default": "./dist/search/search.js"
-		},
-		"./search/stores": {
-			"types": "./dist/search/stores.d.ts",
-			"default": "./dist/search/stores.js"
-		},
-		"./search/types.d.ts": "./dist/search/types.d.ts",
 		"./styles/base.css": "./dist/styles/base.css",
 		"./styles/code.css": "./dist/styles/code.css",
-		"./styles/fonts/fira-mono/fira-mono-latin-400.woff2": "./dist/styles/fonts/fira-mono/fira-mono-latin-400.woff2",
-		"./styles/fonts/overpass/overpass-latin-100.woff2": "./dist/styles/fonts/overpass/overpass-latin-100.woff2",
-		"./styles/fonts/overpass/overpass-latin-300.woff2": "./dist/styles/fonts/overpass/overpass-latin-300.woff2",
-		"./styles/fonts/overpass/overpass-latin-400.woff2": "./dist/styles/fonts/overpass/overpass-latin-400.woff2",
-		"./styles/fonts/overpass/overpass-latin-600.woff2": "./dist/styles/fonts/overpass/overpass-latin-600.woff2",
-		"./styles/fonts/overpass/overpass-latin-700.woff2": "./dist/styles/fonts/overpass/overpass-latin-700.woff2",
-		"./styles/fonts/roboto/roboto-latin-400.woff2": "./dist/styles/fonts/roboto/roboto-latin-400.woff2",
-		"./styles/fonts/roboto/roboto-latin-400italic.woff2": "./dist/styles/fonts/roboto/roboto-latin-400italic.woff2",
-		"./styles/fonts/roboto/roboto-latin-500.woff2": "./dist/styles/fonts/roboto/roboto-latin-500.woff2",
-		"./styles/fonts/roboto/roboto-latin-500italic.woff2": "./dist/styles/fonts/roboto/roboto-latin-500italic.woff2",
 		"./styles/fonts.css": "./dist/styles/fonts.css",
 		"./styles/index.css": "./dist/styles/index.css",
 		"./styles/text.css": "./dist/styles/text.css",
-		"./styles/tokens.css": "./dist/styles/tokens.css",
-		"./theme": {
-			"types": "./dist/theme/index.d.ts",
-			"default": "./dist/theme/index.js"
-		}
+		"./styles/tokens.css": "./dist/styles/tokens.css"
 	},
 	"files": [
 		"dist"

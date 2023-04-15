@@ -1,2 +1,2 @@
 export * from './store';
-export { default as ThemeToggle } from './ThemeToggle.svelte';
+export { default as ThemeToggle } from '../components/ThemeToggle.svelte';
