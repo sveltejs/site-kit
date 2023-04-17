@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 5.0.2
+
+### Patch Changes
+
+- 18614db: Expose theme store
+
 ## 5.0.1
 
 ### Patch Changes
