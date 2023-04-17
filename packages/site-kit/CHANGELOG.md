@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 5.0.3
+
+### Patch Changes
+
+- f869cee: Remove left-over legacy styles
+
 ## 5.0.2
 
 ### Patch Changes
