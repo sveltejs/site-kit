@@ -1,11 +1,11 @@
 <script>
-	import { browser } from '$app/environment';
+	import { BROWSER } from 'esm-env';
 	import { persisted } from 'svelte-local-storage-store';
 	import ToggleButton from './ToggleButton.svelte';
 
 	const checked = persisted('svelte:prefers-ts', false);
 
-	$: browser && document.body.classList.toggle('prefers-ts', $checked);
+	$: BROWSER && document.body.classList.toggle('prefers-ts', $checked);
 </script>
 
 <div class="input-output-toggle">
