@@ -3,7 +3,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 -->
 <script>
 	import { page } from '$app/stores';
-	import { ThemeToggle } from '$lib/theme';
+	import ThemeToggle from './ThemeToggle.svelte';
 	import Icon from './Icon.svelte';
 	import Separator from './Separator.svelte';
 
