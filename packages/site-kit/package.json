@@ -45,17 +45,15 @@
 		"./branding/svelte-logo.svg": "./dist/branding/svelte-logo.svg",
 		"./components": {
 			"types": "./dist/components/index.d.ts",
-			"default": "./dist/components/index.js"
+			"default": "./dist/components/index.js",
+			"svelte": "./dist/components/index.js"
 		},
 		"./icons/link.svg": "./dist/icons/link.svg",
 		"./icons/search.svg": "./dist/icons/search.svg",
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
-		},
 		"./search": {
 			"types": "./dist/search/index.d.ts",
-			"default": "./dist/search/index.js"
+			"default": "./dist/search/index.js",
+			"svelte": "./dist/search/index.js"
 		},
 		"./styles/base.css": "./dist/styles/base.css",
 		"./styles/code.css": "./dist/styles/code.css",
