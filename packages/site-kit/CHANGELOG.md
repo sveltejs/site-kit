@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 5.0.1
+
+### Patch Changes
+
+- c793472: fix Nav referencing wrong ThemeToggle path
+
 ## 4.1.1
 
 ### Patch Changes
