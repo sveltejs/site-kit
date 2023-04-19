@@ -73,20 +73,20 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<Icon name={open ? 'close' : 'menu'} size="1em" />
 	</button>
 
-	<ul>
+	<ul class="menu-section">
 		<slot name="nav-center" />
 	</ul>
 
-	<ul class="external">
-		<slot name="nav-right" />
-
-		<Separator />
-
+	<div class="external menu-section">
+		<ul>
+			<slot name="nav-right" />
+			<Separator />
+		</ul>
 		<div class="appearance">
 			<span class="caption">Theme</span>
 			<ThemeToggle />
 		</div>
-	</ul>
+	</div>
 </nav>
 
 <style>
@@ -96,7 +96,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		height: 100%;
 		top: 0;
 		left: 0;
-		background: var(--back);
+		background: var(--sk-back-1);
 		opacity: 0.8;
 		z-index: 2;
 		backdrop-filter: grayscale(0.5) blur(2px);
@@ -141,9 +141,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 	}
 
-	ul {
+	.menu-section {
 		position: relative;
 		width: 100%;
+	}
+
+	ul {
 		padding: 0;
 		margin: 0;
 		list-style: none;
@@ -198,23 +201,23 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	@media (max-width: 799px) {
-		ul {
+		.menu-section {
 			position: relative;
 			display: none;
 			width: 100%;
-			background: var(--back);
+			background: var(--sk-back-1);
 			padding: 1rem var(--sk-page-padding-side);
 		}
 
-		.open ul {
+		.open .menu-section {
 			display: block;
 		}
 
-		ul.external {
+		.external {
 			padding: 1rem var(--sk-page-padding-side) 1rem;
 		}
 
-		ul.external::before {
+		.external::before {
 			content: '';
 			position: absolute;
 			top: 0;
@@ -224,7 +227,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
 		}
 
-		ul.external::after {
+		.external::after {
 			content: '';
 			position: absolute;
 			width: 100%;
@@ -260,7 +263,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			/* justify-content: space-between; */
 		}
 
-		ul {
+		ul,
+		.menu-section {
 			display: flex;
 			width: auto;
 			height: 100%;
@@ -277,7 +281,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			height: 100%;
 		}
 
-		ul.external {
+		.external {
 			padding: 0 var(--sk-page-padding-side) 0 0;
 			justify-content: end;
 		}
