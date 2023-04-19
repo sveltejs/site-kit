@@ -6,9 +6,7 @@
 	export let label;
 </script>
 
-<button aria-pressed={pressed} on:click={() => (pressed = !pressed)}>
-	<span class="visually-hidden">{label}</span>
-</button>
+<button aria-pressed={pressed} aria-label={label} on:click={() => (pressed = !pressed)} />
 
 <style>
 	button {
@@ -21,7 +19,6 @@
 		height: var(--size);
 		width: calc(100% - 0.6em);
 		max-width: calc(2 * var(--size));
-		top: -2px;
 		border-radius: 0.5em;
 		-webkit-appearance: none;
 		appearance: none;
