@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 5.0.4
+
+### Patch Changes
+
+- 909d06b: Fix some ThemeToggle/Nav a11y issues
+
 ## 5.0.3
 
 ### Patch Changes
