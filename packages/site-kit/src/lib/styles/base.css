@@ -28,8 +28,8 @@ body {
 }
 
 *:focus-visible {
-	outline: none;
-	box-shadow: var(--sk-focus-outline);
+	outline: 2px solid hsla(var(--sk-theme-1-hsl), 0.6);
+	/* box-shadow: var(--sk-focus-outline); */
 	transition: 0.1s ease;
 }
 
