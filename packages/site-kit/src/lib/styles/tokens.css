@@ -10,6 +10,11 @@
 	--sk-selection-color: hsla(204, 100%, 63%, 0.3);
 	--sk-focus-outline: 0 0 0 2px hsla(var(--sk-theme-1-hsl), 0.6);
 
+	/* Base colors */
+	--sk-theme-1: hsla(var(--sk-theme-1-hsl), 1);
+	--sk-theme-2: hsla(var(--sk-theme-2-hsl), 1);
+	--sk-theme-3: hsla(var(--sk-theme-3-hsl), 1);
+
 	/* dimensions */
 	--sk-nav-height: 6rem;
 	--sk-page-padding-top: 6rem;
@@ -43,11 +48,8 @@
 		--sk-back-4: hsl(0, 0%, 22%);
 		--sk-back-5: hsl(0, 0%, 40%);
 		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
-		--sk-theme-1: hsl(15, 100%, 55%);
 		--sk-theme-1-hsl: 15, 100%, 55%;
-		--sk-theme-2: hsl(240, 8%, 44%);
 		--sk-theme-2-hsl: 240, 8%, 44%;
-		--sk-theme-3: hsl(204, 100%, 63%);
 		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 90%);
 		--sk-text-2: hsl(0, 0%, 80%);
@@ -86,11 +88,8 @@
 		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(206, 44%, 93%);
 		--sk-back-5: hsl(206, 20%, 80%);
-		--sk-theme-1: hsl(15, 100%, 50%);
 		--sk-theme-1-hsl: 15, 100%, 50%;
-		--sk-theme-2: hsl(240, 8%, 44%);
 		--sk-theme-2-hsl: 240, 8%, 44%;
-		--sk-theme-3: hsl(204, 100%, 63%);
 		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 13%);
 		--sk-text-2: hsl(0, 0%, 27%);
@@ -149,11 +148,8 @@
 		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(206, 44%, 93%);
 		--sk-back-5: hsl(206, 20%, 80%);
-		--sk-theme-1: hsl(15, 100%, 50%);
 		--sk-theme-1-hsl: 15, 100%, 50%;
-		--sk-theme-2: hsl(240, 8%, 44%);
 		--sk-theme-2-hsl: 240, 8%, 44%;
-		--sk-theme-3: hsl(204, 100%, 63%);
 		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 13%);
 		--sk-text-2: hsl(0, 0%, 27%);
@@ -196,11 +192,8 @@
 		--sk-back-4: hsl(0, 0%, 22%);
 		--sk-back-5: hsl(0, 0%, 40%);
 		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
-		--sk-theme-1: hsl(15, 100%, 55%);
 		--sk-theme-1-hsl: 15, 100%, 55%;
-		--sk-theme-2: hsl(240, 8%, 44%);
 		--sk-theme-2-hsl: 240, 8%, 44%;
-		--sk-theme-3: hsl(204, 100%, 63%);
 		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 90%);
 		--sk-text-2: hsl(0, 0%, 80%);

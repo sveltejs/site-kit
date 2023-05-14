@@ -30,8 +30,6 @@ The main shell of the application. It provides a slot for the top navigation, th
 	<slot name="top-nav" />
 {/if}
 
-<slot name="nav" />
-
 <main id="main" style:--sk-banner-bottom-height={banner_bottom_height}>
 	<slot />
 </main>
