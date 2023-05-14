@@ -10,7 +10,7 @@ html {
 body {
 	font-size: 1.6rem;
 	font-family: var(--sk-font);
-	line-height: 1.5;
+	line-height: 1.618;
 	color: var(--sk-text-2);
 	background-color: var(--sk-back-1);
 	width: 100%;
@@ -25,6 +25,12 @@ body {
 	scrollbar-width: thin;
 	scrollbar-color: var(--sk-scrollbar) transparent;
 	-webkit-overflow-scrolling: touch;
+}
+
+*:focus-visible {
+	outline: none;
+	box-shadow: var(--sk-focus-outline);
+	transition: 0.1s ease;
 }
 
 p,
@@ -161,6 +167,7 @@ a {
 	position: relative;
 	padding: 0 0 1px 0;
 	color: var(--sk-theme-1);
+	color: color-mix(in hwb, var(--sk-theme-1) 100%, var(--sk-text-1) 25%);
 }
 
 /*  tables --------------------------------- */
