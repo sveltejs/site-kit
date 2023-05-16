@@ -1,11 +1,19 @@
 /*
 
-!IMPORTANT: The tokens for light and dark mode are duplicated, if you change a token for dark mode, you should change that for the other dark mode too
+!IMPORTANT: The tokens for light and dark mode are duplicated, if you change a token for dark mode, 
+!you should change that for the other dark mode too
 
 */
+
 :root {
 	--sk-back-h: 206;
 	--sk-selection-color: hsla(204, 100%, 63%, 0.3);
+	--sk-focus-outline: 0 0 0 2px hsla(var(--sk-theme-1-hsl), 0.6);
+
+	/* Base colors */
+	--sk-theme-1: hsla(var(--sk-theme-1-hsl), 1);
+	--sk-theme-2: hsla(var(--sk-theme-2-hsl), 1);
+	--sk-theme-3: hsla(var(--sk-theme-3-hsl), 1);
 
 	/* dimensions */
 	--sk-nav-height: 6rem;
@@ -40,9 +48,9 @@
 		--sk-back-4: hsl(0, 0%, 22%);
 		--sk-back-5: hsl(0, 0%, 40%);
 		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
-		--sk-theme-1: hsl(15, 100%, 55%);
-		--sk-theme-2: hsl(240, 8%, 44%);
-		--sk-theme-3: hsl(204, 100%, 63%);
+		--sk-theme-1-hsl: 15, 100%, 55%;
+		--sk-theme-2-hsl: 240, 8%, 44%;
+		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 90%);
 		--sk-text-2: hsl(0, 0%, 80%);
 		--sk-text-3: hsl(0, 0%, 65%);
@@ -58,7 +66,7 @@
 		--sk-code-ts-bg: var(--sk-back-2);
 		--sk-code-bg: var(--sk-back-3);
 		--sk-code-base: hsl(45, 7%, 75%);
-		--sk-code-comment: hsl(0, 0%, 51%);
+		--sk-code-comment: hsl(0, 0%, 55%);
 		--sk-code-keyword: hsl(204, 88%, 65%);
 		--sk-code-function: hsl(19, 67%, 75%);
 		--sk-code-string: hsl(41, 37%, 68%);
@@ -66,9 +74,9 @@
 		--sk-code-template-string: hsl(2, 80%, 47%);
 		--sk-code-tags: var(--sk-code-function);
 		--sk-code-important: var(--sk-code-string);
-		--sk-code-diff-base: hsla(0, 0%, 100%, 0.4);
+		--sk-code-diff-base: hsla(0, 0%, 100%, 0.5);
 		--sk-code-diff-inserted: hsl(120, 46%, 48%);
-		--sk-code-diff-removed: hsl(2, 64%, 52%);
+		--sk-code-diff-removed: hsl(2, 64%, 70%);
 	}
 
 	body.light {
@@ -80,9 +88,9 @@
 		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(206, 44%, 93%);
 		--sk-back-5: hsl(206, 20%, 80%);
-		--sk-theme-1: hsl(15, 100%, 50%);
-		--sk-theme-2: hsl(240, 8%, 44%);
-		--sk-theme-3: hsl(204, 100%, 63%);
+		--sk-theme-1-hsl: 15, 100%, 50%;
+		--sk-theme-2-hsl: 240, 8%, 44%;
+		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 13%);
 		--sk-text-2: hsl(0, 0%, 27%);
 		--sk-text-3: var(--sk-theme-2);
@@ -105,7 +113,7 @@
 		--sk-code-template-string: hsl(2, 80%, 47%);
 		--sk-code-tags: var(--sk-code-function);
 		--sk-code-important: var(--sk-code-string);
-		--sk-code-diff-base: hsla(0, 0%, 0%, 0.4);
+		--sk-code-diff-base: hsla(0, 0%, 0%, 0.6);
 		--sk-code-diff-inserted: hsl(120, 100%, 25%);
 		--sk-code-diff-removed: hsl(2, 80%, 47%);
 
@@ -140,9 +148,9 @@
 		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(206, 44%, 93%);
 		--sk-back-5: hsl(206, 20%, 80%);
-		--sk-theme-1: hsl(15, 100%, 50%);
-		--sk-theme-2: hsl(240, 8%, 44%);
-		--sk-theme-3: hsl(204, 100%, 63%);
+		--sk-theme-1-hsl: 15, 100%, 50%;
+		--sk-theme-2-hsl: 240, 8%, 44%;
+		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 13%);
 		--sk-text-2: hsl(0, 0%, 27%);
 		--sk-text-3: var(--sk-theme-2);
@@ -184,9 +192,9 @@
 		--sk-back-4: hsl(0, 0%, 22%);
 		--sk-back-5: hsl(0, 0%, 40%);
 		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
-		--sk-theme-1: hsl(15, 100%, 55%);
-		--sk-theme-2: hsl(240, 8%, 44%);
-		--sk-theme-3: hsl(204, 100%, 63%);
+		--sk-theme-1-hsl: 15, 100%, 55%;
+		--sk-theme-2-hsl: 240, 8%, 44%;
+		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 90%);
 		--sk-text-2: hsl(0, 0%, 80%);
 		--sk-text-3: hsl(0, 0%, 65%);
@@ -202,7 +210,7 @@
 		--sk-code-ts-bg: var(--sk-back-2);
 		--sk-code-bg: var(--sk-back-3);
 		--sk-code-base: hsl(45, 7%, 75%);
-		--sk-code-comment: hsl(0, 0%, 51%);
+		--sk-code-comment: hsl(0, 0%, 55%);
 		--sk-code-keyword: hsl(204, 88%, 65%);
 		--sk-code-function: hsl(19, 67%, 75%);
 		--sk-code-string: hsl(41, 37%, 68%);
@@ -210,8 +218,8 @@
 		--sk-code-template-string: hsl(2, 80%, 47%);
 		--sk-code-tags: var(--sk-code-function);
 		--sk-code-important: var(--sk-code-string);
-		--sk-code-diff-base: hsla(0, 0%, 100%, 0.4);
+		--sk-code-diff-base: hsla(0, 0%, 100%, 0.5);
 		--sk-code-diff-inserted: hsl(120, 46%, 48%);
-		--sk-code-diff-removed: hsl(2, 64%, 52%);
+		--sk-code-diff-removed: hsl(2, 64%, 70%);
 	}
 }

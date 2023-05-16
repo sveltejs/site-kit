@@ -1,15 +1,24 @@
 <script>
 	import { onMount } from 'svelte';
+	import { linear, quadInOut } from 'svelte/easing';
+	import { tweened } from 'svelte/motion';
 
-	let p = 0;
+	const p = tweened(0, {
+		easing: quadInOut
+	});
+
 	let visible = false;
 
 	onMount(() => {
 		function next() {
 			visible = true;
-			p += 0.1;
 
-			const remaining = 1 - p;
+			const remaining = 1 - $p;
+
+			p.update((v) => v + 0.1, {
+				duration: remaining + 0.1 > 0.15 ? 250 : 500 / remaining
+			});
+
 			if (remaining > 0.15) setTimeout(next, 500 / remaining);
 		}
 
@@ -19,11 +28,11 @@
 
 {#if visible}
 	<div class="progress-container">
-		<div class="progress" style="width: {p * 100}%" />
+		<div class="progress" style="width: {$p * 100}%" />
 	</div>
 {/if}
 
-{#if p >= 0.4}
+{#if $p >= 0.4}
 	<div class="fade" />
 {/if}
 

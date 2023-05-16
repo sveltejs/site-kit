@@ -63,5 +63,10 @@ pre.twoslash .error-behind {
 }
 
 pre.twoslash data-lsp {
-	border-bottom: 1px dotted var(--sk-back-5);
+	transition: border-color 0.3s;
+	border-bottom: 1px dotted transparent;
+}
+
+pre.twoslash:hover data-lsp {
+	border-color: var(--sk-back-5);
 }

@@ -6,7 +6,7 @@ Accessibility helper component to skip to the main content
 	export let href;
 </script>
 
-<a {href}>Skip to main content</a>
+<a {href}> <slot>Skip to main content</slot> </a>
 
 <style>
 	a {
