@@ -1,5 +1,15 @@
 # @sveltejs/site-kit changelog
 
+## 5.1.0
+
+### Minor Changes
+
+- 6ac9a9f: Different color links, link underlines, custome focus outlines
+
+### Patch Changes
+
+- ccd5cca: chore: add IME support for SearchBox
+
 ## 5.0.4
 
 ### Patch Changes
