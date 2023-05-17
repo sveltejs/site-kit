@@ -101,10 +101,6 @@
 	background-color: transparent !important;
 }
 
-/* .text pre a {
-	border-bottom: 1px dotted var(--sk-theme-1);
-} */
-
 .text pre a:hover {
 	border-bottom: 1px solid var(--sk-theme-1);
 	text-decoration: none !important;
