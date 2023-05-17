@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 5.2.0
+
+### Minor Changes
+
+- d5eaf17: Restyle blockquotes, deprecated styles for blockquotes
+
 ## 5.1.0
 
 ### Minor Changes
