@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 5.2.1
+
+### Patch Changes
+
+- f4d6bd3: Fix link color
+
 ## 5.2.0
 
 ### Minor Changes
