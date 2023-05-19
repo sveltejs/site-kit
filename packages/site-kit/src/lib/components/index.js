@@ -8,6 +8,5 @@ export { default as Section } from './Section.svelte';
 export { default as Separator } from './Separator.svelte';
 export { default as Shell } from './Shell.svelte';
 export { default as SkipLink } from './SkipLink.svelte';
-export { default as TSToggle } from './TSToggle.svelte';
 export { default as ThemeToggle, theme } from './ThemeToggle.svelte';
 export { default as TryTerminal } from './TryTerminal.svelte';

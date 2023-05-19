@@ -1,7 +1,7 @@
 <script>
 	import { BROWSER } from 'esm-env';
 	import { persisted } from 'svelte-local-storage-store';
-	import ToggleButton from './ToggleButton.svelte';
+	import ToggleButton from '../ToggleButton.svelte';
 
 	const checked = persisted('svelte:prefers-ts', false);
 

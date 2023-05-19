@@ -190,7 +190,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		height: 100%;
 		align-items: center;
 		margin-left: 0.75rem;
-		/* transform: translateY(2px); */
 	}
 
 	.appearance .caption {
