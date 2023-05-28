@@ -162,4 +162,29 @@
 		background: var(--sk-back-3);
 		border-left-color: var(--sk-theme-1);
 	}
+
+	@media screen and (max-width: 832px) {
+		.on-this-page {
+			position: relative;
+			top: 3.2rem;
+		}
+
+		h2 {
+			padding-left: 3.2rem;
+		}
+
+		a {
+			padding-left: 3.2rem;
+			box-sizing: border-box;
+		}
+
+		a.active {
+			background-color: transparent;
+		}
+
+		a:hover {
+			text-decoration: none;
+			background-color: initial;
+		}
+	}
 </style>
