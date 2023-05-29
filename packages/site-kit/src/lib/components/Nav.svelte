@@ -59,9 +59,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 {/if}
 
 <nav class:visible={visible || open} class:open bind:this={nav} aria-label="Primary">
-	<a href="/" class="nav-spot home" title={home_title}>
-		<slot name="home" />
-	</a>
+	<div class="nav-spot home">
+		<a href="/" title={home_title}>
+			<slot name="home" />
+		</a>
+	</div>
 
 	<button
 		aria-label="Toggle menu"
@@ -166,6 +168,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		background-size: auto 70%;
 		align-items: center;
 		padding-left: calc(var(--sk-page-padding-side) + 4rem);
+	}
+
+	.home a {
 		text-decoration: none;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
@@ -234,6 +239,28 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			left: 0;
 			bottom: calc(-1 * var(--shadow-height));
 			background: var(--shadow-gradient);
+		}
+
+		.external :global(li) {
+			padding: 0.3rem 0;
+		}
+
+		.external :global(li a) {
+			display: block;
+
+			border-radius: var(--sk-border-radius);
+
+			width: 100%;
+			padding: 0.8rem;
+		}
+
+		.external :global(li a:hover) {
+			border-radius: var(--sk-border-radius);
+
+			color: initial;
+			text-decoration: none;
+
+			background-color: var(--sk-back-4);
 		}
 
 		.appearance {

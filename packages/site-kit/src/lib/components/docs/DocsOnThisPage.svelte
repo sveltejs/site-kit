@@ -2,10 +2,12 @@
 	import { afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
-	import { afterUpdate, onMount } from 'svelte';
+	import { afterUpdate, createEventDispatcher, onMount } from 'svelte';
 
 	/** @type {import('../types').Page} */
 	export let details;
+
+	const dispatch = createEventDispatcher();
 
 	/** @type {string} */
 	let hash = '';
@@ -113,9 +115,21 @@
 	<h2>On this page</h2>
 	<nav>
 		<ul>
-			<li><a href="{base}/docs/{details.slug}" class:active={hash === ''}>{details.title}</a></li>
+			<li>
+				<a
+					href="{base}/docs/{details.slug}"
+					class:active={hash === ''}
+					on:click={() => dispatch('select')}>{details.title}</a
+				>
+			</li>
 			{#each details.sections as { title, slug }}
-				<li><a href={`#${slug}`} class:active={`#${slug}` === hash}>{title}</a></li>
+				<li>
+					<a
+						href={`#${slug}`}
+						class:active={`#${slug}` === hash}
+						on:click={() => dispatch('select')}>{title}</a
+					>
+				</li>
 			{/each}
 		</ul>
 	</nav>

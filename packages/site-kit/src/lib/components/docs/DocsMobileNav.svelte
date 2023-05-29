@@ -1,4 +1,8 @@
 <script>
+	import { click_outside, focus_outside } from '$lib/actions';
+	import { tick } from 'svelte';
+	import { expoOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
 	import { TSToggle } from '.';
 	import { theme } from '../ThemeToggle.svelte';
 	import DocsContents from './DocsContents.svelte';
@@ -9,29 +13,105 @@
 
 	/** @type {import('svelte').ComponentProps<DocsOnThisPage>['details']} */
 	export let pageContents;
+
+	const menu_open = {
+		docs: false,
+		on_this_page: false
+	};
+
+	/**
+	 * @param {HTMLElement} _
+	 * @returns {import('svelte/transition').TransitionConfig}
+	 */
+	const slide_up = (_) => {
+		return {
+			css: (t, u) =>
+				`transform: translate3d(0, ${u * 120}%, 0) scale3d(${0.9 + 0.1 * t}, ${0.9 + 0.1 * t}, 1)`,
+			easing: expoOut,
+			duration: 500
+		};
+	};
+
+	/**
+	 * @param {HTMLElement} node
+	 * @returns {import('svelte/transition').TransitionConfig}
+	 */
+	const fade_out = (node) => {
+		node.style.overflow = 'hidden';
+
+		return {
+			css: (t, u) =>
+				`opacity: ${t}; 
+				 transform: translate3d(0, 0, 0) scale3d(${1 - 0.1 * u}, ${1 - 0.1 * u}, 1})`,
+			easing: expoOut,
+			duration: 500
+		};
+	};
+
+	function toggle_docs_menu() {
+		menu_open.docs = !menu_open.docs;
+	}
+
+	function toggle_on_this_page_menu() {
+		menu_open.on_this_page = !menu_open.on_this_page;
+	}
+
+	async function close_docs_menu() {
+		await tick();
+		menu_open.docs = false;
+	}
+
+	async function close_on_this_page_menu() {
+		await tick();
+
+		menu_open.on_this_page = false;
+	}
 </script>
 
-<nav class:dark={$theme.current === 'dark'}>
+<nav
+	class:menu-open={menu_open.docs || menu_open.on_this_page}
+	class:dark={$theme.current === 'dark'}
+>
 	<div aria-hidden="true" class="trick-overlay" />
 
-	<div class="group-menu">
-		<button class="trigger-button docs-menu">Menu</button>
-		<section class="menu-container">
-			<DocsContents {contents} show_ts_toggle={false} />
+	<div class="group-menu" use:click_outside={close_docs_menu} use:focus_outside={close_docs_menu}>
+		<button
+			aria-expanded={menu_open.docs}
+			on:click={toggle_docs_menu}
+			class="trigger-button docs-menu">Menu</button
+		>
 
-			<div class="ts-toggle">
-				<TSToggle />
-			</div>
-		</section>
+		{#if menu_open.docs}
+			<section in:slide_up out:fade_out class="menu-container">
+				<DocsContents {contents} show_ts_toggle={false} />
+
+				<div class="ts-toggle">
+					<TSToggle />
+				</div>
+			</section>
+		{/if}
 	</div>
 
 	<span />
 
-	<div class="group-otp">
-		<button class="trigger-button on-this-page">On This Page</button>
-		<section class="menu-container">
-			<DocsOnThisPage details={pageContents} />
-		</section>
+	<div
+		class="group-otp"
+		use:click_outside={close_on_this_page_menu}
+		use:focus_outside={close_on_this_page_menu}
+	>
+		<button
+			aria-expanded={menu_open.on_this_page}
+			class="trigger-button on-this-page"
+			on:click={toggle_on_this_page_menu}
+		>
+			On This Page
+		</button>
+
+		{#if menu_open.on_this_page}
+			<section in:slide_up out:fade={{ duration: 400, easing: expoOut }} class="menu-container">
+				<DocsOnThisPage on:select={close_on_this_page_menu} details={pageContents} />
+			</section>
+		{/if}
 	</div>
 </nav>
 
@@ -57,7 +137,7 @@
 		background: hsla(0, 0%, 0%, 0.5);
 	}
 
-	nav:focus-within + .overlay {
+	nav.menu-open + .overlay {
 		opacity: 1;
 		pointer-events: all;
 	}
@@ -72,7 +152,7 @@
 		z-index: 102;
 
 		transform: translate(-50%, 1px);
-		transition: 0.15s ease-in;
+		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		transition-property: box-shadow, border-radius;
 
 		width: 95vw;
@@ -87,7 +167,7 @@
 		isolation: isolate;
 	}
 
-	nav:focus-within {
+	nav.menu-open {
 		border-radius: 0;
 	}
 
@@ -126,32 +206,17 @@
 		z-index: 5;
 	}
 
-	.group-menu:focus-within .ts-toggle {
-		opacity: 1;
-		pointer-events: all;
-	}
-
-	.group-menu:focus-within .menu-container,
-	.group-otp:focus-within .menu-container {
-		transform: translate3d(0, 0, 0);
-	}
-
-	.group-menu:focus-within .menu-container > :global(*),
-	.group-otp:focus-within .menu-container > :global(*) {
-		opacity: 1;
-	}
-
 	.menu-container {
 		display: block;
 
 		position: fixed;
-		left: 0;
+		left: 0.5px;
 		bottom: 48px;
 
-		width: 100%;
+		width: calc(100% - 1px);
 		height: 70vh;
 
-		transform: translate3d(0, 120%, 0) scale3d(0.9, 0.9, 1);
+		/* transform: translate3d(0, 120%, 0) scale3d(0.9, 0.9, 1); */
 
 		border-radius: 1rem 1rem 0 0;
 		box-shadow: 3px -1px 8.6px -9px rgba(0, 0, 0, 0.11), -3px -1px 20px 1px rgba(0, 0, 0, 0.22);
@@ -161,12 +226,6 @@
 		overflow-y: auto;
 
 		transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-	}
-
-	.menu-container > :global(*) {
-		opacity: 0;
-
-		transition: opacity 0.3s ease-in;
 	}
 
 	nav.dark .menu-container {
@@ -179,7 +238,7 @@
 		bottom: 0;
 		z-index: 2;
 
-		width: calc(100% - 1.7px);
+		width: calc(100% - 2px);
 
 		padding: 1rem 0;
 		margin-right: 0;
