@@ -1,11 +1,17 @@
 <!-- @component
 Top navigation bar for the application. It provides a slot for the left side, the right side, and the center.
 -->
+
+<script context="module">
+	export const nav_title = writable('');
+</script>
+
 <script>
 	import { page } from '$app/stores';
-	import ThemeToggle from './ThemeToggle.svelte';
+	import { writable } from 'svelte/store';
 	import Icon from './Icon.svelte';
 	import Separator from './Separator.svelte';
+	import ThemeToggle from './ThemeToggle.svelte';
 
 	export let home_title = 'Homepage';
 
@@ -63,6 +69,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<a href="/" title={home_title}>
 			<slot name="home" />
 		</a>
+
+		{#if $nav_title}
+			<div class="nav-title">
+				{$nav_title}
+			</div>
+		{/if}
 	</div>
 
 	<button
@@ -181,6 +193,20 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	.home :global(strong) {
 		color: var(--sk-text-1);
 		font-weight: inherit;
+	}
+
+	.home .nav-title {
+		display: flex;
+		align-items: center;
+
+		margin-left: 1rem;
+		padding-left: 1rem;
+		font-size: 0.9em;
+		color: var(--sk-text-3);
+		line-height: 1;
+		height: 40%;
+
+		border-left: solid 1px var(--sk-text-4);
 	}
 
 	button {

@@ -78,7 +78,7 @@
 		<button
 			aria-expanded={menu_open.docs}
 			on:click={toggle_docs_menu}
-			class="trigger-button docs-menu">Menu</button
+			class="trigger-button docs-menu">Docs</button
 		>
 
 		{#if menu_open.docs}
@@ -155,12 +155,11 @@
 		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		transition-property: box-shadow, border-radius;
 
-		width: 95vw;
+		width: 100vw;
 		height: 48px;
 
 		padding: 0 16px;
-		border-radius: 1rem 1rem 0 0;
-		box-shadow: 3px -1px 8.6px -9px rgba(0, 0, 0, 0.11), -3px -1px 20px 1px rgba(0, 0, 0, 0.22);
+		box-shadow: 0 -0.1px 6px 0.9px hsla(0, 0%, 0%, 0.1);
 
 		background-color: var(--sk-back-3);
 
@@ -172,7 +171,7 @@
 	}
 
 	nav.dark {
-		box-shadow: inset 0 0 0 0.9px hsla(0, 0%, 100%, 0.2), 0 0 0 1.4px hsla(0, 0%, 0%, 0.2);
+		box-shadow: 0 -0.4px 0px 0px hsla(0, 0%, 40%, 1);
 	}
 
 	.trick-overlay {
@@ -206,14 +205,19 @@
 		z-index: 5;
 	}
 
+	.trigger-button[aria-expanded='true'] {
+		font-weight: 600;
+		color: var(--sk-theme-1);
+	}
+
 	.menu-container {
 		display: block;
 
 		position: fixed;
-		left: 0.5px;
+		left: 0;
 		bottom: 48px;
 
-		width: calc(100% - 1px);
+		width: calc(100%);
 		height: 70vh;
 
 		/* transform: translate3d(0, 120%, 0) scale3d(0.9, 0.9, 1); */
@@ -229,7 +233,10 @@
 	}
 
 	nav.dark .menu-container {
-		box-shadow: inset 0 0 0 0.9px hsla(0, 0%, 100%, 0.2), 0 0 0 1.4px hsla(0, 0%, 0%, 0.2);
+		/* box-shadow: inset 0 0 0 0.9px hsla(0, 0%, 100%, 0.2), 0 0 0 1.4px hsla(0, 0%, 0%, 0.2); */
+		box-shadow: none;
+
+		border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
 	}
 
 	.ts-toggle {
