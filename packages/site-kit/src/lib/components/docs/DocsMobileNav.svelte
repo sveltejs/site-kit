@@ -214,10 +214,10 @@
 		display: block;
 
 		position: fixed;
-		left: 0;
+		left: 0.5px;
 		bottom: 48px;
 
-		width: calc(100%);
+		width: calc(100% - 1px);
 		height: 70vh;
 
 		/* transform: translate3d(0, 120%, 0) scale3d(0.9, 0.9, 1); */
