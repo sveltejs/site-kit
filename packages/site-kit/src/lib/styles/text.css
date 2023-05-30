@@ -307,7 +307,7 @@
 	border: 1px solid hsl(var(--primary-hsl));
 	border-radius: var(--sk-border-radius);
 	padding: 1rem;
-	filter: drop-shadow(2px 2px 6px hsla(var(--primary-hsl), 0.2));
+	box-shadow: 0px 2px 6px hsla(var(--primary-hsl), 0.2);
 }
 
 .text blockquote::before {
