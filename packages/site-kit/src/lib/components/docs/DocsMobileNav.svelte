@@ -1,7 +1,7 @@
 <script>
 	import { click_outside, focus_outside } from '$lib/actions';
 	import { reduced_motion, theme } from '$lib/stores';
-	import { expoIn, expoOut, sineOut } from 'svelte/easing';
+	import { expoOut } from 'svelte/easing';
 	import DocsContents from './DocsContents.svelte';
 	import DocsOnThisPage from './DocsOnThisPage.svelte';
 	import TSToggle from './TSToggle.svelte';
