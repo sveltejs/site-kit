@@ -1,18 +1,11 @@
 <!-- @component
 The main shell of the application. It provides a slot for the top navigation, the main content, and the bottom banner.
 -->
-<script context="module">
-	/** @param {string} title */
-	export const setNavTitle = (title) => {
-		nav_title.set(title);
-	};
-</script>
 
 <script>
 	import { navigating } from '$app/stores';
 	import '../styles/index.css';
 	import Icons from './Icons.svelte';
-	import { nav_title } from './Nav.svelte';
 	import PreloadingIndicator from './PreloadingIndicator.svelte';
 	import SkipLink from './SkipLink.svelte';
 

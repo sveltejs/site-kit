@@ -2,13 +2,9 @@
 Top navigation bar for the application. It provides a slot for the left side, the right side, and the center.
 -->
 
-<script context="module">
-	export const nav_title = writable('');
-</script>
-
 <script>
 	import { page } from '$app/stores';
-	import { writable } from 'svelte/store';
+	import { nav_title } from '$lib/stores';
 	import Icon from './Icon.svelte';
 	import Separator from './Separator.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
@@ -68,13 +64,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	<div class="nav-spot home">
 		<a href="/" title={home_title}>
 			<slot name="home" />
-		</a>
 
-		{#if $nav_title}
-			<div class="nav-title">
-				{$nav_title}
-			</div>
-		{/if}
+			{#if $nav_title}
+				<div class="nav-title">
+					{$nav_title}
+				</div>
+			{/if}
+		</a>
 	</div>
 
 	<button
@@ -183,6 +179,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	.home a {
+		display: flex;
+		align-items: center;
 		text-decoration: none;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
@@ -200,8 +198,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		align-items: center;
 
 		margin-left: 1rem;
-		padding-left: 1rem;
-		font-size: 0.9em;
+		padding: 0.5rem 0 0.5rem 1rem;
+		font-size: 0.7em;
 		color: var(--sk-text-3);
 		line-height: 1;
 		height: 40%;
@@ -228,6 +226,19 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		font-size: var(--sk-text-xs);
 		line-height: 1;
 		margin-right: 0.5rem;
+	}
+
+	@media (max-width: 1100px) {
+		.home a {
+			display: initial;
+		}
+
+		.home a .nav-title {
+			margin: 0;
+			padding: 0;
+			border-left: transparent;
+			font-size: 0.6em;
+		}
 	}
 
 	@media (max-width: 799px) {

@@ -42,6 +42,10 @@
 			"types": "./dist/actions/index.d.ts",
 			"default": "./dist/actions/index.js"
 		},
+		"./stores": {
+			"types": "./dist/stores/index.d.ts",
+			"default": "./dist/stores/index.js"
+		},
 		"./branding/svelte-logo.svg": "./dist/branding/svelte-logo.svg",
 		"./components": {
 			"types": "./dist/components/index.d.ts",

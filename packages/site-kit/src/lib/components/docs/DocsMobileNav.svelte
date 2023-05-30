@@ -1,12 +1,10 @@
 <script>
 	import { click_outside, focus_outside } from '$lib/actions';
-	import { tick } from 'svelte';
-	import { expoOut } from 'svelte/easing';
-	import { fade } from 'svelte/transition';
-	import { TSToggle } from '.';
-	import { theme } from '../ThemeToggle.svelte';
+	import { reduced_motion, theme } from '$lib/stores';
+	import { expoIn, expoOut, sineOut } from 'svelte/easing';
 	import DocsContents from './DocsContents.svelte';
 	import DocsOnThisPage from './DocsOnThisPage.svelte';
+	import TSToggle from './TSToggle.svelte';
 
 	/** @type {import('svelte').ComponentProps<DocsContents>['contents']} */
 	export let contents;
@@ -14,10 +12,10 @@
 	/** @type {import('svelte').ComponentProps<DocsOnThisPage>['details']} */
 	export let pageContents;
 
-	const menu_open = {
-		docs: false,
-		on_this_page: false
-	};
+	let is_menu_open = false;
+
+	/** @type {'docs' | 'on-this-page' | null} */
+	let selected_menu = null;
 
 	/**
 	 * @param {HTMLElement} _
@@ -26,7 +24,11 @@
 	const slide_up = (_) => {
 		return {
 			css: (t, u) =>
-				`transform: translate3d(0, ${u * 120}%, 0) scale3d(${0.9 + 0.1 * t}, ${0.9 + 0.1 * t}, 1)`,
+				$reduced_motion
+					? `opacity: ${t}`
+					: `transform: translate3d(0, ${u * 120}%, 0) scale3d(${0.9 + 0.1 * t}, ${
+							0.9 + 0.1 * t
+					  }, 1)`,
 			easing: expoOut,
 			duration: 500
 		};
@@ -42,77 +44,85 @@
 		return {
 			css: (t, u) =>
 				`opacity: ${t}; 
-				 transform: translate3d(0, 0, 0) scale3d(${1 - 0.1 * u}, ${1 - 0.1 * u}, 1})`,
+				 ${
+						!$reduced_motion
+							? `transform: translate3d(0, 0, 0) scale3d(${1 - 0.1 * u}, ${1 - 0.1 * u}, 1})`
+							: ''
+					}`,
 			easing: expoOut,
 			duration: 500
 		};
 	};
 
-	function toggle_docs_menu() {
-		menu_open.docs = !menu_open.docs;
+	/** @param {selected_menu} menu */
+	function toggle_menu(menu) {
+		if (is_menu_open) {
+			if (selected_menu !== menu) return (selected_menu = menu);
+
+			// Close
+			is_menu_open = false;
+			selected_menu = null;
+
+			return;
+		}
+
+		selected_menu = menu;
+		is_menu_open = true;
 	}
 
-	function toggle_on_this_page_menu() {
-		menu_open.on_this_page = !menu_open.on_this_page;
-	}
-
-	async function close_docs_menu() {
-		await tick();
-		menu_open.docs = false;
-	}
-
-	async function close_on_this_page_menu() {
-		await tick();
-
-		menu_open.on_this_page = false;
+	function close_menu() {
+		is_menu_open = false;
+		selected_menu = null;
 	}
 </script>
 
 <nav
-	class:menu-open={menu_open.docs || menu_open.on_this_page}
+	class:menu-open={is_menu_open}
 	class:dark={$theme.current === 'dark'}
+	use:click_outside={close_menu}
+	use:focus_outside={close_menu}
 >
 	<div aria-hidden="true" class="trick-overlay" />
 
-	<div class="group-menu" use:click_outside={close_docs_menu} use:focus_outside={close_docs_menu}>
-		<button
-			aria-expanded={menu_open.docs}
-			on:click={toggle_docs_menu}
-			class="trigger-button docs-menu">Docs</button
-		>
-
-		{#if menu_open.docs}
-			<section in:slide_up out:fade_out class="menu-container">
-				<DocsContents {contents} show_ts_toggle={false} />
-
-				<div class="ts-toggle">
-					<TSToggle />
-				</div>
-			</section>
-		{/if}
-	</div>
+	<button
+		aria-expanded={selected_menu === 'docs'}
+		on:click={() => toggle_menu('docs')}
+		class="trigger-button docs-menu"
+	>
+		Docs
+	</button>
 
 	<span />
 
-	<div
-		class="group-otp"
-		use:click_outside={close_on_this_page_menu}
-		use:focus_outside={close_on_this_page_menu}
+	<button
+		aria-expanded={selected_menu === 'on-this-page'}
+		class="trigger-button on-this-page"
+		on:click={() => toggle_menu('on-this-page')}
 	>
-		<button
-			aria-expanded={menu_open.on_this_page}
-			class="trigger-button on-this-page"
-			on:click={toggle_on_this_page_menu}
-		>
-			On This Page
-		</button>
+		On This Page
+	</button>
 
-		{#if menu_open.on_this_page}
-			<section in:slide_up out:fade={{ duration: 400, easing: expoOut }} class="menu-container">
-				<DocsOnThisPage on:select={close_on_this_page_menu} details={pageContents} />
-			</section>
-		{/if}
-	</div>
+	{#if is_menu_open}
+		<section in:slide_up out:fade_out class="menu-container">
+			<div
+				class="viewport"
+				class:motion={!$reduced_motion}
+				class:offset={selected_menu === 'on-this-page'}
+			>
+				<div class="view-one">
+					<DocsContents {contents} show_ts_toggle={false} />
+
+					<div class="ts-toggle">
+						<TSToggle />
+					</div>
+				</div>
+
+				<div class="view-two">
+					<DocsOnThisPage details={pageContents} on:select={() => (is_menu_open = false)} />
+				</div>
+			</div>
+		</section>
+	{/if}
 </nav>
 
 <div aria-hidden="true" class="overlay" />
@@ -194,11 +204,6 @@
 		width: calc(100% - 1.5px);
 	}
 
-	[class^='group-'] {
-		display: flex;
-		align-items: center;
-	}
-
 	.trigger-button {
 		font-size: var(--sk-text-xs);
 
@@ -220,8 +225,6 @@
 		width: calc(100% - 1px);
 		height: 70vh;
 
-		/* transform: translate3d(0, 120%, 0) scale3d(0.9, 0.9, 1); */
-
 		border-radius: 1rem 1rem 0 0;
 		box-shadow: 3px -1px 8.6px -9px rgba(0, 0, 0, 0.11), -3px -1px 20px 1px rgba(0, 0, 0, 0.22);
 
@@ -233,10 +236,26 @@
 	}
 
 	nav.dark .menu-container {
-		/* box-shadow: inset 0 0 0 0.9px hsla(0, 0%, 100%, 0.2), 0 0 0 1.4px hsla(0, 0%, 0%, 0.2); */
 		box-shadow: none;
 
 		border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
+	}
+
+	.viewport {
+		display: grid;
+		grid-template-columns: 50% 50%;
+		grid-auto-rows: 100%;
+
+		width: 200%;
+		height: 100%;
+	}
+
+	.viewport.motion {
+		transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+	}
+
+	.viewport.offset {
+		transform: translate(-50%, 0);
 	}
 
 	.ts-toggle {
