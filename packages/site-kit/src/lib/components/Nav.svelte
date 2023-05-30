@@ -4,7 +4,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 <script>
 	import { page } from '$app/stores';
-	import { nav_title } from '$lib/stores';
 	import Icon from './Icon.svelte';
 	import Separator from './Separator.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
@@ -65,9 +64,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<a href="/" title={home_title}>
 			<slot name="home" />
 
-			{#if $nav_title}
+			{#if $page.data.nav_title}
 				<div class="nav-title">
-					{$nav_title}
+					{$page.data.nav_title}
 				</div>
 			{/if}
 		</a>
