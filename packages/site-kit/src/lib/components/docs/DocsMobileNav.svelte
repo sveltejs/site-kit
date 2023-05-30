@@ -5,6 +5,7 @@
 	import DocsContents from './DocsContents.svelte';
 	import DocsOnThisPage from './DocsOnThisPage.svelte';
 	import TSToggle from './TSToggle.svelte';
+	import { browser } from '$app/environment';
 
 	/** @type {import('svelte').ComponentProps<DocsContents>['contents']} */
 	export let contents;
@@ -12,10 +13,21 @@
 	/** @type {import('svelte').ComponentProps<DocsOnThisPage>['details']} */
 	export let pageContents;
 
+	/** @type {HTMLElement} */
+	let menu_container;
+
 	let is_menu_open = false;
 
 	/** @type {'docs' | 'on-this-page' | null} */
 	let selected_menu = null;
+
+	$: {
+		selected_menu;
+
+		if (!browser) break $;
+
+		menu_container?.scrollTo({ top: 0 });
+	}
 
 	/**
 	 * @param {HTMLElement} _
@@ -86,8 +98,8 @@
 
 	<button
 		aria-expanded={selected_menu === 'docs'}
+		class="trigger-button"
 		on:click={() => toggle_menu('docs')}
-		class="trigger-button docs-menu"
 	>
 		Docs
 	</button>
@@ -96,14 +108,14 @@
 
 	<button
 		aria-expanded={selected_menu === 'on-this-page'}
-		class="trigger-button on-this-page"
+		class="trigger-button"
 		on:click={() => toggle_menu('on-this-page')}
 	>
 		On This Page
 	</button>
 
 	{#if is_menu_open}
-		<section in:slide_up out:fade_out class="menu-container">
+		<section class="menu-container" bind:this={menu_container} in:slide_up out:fade_out>
 			<div
 				class="viewport"
 				class:motion={!$reduced_motion}
@@ -233,6 +245,8 @@
 		overflow-y: auto;
 
 		transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+
+		overflow-x: hidden;
 	}
 
 	nav.dark .menu-container {
