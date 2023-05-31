@@ -4,9 +4,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 <script>
 	import { page } from '$app/stores';
-	import Icon from './Icon.svelte';
+	import Icon from '../components/Icon.svelte';
+	import ThemeToggle from '../components/ThemeToggle.svelte';
 	import Separator from './Separator.svelte';
-	import ThemeToggle from './ThemeToggle.svelte';
 
 	export let home_title = 'Homepage';
 
@@ -59,7 +59,28 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	/>
 {/if}
 
-<nav class:visible={visible || open} class:open bind:this={nav} aria-label="Primary">
+<!-- Visible only on mobile as static element. Scrolls with the content -->
+<header>
+	<div class="nav-spot home">
+		<a href="/" title={home_title}>
+			<slot name="home" />
+
+			{#if $page.data.nav_title}
+				<div class="nav-title">
+					{$page.data.nav_title}
+				</div>
+			{/if}
+		</a>
+	</div>
+</header>
+
+<nav
+	class="desktop"
+	class:visible={visible || open}
+	class:open
+	bind:this={nav}
+	aria-label="Primary"
+>
 	<div class="nav-spot home">
 		<a href="/" title={home_title}>
 			<slot name="home" />
@@ -98,6 +119,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	</div>
 </nav>
 
+<nav class="mobile" />
+
 <style>
 	.modal-background {
 		position: fixed;
@@ -111,7 +134,16 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		backdrop-filter: grayscale(0.5) blur(2px);
 	}
 
-	nav {
+	header {
+		position: relative;
+		z-index: 1;
+
+		width: 100vw;
+		height: var(--sk-nav-height);
+		margin-bottom: calc(-1 * var(--sk-nav-height));
+	}
+
+	nav.desktop {
 		--shadow-height: 0.5rem;
 		--shadow-gradient: linear-gradient(
 			to bottom,
@@ -131,7 +163,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		transition: transform 0.2s;
 	}
 
-	nav::after {
+	nav.desktop::after {
 		content: '';
 		position: absolute;
 		width: 100%;
@@ -142,7 +174,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	@media (max-width: 800px) {
-		nav:not(.visible):not(:focus-within) {
+		nav.desktop:not(.visible):not(:focus-within) {
 			transform: translate(
 				0,
 				calc(-100% - 5rem)
@@ -227,20 +259,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		margin-right: 0.5rem;
 	}
 
-	@media (max-width: 1100px) {
-		.home a {
-			display: initial;
-		}
-
-		.home a .nav-title {
-			margin: 0;
-			padding: 0;
-			border-left: transparent;
-			font-size: 0.6em;
-		}
-	}
-
 	@media (max-width: 799px) {
+		nav.desktop {
+			display: none;
+		}
+
 		.menu-section {
 			position: relative;
 			display: none;
@@ -318,7 +341,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: none;
 		}
 
-		nav {
+		nav.desktop {
 			display: grid;
 			grid-template-columns: 1fr auto 1fr;
 			/* align-items: center; */

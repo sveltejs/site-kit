@@ -52,10 +52,15 @@
 			"default": "./dist/components/index.js",
 			"svelte": "./dist/components/index.js"
 		},
-		"./components/docs": {
-			"types": "./dist/components/docs/index.d.ts",
-			"default": "./dist/components/docs/index.js",
-			"svelte": "./dist/components/docs/index.js"
+		"./docs": {
+			"types": "./dist/docs/index.d.ts",
+			"default": "./dist/docs/index.js",
+			"svelte": "./dist/docs/index.js"
+		},
+		"./nav": {
+			"types": "./dist/nav/index.d.ts",
+			"default": "./dist/nav/index.js",
+			"svelte": "./dist/nav/index.js"
 		},
 		"./icons/link.svg": "./dist/icons/link.svg",
 		"./icons/search.svg": "./dist/icons/search.svg",

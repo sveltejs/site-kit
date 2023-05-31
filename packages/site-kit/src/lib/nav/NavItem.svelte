@@ -1,12 +1,13 @@
 <!-- @component
 Simple item component for use within `Nav`
 -->
+
 <script>
 	/** @type {string | undefined} */
 	export let href = undefined;
 
-	/** @type {string | undefined} */
-	export let external = undefined;
+	/** @type {boolean} */
+	export let external = false;
 
 	/** @type {string | undefined} */
 	export let title = undefined;
@@ -15,23 +16,18 @@ Simple item component for use within `Nav`
 	export let selected = undefined;
 </script>
 
-{#if external}
-	<li>
-		<a href={external} {title} rel="external">
-			<span class="large"><slot /></span>
-			<!-- if no slot="small" given, fall back to using content from large -->
-			<span class="small"><slot name="small"><slot /></slot></span>
-		</a>
-	</li>
-{:else}
-	<li>
-		<a aria-current={selected} {href} {title}>
-			<span class="large"><slot /></span>
-			<!-- if no slot="small" given, fall back to using content from large -->
-			<span class="small"><slot name="small"><slot /></slot></span>
-		</a>
-	</li>
-{/if}
+<li>
+	<a
+		{href}
+		aria-current={!external ? selected : undefined}
+		{title}
+		rel={external ? 'external' : undefined}
+	>
+		<span class="large"><slot /></span>
+		<!-- if no slot="small" given, fall back to using content from large -->
+		<span class="small"><slot name="small"><slot /></slot></span>
+	</a>
+</li>
 
 <style>
 	a {
