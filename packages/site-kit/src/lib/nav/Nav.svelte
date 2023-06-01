@@ -3,12 +3,18 @@ Top navigation bar for the application. It provides a slot for the left side, th
 -->
 
 <script>
+	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
+	import { click_outside, focus_outside } from '$lib/actions';
+	import { mql, reduced_motion, theme } from '$lib/stores';
+	import { expoOut } from 'svelte/easing';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
 	import Separator from './Separator.svelte';
 
 	export let home_title = 'Homepage';
+
+	const is_mobile = mql('(max-width: 800px)');
 
 	let open = false;
 	let visible = true;
@@ -20,6 +26,43 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	page.subscribe(() => {
 		open = false;
 	});
+
+	/**
+	 * @param {HTMLElement} _
+	 * @returns {import('svelte/transition').TransitionConfig}
+	 */
+	const slide_up = (_) => {
+		return {
+			css: (t, u) =>
+				$reduced_motion
+					? `opacity: ${t}`
+					: `transform: translate3d(0, ${u * 120}%, 0) scale3d(${0.9 + 0.1 * t}, ${
+							0.9 + 0.1 * t
+					  }, 1)`,
+			easing: expoOut,
+			duration: 500
+		};
+	};
+
+	/**
+	 * @param {HTMLElement} node
+	 * @returns {import('svelte/transition').TransitionConfig}
+	 */
+	const fade_out = (node) => {
+		node.style.overflow = 'hidden';
+
+		return {
+			css: (t, u) =>
+				`opacity: ${t}; 
+				 ${
+						!$reduced_motion
+							? `transform: translate3d(0, 0, 0) scale3d(${1 - 0.1 * u}, ${1 - 0.1 * u}, 1})`
+							: ''
+					}`,
+			easing: expoOut,
+			duration: 500
+		};
+	};
 
 	// Prevents navbar to show/hide when clicking in docs sidebar
 	let hash_changed = false;
@@ -43,6 +86,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			open = false;
 		}
 	}
+
+	function close_nav() {
+		open = false;
+	}
 </script>
 
 <svelte:window
@@ -51,35 +98,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	on:focusin={handle_focus}
 />
 
-{#if open}
-	<div
-		class="modal-background hide-if-desktop"
-		on:click={() => (open = false)}
-		on:keydown={(e) => e.key === ' ' && (open = false)}
-	/>
-{/if}
-
-<!-- Visible only on mobile as static element. Scrolls with the content -->
-<header>
-	<div class="nav-spot home">
-		<a href="/" title={home_title}>
-			<slot name="home" />
-
-			{#if $page.data.nav_title}
-				<div class="nav-title">
-					{$page.data.nav_title}
-				</div>
-			{/if}
-		</a>
-	</div>
-</header>
-
 <nav
-	class="desktop"
+	bind:this={nav}
 	class:visible={visible || open}
 	class:open
-	bind:this={nav}
+	class:dark={$theme.current === 'dark'}
 	aria-label="Primary"
+	use:click_outside={close_nav}
+	use:focus_outside={close_nav}
 >
 	<div class="nav-spot home">
 		<a href="/" title={home_title}>
@@ -107,78 +133,70 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<slot name="nav-center" />
 	</ul>
 
-	<div class="external menu-section">
-		<ul>
-			<slot name="nav-right" />
-			<Separator />
-		</ul>
-		<div class="appearance">
-			<span class="caption">Theme</span>
-			<ThemeToggle />
+	{#if browser && (!$is_mobile || open)}
+		<div class="external menu-section" in:slide_up out:fade_out>
+			<ul>
+				<slot name="nav-right" />
+				<Separator />
+			</ul>
+			<div class="appearance">
+				<span class="caption">Theme</span>
+				<ThemeToggle />
+			</div>
 		</div>
-	</div>
+	{/if}
 </nav>
 
-<nav class="mobile" />
+<div class="overlay" />
 
 <style>
-	.modal-background {
+	.overlay {
 		position: fixed;
-		width: 100%;
-		height: 100%;
 		top: 0;
 		left: 0;
-		background: var(--sk-back-1);
-		opacity: 0.8;
-		z-index: 2;
-		backdrop-filter: grayscale(0.5) blur(2px);
+		z-index: 99;
+
+		opacity: 0;
+		pointer-events: none;
+
+		width: 100%;
+		height: 100%;
+
+		background: hsla(0, 0%, 0%, 0.5);
+		backdrop-filter: blur(5px);
+
+		transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 	}
 
-	header {
-		position: relative;
-		z-index: 1;
-
-		width: 100vw;
-		height: var(--sk-nav-height);
-		margin-bottom: calc(-1 * var(--sk-nav-height));
+	nav.open ~ .overlay {
+		opacity: 1;
+		pointer-events: auto;
 	}
 
-	nav.desktop {
-		--shadow-height: 0.5rem;
-		--shadow-gradient: linear-gradient(
-			to bottom,
-			rgba(0, 0, 0, 0.1) 0%,
-			rgba(0, 0, 0, 0.05) 30%,
-			transparent 100%
-		);
+	nav {
 		position: fixed;
 		top: 0;
+		z-index: 100;
+
 		width: 100vw;
 		height: var(--sk-nav-height);
 		margin: 0 auto;
+
 		background-color: var(--sk-back-2);
+
 		font-family: var(--sk-font);
-		z-index: 100;
+
 		user-select: none;
 		transition: transform 0.2s;
-	}
 
-	nav.desktop::after {
-		content: '';
-		position: absolute;
-		width: 100%;
-		height: var(--shadow-height);
-		left: 0;
-		bottom: calc(-1 * var(--shadow-height));
-		background: var(--shadow-gradient);
+		box-shadow: 0 -0.1px 6px 0.9px hsla(0, 0%, 0%, 0.1);
+
+		isolation: isolate;
 	}
 
 	@media (max-width: 800px) {
-		nav.desktop:not(.visible):not(:focus-within) {
-			transform: translate(
-				0,
-				calc(-100% - 5rem)
-			); /* TODO revert 5rem to 1rem after we remove the banner */
+		nav:not(.visible):not(:focus-within) {
+			transform: translate(0, calc(100%)); /* TODO revert 5rem to 1rem after we remove the banner */
 		}
 	}
 
@@ -196,6 +214,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	ul :global(a) {
 		color: var(--sk-text-2);
 		line-height: 1;
+	}
+
+	.nav-spot {
+		position: relative;
 	}
 
 	.home {
@@ -260,8 +282,32 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	@media (max-width: 799px) {
-		nav.desktop {
-			display: none;
+		.nav-spot,
+		nav > button {
+			z-index: 5;
+		}
+
+		nav {
+			top: unset;
+			bottom: 0;
+		}
+
+		nav::after {
+			content: '';
+
+			position: absolute;
+			left: 0;
+			bottom: 0;
+
+			width: 100%;
+			height: 100%;
+
+			border-radius: inherit;
+			box-shadow: inherit;
+
+			background-color: inherit;
+
+			z-index: 4;
 		}
 
 		.menu-section {
@@ -277,7 +323,28 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		.external {
-			padding: 1rem var(--sk-page-padding-side) 1rem;
+			display: block;
+
+			position: fixed;
+			left: 0px;
+			bottom: var(--sk-nav-height);
+			z-index: 1;
+
+			width: calc(100%);
+			max-height: 70vh;
+			padding: 1rem 1rem 1rem;
+
+			border-radius: 1rem 1rem 0 0;
+			/* box-shadow: 3px -1px 8.6px -9px rgba(0, 0, 0, 0.11), -3px -1px 20px 1px rgba(0, 0, 0, 0.22); */
+
+			background-color: var(--sk-back-2);
+
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		nav.dark .external {
+			border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
 		}
 
 		.external::before {
@@ -313,6 +380,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			padding: 0.8rem;
 		}
 
+		.external :global(li a[aria-current]) {
+			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
+		}
+
 		.external :global(li a:hover) {
 			border-radius: var(--sk-border-radius);
 
@@ -320,6 +391,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			text-decoration: none;
 
 			background-color: var(--sk-back-4);
+		}
+
+		.external :global(li a[aria-current]:hover) {
+			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
+			color: var(--sk-theme-1);
 		}
 
 		.appearance {
@@ -337,11 +413,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	@media (min-width: 800px) {
-		.modal-background {
+		.overlay {
 			display: none;
 		}
 
-		nav.desktop {
+		nav {
 			display: grid;
 			grid-template-columns: 1fr auto 1fr;
 			/* align-items: center; */

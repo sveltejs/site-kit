@@ -101,7 +101,7 @@
 		class="trigger-button"
 		on:click={() => toggle_menu('docs')}
 	>
-		Docs
+		Contents
 	</button>
 
 	<span />
@@ -144,7 +144,7 @@
 		position: fixed;
 		top: 0;
 		left: 0;
-		z-index: 101;
+		z-index: 98;
 
 		width: 100vw;
 		height: 100vh;
@@ -171,7 +171,7 @@
 		position: fixed;
 		bottom: 0;
 		left: 50%;
-		z-index: 102;
+		z-index: 99;
 
 		transform: translate(-50%, 1px);
 		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);

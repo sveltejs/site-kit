@@ -14,16 +14,30 @@ Simple item component for use within `Nav`
 
 	/** @type {any}*/
 	export let selected = undefined;
+
+	export let mobileOnly = false;
+
+	/** @type {(() => void) | undefined} */
+	export let action = undefined;
 </script>
 
-<li>
+<li data-primary={$$slots['primary-icon'] ? true : null} class:mobile-only={mobileOnly}>
 	<a
 		{href}
-		aria-current={!external ? selected : undefined}
 		{title}
-		rel={external ? 'external' : undefined}
+		aria-current={!external ? selected : null}
+		rel={external ? 'external' : null}
+		on:click={(e) => {
+			if (action) {
+				e.preventDefault();
+				action();
+			}
+		}}
 	>
+		<span class="primary-icon"><slot name="primary-icon" /></span>
+
 		<span class="large"><slot /></span>
+
 		<!-- if no slot="small" given, fall back to using content from large -->
 		<span class="small"><slot name="small"><slot /></slot></span>
 	</a>
@@ -51,6 +65,10 @@ Simple item component for use within `Nav`
 		display: none;
 	}
 
+	.mobile-only {
+		display: inline;
+	}
+
 	@media (min-width: 800px) {
 		.small {
 			display: none;
@@ -58,6 +76,10 @@ Simple item component for use within `Nav`
 
 		.large {
 			display: inline;
+		}
+
+		.mobile-only {
+			display: none;
 		}
 	}
 </style>

@@ -50,6 +50,12 @@ The main shell of the application. It provides a slot for the top navigation, th
 		overflow: hidden;
 	}
 
+	@media (max-width: 800px) {
+		main {
+			padding-top: 0;
+		}
+	}
+
 	:global(body) {
 		font-size: 1.6rem !important;
 	}
