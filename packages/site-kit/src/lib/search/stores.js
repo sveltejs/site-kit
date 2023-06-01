@@ -3,4 +3,4 @@ import { writable } from 'svelte/store';
 
 export const searching = writable(false);
 export const query = writable('');
-export const recent = persisted('recent_searches', []);
+export const recent = persisted('svelte:recent-searches', []);
