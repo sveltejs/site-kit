@@ -6,7 +6,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { click_outside, focus_outside } from '$lib/actions';
-	import { mql, reduced_motion, theme, should_nav_autohide, nav_overlay_open } from '$lib/stores';
+	import { mql, nav_overlay_open, reduced_motion, theme } from '$lib/stores';
 	import { expoOut } from 'svelte/easing';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -17,7 +17,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	const is_mobile = mql('(max-width: 800px)');
 
 	let open = false;
-	let visible = true;
+	let visible = $page.data.nav_initially_visible ?? true;
 
 	/** @type {HTMLElement} */
 	let nav;
