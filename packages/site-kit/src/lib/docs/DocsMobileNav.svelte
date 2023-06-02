@@ -1,6 +1,6 @@
 <script>
 	import { click_outside, focus_outside } from '$lib/actions';
-	import { reduced_motion, theme } from '$lib/stores';
+	import { nav_overlay_open, reduced_motion, should_nav_autohide, theme } from '$lib/stores';
 	import { expoOut } from 'svelte/easing';
 	import DocsContents from './DocsContents.svelte';
 	import DocsOnThisPage from './DocsOnThisPage.svelte';
@@ -17,6 +17,9 @@
 	let menu_container;
 
 	let is_menu_open = false;
+
+	$: $should_nav_autohide = !is_menu_open;
+	$: $nav_overlay_open = is_menu_open;
 
 	/** @type {'docs' | 'on-this-page' | null} */
 	let selected_menu = null;
@@ -137,43 +140,15 @@
 	{/if}
 </nav>
 
-<div aria-hidden="true" class="overlay" />
-
 <style>
-	.overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 98;
-
-		width: 100vw;
-		height: 100vh;
-
-		backdrop-filter: blur(5px);
-
-		opacity: 0;
-		pointer-events: none;
-
-		transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-
-		background: hsla(0, 0%, 0%, 0.5);
-	}
-
-	nav.menu-open + .overlay {
-		opacity: 1;
-		pointer-events: all;
-	}
-
 	nav {
+		position: relative;
+		z-index: 6;
+		bottom: 48px;
+
 		display: grid;
 		grid-template-columns: auto 1fr auto;
 
-		position: fixed;
-		bottom: 0;
-		left: 50%;
-		z-index: 99;
-
-		transform: translate(-50%, 1px);
 		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		transition-property: box-shadow, border-radius;
 
@@ -232,7 +207,8 @@
 
 		position: fixed;
 		left: 0.5px;
-		bottom: 48px;
+		bottom: var(--sk-nav-height);
+		z-index: -1;
 
 		width: calc(100% - 1px);
 		height: 70vh;
@@ -243,9 +219,6 @@
 		background-color: var(--sk-back-3);
 
 		overflow-y: auto;
-
-		transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-
 		overflow-x: hidden;
 	}
 

@@ -6,7 +6,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { click_outside, focus_outside } from '$lib/actions';
-	import { mql, reduced_motion, theme } from '$lib/stores';
+	import { mql, reduced_motion, theme, should_nav_autohide, nav_overlay_open } from '$lib/stores';
 	import { expoOut } from 'svelte/easing';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -107,6 +107,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	use:click_outside={close_nav}
 	use:focus_outside={close_nav}
 >
+	{#if $page.data.secondary_nav}
+		<svelte:component
+			this={$page.data.secondary_nav.component}
+			{...$page.data.secondary_nav.props}
+		/>
+	{/if}
+
 	<div class="nav-spot home">
 		<a href="/" title={home_title}>
 			<slot name="home" />
@@ -147,7 +154,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	{/if}
 </nav>
 
-<div class="overlay" />
+<div class="overlay" class:visible={$nav_overlay_open || open} />
 
 <style>
 	.overlay {
@@ -168,7 +175,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 	}
 
-	nav.open ~ .overlay {
+	.overlay.visible {
 		opacity: 1;
 		pointer-events: auto;
 	}
@@ -195,8 +202,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	@media (max-width: 800px) {
-		nav:not(.visible):not(:focus-within) {
-			transform: translate(0, calc(100%)); /* TODO revert 5rem to 1rem after we remove the banner */
+		nav:not(.visible) {
+			transform: translate(
+				0,
+				calc(var(--sk-nav-height) + 2px)
+			); /* TODO revert 5rem to 1rem after we remove the banner */
 		}
 	}
 
@@ -262,7 +272,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	button {
 		position: absolute;
-		top: calc(var(--sk-nav-height) / 2 - 1rem);
+		bottom: calc(var(--sk-nav-height) / 2 - 1rem);
 		right: var(--sk-page-padding-side);
 		line-height: 1;
 	}
@@ -284,7 +294,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	@media (max-width: 799px) {
 		.nav-spot,
 		nav > button {
-			z-index: 5;
+			z-index: 7;
 		}
 
 		nav {
@@ -307,7 +317,18 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 			background-color: inherit;
 
-			z-index: 4;
+			z-index: 6;
+		}
+
+		.home {
+			position: absolute;
+			bottom: 0;
+
+			display: flex;
+			align-items: center;
+
+			height: var(--sk-nav-height);
+			padding-left: calc(var(--sk-page-padding-side) + 4rem);
 		}
 
 		.menu-section {
