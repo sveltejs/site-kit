@@ -6,7 +6,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 	import { onMount } from 'svelte';
 	import Icon from '../components/Icon.svelte';
 	import { afterNavigate } from '$app/navigation';
-	import { searching, query, recent } from './stores.js';
+	import { searching, search_query, search_recent } from '$lib/stores/search.js';
 	import { focusable_children, trap } from '../actions/focus.js';
 	import SearchResults from './SearchResults.svelte';
 	import SearchWorker from './search-worker.js?worker';
@@ -76,7 +76,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 
 	/** @param {string} href */
 	function navigate(href) {
-		$recent = [href, ...$recent.filter((x) => x !== href)];
+		$search_recent = [href, ...$search_recent.filter((x) => x !== href)];
 		close();
 	}
 
@@ -84,11 +84,11 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		const id = uid++;
 		pending.add(id);
 
-		worker.postMessage({ type: 'query', id, payload: $query });
+		worker.postMessage({ type: 'query', id, payload: $search_query });
 	}
 
 	$: if (ready) {
-		worker.postMessage({ type: 'recents', payload: $recent });
+		worker.postMessage({ type: 'recents', payload: $search_recent });
 	}
 
 	$: if ($searching) {
@@ -101,7 +101,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 	on:keydown={(e) => {
 		if (e.key === 'k' && (navigator.platform === 'MacIntel' ? e.metaKey : e.ctrlKey)) {
 			e.preventDefault();
-			$query = '';
+			$search_query = '';
 
 			if ($searching) {
 				close();
@@ -151,9 +151,9 @@ It appears when the user clicks on the `Search` component or presses the corresp
 					}
 				}}
 				on:input={(e) => {
-					$query = e.currentTarget.value;
+					$search_query = e.currentTarget.value;
 				}}
-				value={$query}
+				value={$search_query}
 				placeholder="Search"
 				aria-describedby="search-description"
 				aria-label="Search"
@@ -195,7 +195,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 										<button
 											aria-label="Delete"
 											on:click={(e) => {
-												$recent = $recent.filter((href) => href !== search.href);
+												$search_recent = $search_recent.filter((href) => href !== search.href);
 												e.stopPropagation();
 												e.preventDefault();
 											}}

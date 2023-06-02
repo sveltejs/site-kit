@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import TSToggle from './TSToggle.svelte';
 
-	/** @type {import('../types').DocsList} */
+	/** @type {import('./types').DocsList} */
 	export let contents = [];
 
 	export let show_ts_toggle = true;
@@ -129,6 +129,12 @@
 			text-decoration: none;
 
 			background-color: var(--sk-back-4);
+		}
+
+		.active {
+			background-color: hsla(var(--sk-theme-1-hsl), 0.1);
+			color: var(--sk-theme-1);
+			font-weight: 400;
 		}
 	}
 

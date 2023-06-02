@@ -6,7 +6,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import { click_outside, focus_outside } from '$lib/actions';
-	import { mql, nav_overlay_open, reduced_motion, theme } from '$lib/stores';
+	import { mql, nav_overlay_open, reduced_motion, theme, searching } from '$lib/stores';
 	import { expoOut } from 'svelte/easing';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -103,6 +103,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	class:visible={visible || open}
 	class:open
 	class:dark={$theme.current === 'dark'}
+	style:--secondary-nav-height={$page.data.secondary_nav.height}
 	aria-label="Primary"
 	use:click_outside={close_nav}
 	use:focus_outside={close_nav}
@@ -126,15 +127,21 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		</a>
 	</div>
 
-	<button
-		aria-label="Toggle menu"
-		aria-expanded={open}
-		class="menu-toggle"
-		class:open
-		on:click={() => (open = !open)}
-	>
-		<Icon name={open ? 'close' : 'menu'} size="1em" />
-	</button>
+	<div class="buttons">
+		<button aria-label="Search" aria-expanded={$searching} on:click={() => ($searching = true)}>
+			<Icon name="search" size="1em" />
+		</button>
+
+		<button
+			aria-label="Toggle menu"
+			aria-expanded={open}
+			class="menu-toggle"
+			class:open
+			on:click={() => (open = !open)}
+		>
+			<Icon name={open ? 'close' : 'menu'} size="1em" />
+		</button>
+	</div>
 
 	<ul class="menu-section">
 		<slot name="nav-center" />
@@ -270,10 +277,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		border-left: solid 1px var(--sk-text-4);
 	}
 
-	button {
+	.buttons {
 		position: absolute;
 		bottom: calc(var(--sk-nav-height) / 2 - 1rem);
 		right: var(--sk-page-padding-side);
+
+		display: flex;
+		gap: 1.5rem;
+
 		line-height: 1;
 	}
 
@@ -293,7 +304,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	@media (max-width: 799px) {
 		.nav-spot,
-		nav > button {
+		nav > .buttons {
 			z-index: 7;
 		}
 
@@ -348,7 +359,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 			position: fixed;
 			left: 0px;
-			bottom: var(--sk-nav-height);
+			bottom: calc(var(--sk-nav-height) + var(--secondary-nav-height, 0));
 			z-index: 1;
 
 			width: calc(100%);
@@ -468,7 +479,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			justify-content: end;
 		}
 
-		button {
+		.buttons {
 			display: none;
 		}
 	}

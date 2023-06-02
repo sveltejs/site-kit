@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import { afterUpdate, createEventDispatcher, onMount } from 'svelte';
 
-	/** @type {import('../types').Page} */
+	/** @type {import('./types').Page} */
 	export let details;
 
 	const dispatch = createEventDispatcher();
@@ -180,11 +180,11 @@
 	@media screen and (max-width: 832px) {
 		.on-this-page {
 			position: relative;
-			top: 3.2rem;
+			top: 1.4rem;
 		}
 
 		h2 {
-			padding-left: 3.2rem;
+			display: none;
 		}
 
 		a {

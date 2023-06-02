@@ -2,7 +2,15 @@
 Simple separator component for use within `Nav`
 -->
 
-<li aria-hidden="true"><span class="separator" /></li>
+<script>
+	export let linear = false;
+</script>
+
+{#if linear}
+	<span class="separator" />
+{:else}
+	<li aria-hidden="true"><span class="separator" /></li>
+{/if}
 
 <style>
 	.separator {

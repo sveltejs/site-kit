@@ -1,11 +1,13 @@
 <script>
+	import { browser } from '$app/environment';
 	import { click_outside, focus_outside } from '$lib/actions';
+	import Icon from '$lib/components/Icon.svelte';
+	import { Separator } from '$lib/nav';
 	import { nav_overlay_open, reduced_motion, should_nav_autohide, theme } from '$lib/stores';
 	import { expoOut } from 'svelte/easing';
 	import DocsContents from './DocsContents.svelte';
 	import DocsOnThisPage from './DocsOnThisPage.svelte';
 	import TSToggle from './TSToggle.svelte';
-	import { browser } from '$app/environment';
 
 	/** @type {import('svelte').ComponentProps<DocsContents>['contents']} */
 	export let contents;
@@ -104,37 +106,27 @@
 		class="trigger-button"
 		on:click={() => toggle_menu('docs')}
 	>
-		Contents
+		<Icon name="menu" size="0.5em" /> &nbsp; Contents
 	</button>
 
 	<span />
 
-	<button
-		aria-expanded={selected_menu === 'on-this-page'}
-		class="trigger-button"
-		on:click={() => toggle_menu('on-this-page')}
-	>
-		On This Page
-	</button>
-
 	{#if is_menu_open}
 		<section class="menu-container" bind:this={menu_container} in:slide_up out:fade_out>
-			<div
-				class="viewport"
-				class:motion={!$reduced_motion}
-				class:offset={selected_menu === 'on-this-page'}
-			>
-				<div class="view-one">
-					<DocsContents {contents} show_ts_toggle={false} />
+			<h3>ON THIS PAGE</h3>
+			<br />
+			<DocsOnThisPage details={pageContents} on:select={() => (is_menu_open = false)} />
 
-					<div class="ts-toggle">
-						<TSToggle />
-					</div>
-				</div>
+			<Separator linear />
 
-				<div class="view-two">
-					<DocsOnThisPage details={pageContents} on:select={() => (is_menu_open = false)} />
-				</div>
+			<h3>CONTENTS</h3>
+			<br />
+			<DocsContents {contents} show_ts_toggle={false} />
+
+			<br /><br /><br />
+
+			<div class="ts-toggle">
+				<TSToggle />
 			</div>
 		</section>
 	{/if}
@@ -206,12 +198,12 @@
 		display: block;
 
 		position: fixed;
-		left: 0.5px;
+		left: 0;
 		bottom: var(--sk-nav-height);
 		z-index: -1;
 
-		width: calc(100% - 1px);
-		height: 70vh;
+		width: calc(100%);
+		height: 80vh;
 
 		border-radius: 1rem 1rem 0 0;
 		box-shadow: 3px -1px 8.6px -9px rgba(0, 0, 0, 0.11), -3px -1px 20px 1px rgba(0, 0, 0, 0.22);
@@ -228,27 +220,53 @@
 		border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
 	}
 
-	.viewport {
-		display: grid;
-		grid-template-columns: 50% 50%;
-		grid-auto-rows: 100%;
+	h3 {
+		display: block;
 
-		width: 200%;
-		height: 100%;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+
+		text-transform: uppercase;
+		font-size: 1.4rem !important;
+		font-weight: 400;
+		margin: 0 0 -3rem 0 !important;
+		padding: 2rem 0 2rem 0.6rem;
+		color: var(--sk-text-3);
+
+		background-color: var(--sk-back-3);
+
+		padding-left: 3.2rem;
+
+		font-size: 1.1em !important;
+		font-weight: 600;
 	}
 
-	.viewport.motion {
-		transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-	}
+	h3::before {
+		content: '';
 
-	.viewport.offset {
-		transform: translate(-50%, 0);
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+
+		transform: translateY(200%);
+
+		width: 100%;
+		height: 50%;
+
+		background: linear-gradient(
+			to bottom,
+			hsla(var(--sk-back-3-hsl), 1) 0%,
+			hsla(var(--sk-back-3-hsl), 0.3) 50%,
+			hsl(var(--sk-back-3-hsl), 0) 100%
+		);
 	}
 
 	.ts-toggle {
 		position: sticky;
 		left: 0.75px;
-		bottom: 0;
+		bottom: 48px;
 		z-index: 2;
 
 		width: calc(100% - 2px);

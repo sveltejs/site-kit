@@ -3,7 +3,7 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 -->
 <script>
 	import { BROWSER } from 'esm-env';
-	import { query, searching } from './stores.js';
+	import { search_query, searching } from '../stores/search.js';
 
 	export let q = '';
 </script>
@@ -13,7 +13,7 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 		value={q}
 		on:input={(e) => {
 			$searching = true;
-			$query = e.currentTarget.value;
+			$search_query = e.currentTarget.value;
 			e.currentTarget.value = '';
 		}}
 		on:mousedown|preventDefault={() => ($searching = true)}
