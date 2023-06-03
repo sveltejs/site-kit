@@ -245,7 +245,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		position: absolute;
 		bottom: 0;
-		right: 0;
+		right: 1rem;
 
 		height: 100%;
 	}
