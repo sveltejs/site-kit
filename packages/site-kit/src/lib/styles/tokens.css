@@ -73,7 +73,7 @@ body {
 
 		--sk-text-warning-hsl: 32, 67%, 56%;
 
-		--sk-code-ts-bg: var(--sk-back-2);
+		--sk-code-ts-bg: hsl(var(--sk-back-2-hsl));
 		--sk-code-bg: var(--sk-back-3);
 		--sk-code-base: hsl(45, 7%, 75%);
 		--sk-code-comment: hsl(0, 0%, 55%);
@@ -223,7 +223,7 @@ body {
 
 		--sk-text-warning-hsl: 32, 67%, 56%;
 
-		--sk-code-ts-bg: var(--sk-back-2);
+		--sk-code-ts-bg: hsl(var(--sk-back-2));
 		--sk-code-bg: var(--sk-back-3);
 		--sk-code-base: hsl(45, 7%, 75%);
 		--sk-code-comment: hsl(0, 0%, 55%);

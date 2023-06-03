@@ -4,6 +4,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 <script>
 	import { page } from '$app/stores';
+	import { Search } from '$lib/search';
 	import { theme } from '$lib/stores';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -60,26 +61,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	class:dark={$theme.current === 'dark'}
 	aria-label="Primary"
 >
-	{#if $page.data.mobile_nav_start}
-		{@const { icon, component, props } = $page.data.mobile_nav_start}
-
-		<Menu --background="var(--sk-back-3)" let:open let:toggle>
-			<button
-				aria-label="Toggle contents"
-				aria-expanded={open}
-				class="menu-toggle start"
-				class:open
-				on:click={toggle}
-			>
-				<Icon name={icon} size="1em" />
-			</button>
-
-			<div slot="component" let:toggle>
-				<svelte:component this={component} {...props} on:select={toggle} />
-			</div>
-		</Menu>
-	{/if}
-
 	<a href="/" title={home_title} class="nav-spot home">
 		<span class="home-large">
 			<slot name="home-large" />
@@ -96,28 +77,52 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		{/if}
 	</a>
 
-	<Menu --padding="1rem" let:toggle let:open>
-		<button
-			aria-label="Toggle menu"
-			aria-expanded={open}
-			class="menu-toggle"
-			class:open
-			on:click={toggle}
-		>
-			<Icon name={open ? 'close' : 'menu'} size="1em" />
-		</button>
+	<div class="buttons">
+		{#if $page.data.mobile_nav_start}
+			{@const { icon, component, props } = $page.data.mobile_nav_start}
 
-		<div class="mobile-main-menu" slot="component">
-			<ul>
-				<slot name="nav-right" />
-				<Separator />
-			</ul>
-			<div class="appearance">
-				<span class="caption">Theme</span>
-				<ThemeToggle />
+			<Menu --background="var(--sk-back-3)" let:open let:toggle>
+				<button
+					aria-label="Toggle contents"
+					aria-expanded={open}
+					class="menu-toggle start"
+					class:open
+					on:click={toggle}
+				>
+					<Icon name={icon} size="1em" />
+				</button>
+
+				<div slot="component" let:toggle>
+					<svelte:component this={component} {...props} on:select={toggle} />
+				</div>
+			</Menu>
+		{/if}
+
+		<Menu --padding="1rem" let:toggle let:open>
+			<button
+				aria-label="Toggle menu"
+				aria-expanded={open}
+				class="menu-toggle"
+				class:open
+				on:click={toggle}
+			>
+				<Icon name={open ? 'close' : 'menu'} size="1em" />
+			</button>
+
+			<div class="mobile-main-menu" slot="component">
+				<ul>
+					<slot name="nav-right" />
+					<Separator />
+					<div style="height: 1rem" />
+					<Search />
+				</ul>
+				<div class="appearance">
+					<span class="caption">Theme</span>
+					<ThemeToggle />
+				</div>
 			</div>
-		</div>
-	</Menu>
+		</Menu>
+	</div>
 
 	<ul class="menu-section">
 		<slot name="nav-center" />
@@ -233,35 +238,29 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		border-left: solid 1px var(--sk-text-4);
 	}
 
-	button {
+	.buttons {
+		display: flex;
+		gap: 0.5rem;
+
 		position: absolute;
 		bottom: 0;
 		right: 0;
 
+		height: 100%;
+	}
+
+	button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 
 		height: 100%;
-		width: calc(var(--sk-nav-height) * 1.5);
+		width: var(--sk-nav-height);
 
 		display: flex;
 		gap: 1.5rem;
 
 		line-height: 1;
-	}
-
-	button :global(svg) {
-		transform: translateX(50%);
-	}
-
-	button.start {
-		right: unset;
-		left: 0;
-	}
-
-	button.start :global(svg) {
-		transform: translateX(-50%);
 	}
 
 	button.open {
@@ -284,7 +283,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	@media (max-width: 799px) {
 		.nav-spot,
-		nav button {
+		nav .buttons :global(button) {
+			position: relative;
 			z-index: 7;
 		}
 
@@ -313,10 +313,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		.home {
 			position: absolute;
-			left: 50%;
+			left: 0rem;
 			bottom: 0;
-
-			transform: translateX(-50%);
 
 			display: flex;
 			align-items: center;
@@ -381,12 +379,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		.appearance {
+			position: relative;
+			left: -1.25rem;
+			bottom: -1rem;
+
 			justify-content: space-between;
 			align-items: center;
-			margin: 10px 0 0;
-			padding: 1rem 1.25rem;
-			background: var(--sk-back-3);
-			border-radius: 3.5rem;
+			padding: 1.5rem 1.25rem;
+
+			width: calc(100% + 1.25rem);
 		}
 
 		.appearance .caption {
@@ -397,7 +398,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	@media (min-width: 800px) {
 		nav {
 			display: grid;
-			grid-template-columns: 0 1fr 0 auto 1fr;
+			grid-template-columns: 1fr auto 1fr;
 		}
 
 		ul,
@@ -423,7 +424,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			justify-content: end;
 		}
 
-		button {
+		.buttons {
 			display: none;
 		}
 	}
