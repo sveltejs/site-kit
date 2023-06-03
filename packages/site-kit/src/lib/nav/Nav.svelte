@@ -3,13 +3,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 -->
 
 <script>
-	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
-	import { click_outside, focus_outside } from '$lib/actions';
-	import { mql, nav_overlay_open, reduced_motion, theme, searching } from '$lib/stores';
-	import { expoOut } from 'svelte/easing';
+	import { mql, theme } from '$lib/stores';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
+	import Menu from './Menu.svelte';
 	import Separator from './Separator.svelte';
 
 	export let home_title = 'Homepage';
@@ -26,43 +24,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	page.subscribe(() => {
 		open = false;
 	});
-
-	/**
-	 * @param {HTMLElement} _
-	 * @returns {import('svelte/transition').TransitionConfig}
-	 */
-	const slide_up = (_) => {
-		return {
-			css: (t, u) =>
-				$reduced_motion
-					? `opacity: ${t}`
-					: `transform: translate3d(0, ${u * 120}%, 0) scale3d(${0.9 + 0.1 * t}, ${
-							0.9 + 0.1 * t
-					  }, 1)`,
-			easing: expoOut,
-			duration: 500
-		};
-	};
-
-	/**
-	 * @param {HTMLElement} node
-	 * @returns {import('svelte/transition').TransitionConfig}
-	 */
-	const fade_out = (node) => {
-		node.style.overflow = 'hidden';
-
-		return {
-			css: (t, u) =>
-				`opacity: ${t}; 
-				 ${
-						!$reduced_motion
-							? `transform: translate3d(0, 0, 0) scale3d(${1 - 0.1 * u}, ${1 - 0.1 * u}, 1})`
-							: ''
-					}`,
-			easing: expoOut,
-			duration: 500
-		};
-	};
 
 	// Prevents navbar to show/hide when clicking in docs sidebar
 	let hash_changed = false;
@@ -86,10 +47,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			open = false;
 		}
 	}
-
-	function close_nav() {
-		open = false;
-	}
 </script>
 
 <svelte:window
@@ -103,21 +60,37 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	class:visible={visible || open}
 	class:open
 	class:dark={$theme.current === 'dark'}
-	style:--secondary-nav-height={$page.data.secondary_nav.height}
 	aria-label="Primary"
-	use:click_outside={close_nav}
-	use:focus_outside={close_nav}
 >
-	{#if $page.data.secondary_nav}
-		<svelte:component
-			this={$page.data.secondary_nav.component}
-			{...$page.data.secondary_nav.props}
-		/>
+	{#if $page.data.mobile_nav_start}
+		{@const { icon, component, props } = $page.data.mobile_nav_start}
+
+		<Menu --background="var(--sk-back-3)" let:open let:toggle>
+			<button
+				aria-label="Toggle contents"
+				aria-expanded={open}
+				class="menu-toggle start"
+				class:open
+				on:click={toggle}
+			>
+				<Icon name={icon} size="1em" />
+			</button>
+
+			<div slot="component" let:toggle>
+				<svelte:component this={component} {...props} on:select={toggle} />
+			</div>
+		</Menu>
 	{/if}
 
 	<div class="nav-spot home">
 		<a href="/" title={home_title}>
-			<slot name="home" />
+			<span class="home-large">
+				<slot name="home-large" />
+			</span>
+
+			<span class="home-small">
+				<slot name="home-small" />
+			</span>
 
 			{#if $page.data.nav_title}
 				<div class="nav-title">
@@ -127,28 +100,18 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		</a>
 	</div>
 
-	<div class="buttons">
-		<button aria-label="Search" aria-expanded={$searching} on:click={() => ($searching = true)}>
-			<Icon name="search" size="1em" />
-		</button>
-
+	<Menu --padding="1rem" let:toggle let:open>
 		<button
 			aria-label="Toggle menu"
 			aria-expanded={open}
 			class="menu-toggle"
 			class:open
-			on:click={() => (open = !open)}
+			on:click={toggle}
 		>
 			<Icon name={open ? 'close' : 'menu'} size="1em" />
 		</button>
-	</div>
 
-	<ul class="menu-section">
-		<slot name="nav-center" />
-	</ul>
-
-	{#if browser && (!$is_mobile || open)}
-		<div class="external menu-section" in:slide_up out:fade_out>
+		<div class="mobile-main-menu" slot="component">
 			<ul>
 				<slot name="nav-right" />
 				<Separator />
@@ -158,35 +121,25 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				<ThemeToggle />
 			</div>
 		</div>
-	{/if}
+	</Menu>
+
+	<ul class="menu-section">
+		<slot name="nav-center" />
+	</ul>
+
+	<div class="external menu-section">
+		<ul>
+			<slot name="nav-right" />
+			<Separator />
+		</ul>
+		<div class="appearance">
+			<span class="caption">Theme</span>
+			<ThemeToggle />
+		</div>
+	</div>
 </nav>
 
-<div class="overlay" class:visible={$nav_overlay_open || open} />
-
 <style>
-	.overlay {
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: 99;
-
-		opacity: 0;
-		pointer-events: none;
-
-		width: 100%;
-		height: 100%;
-
-		background: hsla(0, 0%, 0%, 0.5);
-		backdrop-filter: blur(5px);
-
-		transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-	}
-
-	.overlay.visible {
-		opacity: 1;
-		pointer-events: auto;
-	}
-
 	nav {
 		position: fixed;
 		top: 0;
@@ -258,6 +211,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		color: var(--sk-text-4);
 	}
 
+	.home .home-small {
+		display: none;
+	}
+
+	.home .home-large {
+		display: block;
+	}
+
 	.home :global(strong) {
 		color: var(--sk-text-1);
 		font-weight: inherit;
@@ -277,7 +238,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		border-left: solid 1px var(--sk-text-4);
 	}
 
-	.buttons {
+	button {
 		position: absolute;
 		bottom: calc(var(--sk-nav-height) / 2 - 1rem);
 		right: var(--sk-page-padding-side);
@@ -286,6 +247,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		gap: 1.5rem;
 
 		line-height: 1;
+	}
+
+	button.start {
+		right: unset;
+		left: var(--sk-page-padding-side);
 	}
 
 	.appearance {
@@ -304,7 +270,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	@media (max-width: 799px) {
 		.nav-spot,
-		nav > .buttons {
+		nav button {
 			z-index: 7;
 		}
 
@@ -333,13 +299,28 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		.home {
 			position: absolute;
+			left: 50%;
 			bottom: 0;
+
+			transform: translateX(-50%);
 
 			display: flex;
 			align-items: center;
 
 			height: var(--sk-nav-height);
 			padding-left: calc(var(--sk-page-padding-side) + 4rem);
+		}
+
+		.home .home-small {
+			display: block;
+		}
+
+		.home .home-large {
+			display: none;
+		}
+
+		.home .nav-title {
+			display: none;
 		}
 
 		.menu-section {
@@ -354,56 +335,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: block;
 		}
 
-		.external {
-			display: block;
-
-			position: fixed;
-			left: 0px;
-			bottom: calc(var(--sk-nav-height) + var(--secondary-nav-height, 0));
-			z-index: 1;
-
-			width: calc(100%);
-			max-height: 70vh;
-			padding: 1rem 1rem 1rem;
-
-			border-radius: 1rem 1rem 0 0;
-			/* box-shadow: 3px -1px 8.6px -9px rgba(0, 0, 0, 0.11), -3px -1px 20px 1px rgba(0, 0, 0, 0.22); */
-
-			background-color: var(--sk-back-2);
-
-			overflow-y: auto;
-			overflow-x: hidden;
-		}
-
-		nav.dark .external {
-			border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
-		}
-
-		.external::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: var(--sk-page-padding-side);
-			width: calc(100% - 2 * var(--sk-page-padding-side));
-			height: 1px;
-			background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
-		}
-
-		.external::after {
-			content: '';
-			position: absolute;
-			width: 100%;
-			height: var(--shadow-height);
-			left: 0;
-			bottom: calc(-1 * var(--shadow-height));
-			background: var(--shadow-gradient);
-		}
-
-		.external :global(li) {
+		.mobile-main-menu :global(li) {
 			padding: 0.3rem 0;
 		}
 
-		.external :global(li a) {
+		.mobile-main-menu :global(li a) {
 			display: block;
 
 			border-radius: var(--sk-border-radius);
@@ -412,11 +348,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			padding: 0.8rem;
 		}
 
-		.external :global(li a[aria-current]) {
+		.mobile-main-menu :global(li a[aria-current]) {
 			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
 		}
 
-		.external :global(li a:hover) {
+		.mobile-main-menu :global(li a:hover) {
 			border-radius: var(--sk-border-radius);
 
 			color: initial;
@@ -425,7 +361,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			background-color: var(--sk-back-4);
 		}
 
-		.external :global(li a[aria-current]:hover) {
+		.mobile-main-menu :global(li a[aria-current]:hover) {
 			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
 			color: var(--sk-theme-1);
 		}
@@ -445,15 +381,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	@media (min-width: 800px) {
-		.overlay {
-			display: none;
-		}
-
 		nav {
 			display: grid;
-			grid-template-columns: 1fr auto 1fr;
-			/* align-items: center; */
-			/* justify-content: space-between; */
+			grid-template-columns: 0 1fr 0 auto 1fr;
 		}
 
 		ul,
@@ -479,7 +409,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			justify-content: end;
 		}
 
-		.buttons {
+		button {
 			display: none;
 		}
 	}

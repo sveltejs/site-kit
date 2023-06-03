@@ -5,7 +5,8 @@
 
 */
 
-:root {
+:root,
+body {
 	--sk-back-h: 206;
 	--sk-selection-color: hsla(204, 100%, 63%, 0.3);
 	--sk-focus-outline: 0 0 0 2px hsla(var(--sk-theme-1-hsl), 0.6);
@@ -14,6 +15,9 @@
 	--sk-theme-1: hsl(var(--sk-theme-1-hsl));
 	--sk-theme-2: hsl(var(--sk-theme-2-hsl));
 	--sk-theme-3: hsl(var(--sk-theme-3-hsl));
+
+	--sk-back-3: hsla(var(--sk-back-3-hsl), 1);
+	--sk-back-2: hsla(var(--sk-back-2-hsl), 1);
 
 	--sk-text-warning: hsl(var(--sk-text-warning-hsl));
 
@@ -44,9 +48,9 @@
 		color-scheme: dark;
 
 		--sk-back-3-hsl: 0, 0%, 14%;
+		--sk-back-2-hsl: 0, 0%, 18%;
+
 		--sk-back-1: hsl(0, 0%, 10%);
-		--sk-back-2: hsl(0, 0%, 18%);
-		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(0, 0%, 22%);
 		--sk-back-5: hsl(0, 0%, 40%);
 		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
@@ -87,9 +91,9 @@
 		color-scheme: light;
 
 		--sk-back-3-hsl: 206, 64%, 98%;
+		--sk-back-2-hsl: 0, 0%, 100%;
+
 		--sk-back-1: hsl(0, 0%, 100%);
-		--sk-back-2: hsl(0, 0%, 100%); /* same as sk-back-1 in light mode, different in dark mode */
-		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(206, 44%, 93%);
 		--sk-back-5: hsl(206, 20%, 80%);
 		--sk-theme-1-hsl: 15, 100%, 50%;
@@ -149,9 +153,9 @@
 		color-scheme: light;
 
 		--sk-back-3-hsl: 206, 64%, 98%;
+		--sk-back-2-hsl: 0, 0%, 100%;
+
 		--sk-back-1: hsl(0, 0%, 100%);
-		--sk-back-2: hsl(0, 0%, 100%); /* same as sk-back-1 in light mode, different in dark mode */
-		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(206, 44%, 93%);
 		--sk-back-5: hsl(206, 20%, 80%);
 		--sk-theme-1-hsl: 15, 100%, 50%;
@@ -194,9 +198,9 @@
 		color-scheme: dark;
 
 		--sk-back-3-hsl: 0, 0%, 14%;
+		--sk-back-2-hsl: 0, 0%, 18%;
+
 		--sk-back-1: hsl(0, 0%, 10%);
-		--sk-back-2: hsl(0, 0%, 18%);
-		--sk-back-3: hsl(var(--sk-back-3-hsl));
 		--sk-back-4: hsl(0, 0%, 22%);
 		--sk-back-5: hsl(0, 0%, 40%);
 		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
