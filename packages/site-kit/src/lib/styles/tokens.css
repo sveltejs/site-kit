@@ -5,21 +5,9 @@
 
 */
 
-:root,
-body {
+:root {
 	--sk-back-h: 206;
 	--sk-selection-color: hsla(204, 100%, 63%, 0.3);
-	--sk-focus-outline: 0 0 0 2px hsla(var(--sk-theme-1-hsl), 0.6);
-
-	/* Base colors */
-	--sk-theme-1: hsl(var(--sk-theme-1-hsl));
-	--sk-theme-2: hsl(var(--sk-theme-2-hsl));
-	--sk-theme-3: hsl(var(--sk-theme-3-hsl));
-
-	--sk-back-3: hsla(var(--sk-back-3-hsl), 1);
-	--sk-back-2: hsla(var(--sk-back-2-hsl), 1);
-
-	--sk-text-warning: hsl(var(--sk-text-warning-hsl));
 
 	/* dimensions */
 	--sk-nav-height: 6rem;
@@ -41,6 +29,20 @@ body {
 	--sk-text-s: 1.6rem;
 	--sk-text-xs: 1.3rem;
 	--sk-line-max-width: 84rem;
+}
+
+body {
+	--sk-focus-outline: 0 0 0 2px hsla(var(--sk-theme-1-hsl), 0.6);
+
+	/* Base colors */
+	--sk-theme-1: hsl(var(--sk-theme-1-hsl));
+	--sk-theme-2: hsl(var(--sk-theme-2-hsl));
+	--sk-theme-3: hsl(var(--sk-theme-3-hsl));
+
+	--sk-back-3: hsla(var(--sk-back-3-hsl), 1);
+	--sk-back-2: hsla(var(--sk-back-2-hsl), 1);
+
+	--sk-text-warning: hsl(var(--sk-text-warning-hsl));
 }
 
 @media only screen and (prefers-color-scheme: dark) {

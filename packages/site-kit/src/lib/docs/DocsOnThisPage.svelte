@@ -188,12 +188,14 @@
 		}
 
 		a {
+			padding: 0.6rem 0.75rem;
 			padding-left: 2.4rem;
 			box-sizing: border-box;
 		}
 
 		a.active {
 			background-color: transparent;
+			border-left: 4px solid var(--sk-theme-1);
 		}
 
 		a:hover {
