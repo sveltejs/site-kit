@@ -43,18 +43,15 @@
 		z-index: 10;
 
 		text-transform: uppercase;
-		font-size: 1.4rem !important;
-		font-weight: 400;
-		margin: 0 0 -3rem 0 !important;
-		padding: 2rem 0 2rem 0.6rem;
-		color: var(--sk-text-2);
-
-		background-color: var(--sk-back-3);
-
-		padding-left: 3.2rem;
-
 		font-size: 1.1em !important;
 		font-weight: 600;
+		color: var(--sk-text-2);
+
+		margin: 0 0 -3rem 0 !important;
+		padding: 1.5rem 0;
+		padding-left: 2.4rem;
+
+		background-color: var(--sk-back-3);
 	}
 
 	h3::before {
@@ -65,7 +62,7 @@
 		left: 0;
 		z-index: 1;
 
-		/* transform: translateY(200%); */
+		transform: translateY(200%);
 
 		width: 100%;
 		height: 50%;

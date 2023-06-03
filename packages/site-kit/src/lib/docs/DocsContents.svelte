@@ -117,6 +117,10 @@
 	}
 
 	@media (max-width: 831px) {
+		.sidebar {
+			padding: 2.4rem;
+		}
+
 		a {
 			border-radius: var(--sk-border-radius);
 			line-height: 1;

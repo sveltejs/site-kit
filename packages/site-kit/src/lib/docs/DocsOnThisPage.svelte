@@ -188,7 +188,7 @@
 		}
 
 		a {
-			padding-left: 3.2rem;
+			padding-left: 2.4rem;
 			box-sizing: border-box;
 		}
 

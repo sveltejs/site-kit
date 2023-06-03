@@ -4,15 +4,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 <script>
 	import { page } from '$app/stores';
-	import { mql, theme } from '$lib/stores';
+	import { theme } from '$lib/stores';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
 	import Menu from './Menu.svelte';
 	import Separator from './Separator.svelte';
 
 	export let home_title = 'Homepage';
-
-	const is_mobile = mql('(max-width: 800px)');
 
 	let open = false;
 	let visible = $page.data.nav_initially_visible ?? true;
@@ -82,23 +80,21 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		</Menu>
 	{/if}
 
-	<div class="nav-spot home">
-		<a href="/" title={home_title}>
-			<span class="home-large">
-				<slot name="home-large" />
-			</span>
+	<a href="/" title={home_title} class="nav-spot home">
+		<span class="home-large">
+			<slot name="home-large" />
+		</span>
 
-			<span class="home-small">
-				<slot name="home-small" />
-			</span>
+		<span class="home-small">
+			<slot name="home-small" />
+		</span>
 
-			{#if $page.data.nav_title}
-				<div class="nav-title">
-					{$page.data.nav_title}
-				</div>
-			{/if}
-		</a>
-	</div>
+		{#if $page.data.nav_title}
+			<div class="nav-title">
+				{$page.data.nav_title}
+			</div>
+		{/if}
+	</a>
 
 	<Menu --padding="1rem" let:toggle let:open>
 		<button
@@ -163,10 +159,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	@media (max-width: 800px) {
 		nav:not(.visible) {
-			transform: translate(
-				0,
-				calc(var(--sk-nav-height) + 2px)
-			); /* TODO revert 5rem to 1rem after we remove the banner */
+			transform: translate(0, calc(var(--sk-nav-height)));
 		}
 	}
 
@@ -201,7 +194,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		padding-left: calc(var(--sk-page-padding-side) + 4rem);
 	}
 
-	.home a {
+	.home {
 		display: flex;
 		align-items: center;
 		text-decoration: none;
@@ -213,6 +206,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	.home .home-small {
 		display: none;
+
+		margin-left: -0.75rem;
 	}
 
 	.home .home-large {
@@ -240,8 +235,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	button {
 		position: absolute;
-		bottom: calc(var(--sk-nav-height) / 2 - 1rem);
-		right: var(--sk-page-padding-side);
+		bottom: 0;
+		right: 0;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		height: 100%;
+		width: calc(var(--sk-nav-height) * 1.5);
 
 		display: flex;
 		gap: 1.5rem;
@@ -249,9 +251,21 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		line-height: 1;
 	}
 
+	button :global(svg) {
+		transform: translateX(50%);
+	}
+
 	button.start {
 		right: unset;
-		left: var(--sk-page-padding-side);
+		left: 0;
+	}
+
+	button.start :global(svg) {
+		transform: translateX(-50%);
+	}
+
+	button.open {
+		color: var(--sk-theme-1);
 	}
 
 	.appearance {
