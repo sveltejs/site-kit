@@ -150,7 +150,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		font-family: var(--sk-font);
 
 		user-select: none;
-		transition: transform 0.2s;
+		transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 
 		box-shadow: 0 -0.1px 6px 0.9px hsla(0, 0%, 0%, 0.1);
 
@@ -333,8 +333,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: none;
 		}
 
-		.home .nav-title {
-			display: none;
+		.home .home-small:empty + .nav-title {
+			margin-left: 0rem;
 		}
 
 		.menu-section {
