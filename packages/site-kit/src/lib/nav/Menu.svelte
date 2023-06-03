@@ -1,8 +1,7 @@
 <script>
 	import { click_outside, focus_outside } from '$lib/actions';
-	import { nav_overlay_open, reduced_motion, theme } from '$lib/stores';
+	import { overlay_open, reduced_motion, theme } from '$lib/stores';
 	import { expoOut } from 'svelte/easing';
-	import { writable } from 'svelte/store';
 
 	export let visible = true;
 
@@ -16,7 +15,7 @@
 		open = false;
 	}
 
-	$: $nav_overlay_open = open;
+	$: $overlay_open = open;
 
 	/**
 	 * @param {HTMLElement} _

@@ -1,10 +1,10 @@
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 
-export const nav_overlay_open = writable(false);
+export const overlay_open = writable(false);
 export const should_nav_autohide = writable(false);
 
-nav_overlay_open.subscribe((value) => {
+overlay_open.subscribe((value) => {
 	if (!browser) return;
 
 	if (value) {

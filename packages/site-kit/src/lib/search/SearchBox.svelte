@@ -3,11 +3,11 @@ Renders a search box as an overlay that can be used to search the documentation.
 It appears when the user clicks on the `Search` component or presses the corresponding keyboard shortcut.
 -->
 <script>
-	import { onMount } from 'svelte';
-	import Icon from '../components/Icon.svelte';
 	import { afterNavigate } from '$app/navigation';
-	import { searching, search_query, search_recent } from '$lib/stores/search.js';
+	import { overlay_open, search_query, search_recent, searching } from '$lib/stores';
+	import { onMount, tick } from 'svelte';
 	import { focusable_children, trap } from '../actions/focus.js';
+	import Icon from '../components/Icon.svelte';
 	import SearchResults from './SearchResults.svelte';
 	import SearchWorker from './search-worker.js?worker';
 
@@ -59,7 +59,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		close();
 	});
 
-	function close() {
+	async function close() {
 		if ($searching) {
 			$searching = false;
 			const scroll = -parseInt(document.body.style.top || '0');
@@ -91,9 +91,15 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		worker.postMessage({ type: 'recents', payload: $search_recent });
 	}
 
+	$: {
+		tick().then(() => ($overlay_open = $searching));
+	}
+
 	$: if ($searching) {
 		document.body.style.top = `-${window.scrollY}px`;
 		document.body.style.position = 'fixed';
+
+		$overlay_open = true;
 	}
 </script>
 
@@ -117,7 +123,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 />
 
 {#if $searching && ready}
-	<div class="modal-background" on:click={close} />
+	<div class="pseudo-overlay" aria-hidden="true" on:click={close} />
 
 	<div
 		bind:this={modal}
@@ -220,6 +226,15 @@ It appears when the user clicks on the `Search` component or presses the corresp
 </div>
 
 <style>
+	.pseudo-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		z-index: 100;
+	}
+
 	input {
 		font-family: inherit;
 		font-size: 1.6rem;
@@ -278,7 +293,6 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		margin: 0;
 	}
 
-	.modal-background,
 	.modal {
 		position: fixed;
 		left: 0;
@@ -286,11 +300,6 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		width: 100%;
 		height: 100%;
 		z-index: 9999;
-	}
-
-	.modal-background {
-		background: var(--sk-back-1);
-		opacity: 0.7;
 	}
 
 	.modal {

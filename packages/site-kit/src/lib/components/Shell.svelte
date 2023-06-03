@@ -4,7 +4,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 
 <script>
 	import { navigating } from '$app/stores';
-	import { nav_overlay_open } from '$lib/stores';
+	import { overlay_open } from '$lib/stores';
 	import PreloadingIndicator from '../nav/PreloadingIndicator.svelte';
 	import SkipLink from '../nav/SkipLink.svelte';
 	import '../styles/index.css';
@@ -32,7 +32,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 	<slot name="top-nav" />
 {/if}
 
-<div class="overlay" class:visible={$nav_overlay_open} aria-hidden="true" />
+<div class="overlay" class:visible={$overlay_open} aria-hidden="true" />
 
 <main id="main" style:--sk-banner-bottom-height={banner_bottom_height}>
 	<slot />

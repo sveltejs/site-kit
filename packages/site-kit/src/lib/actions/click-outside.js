@@ -6,7 +6,7 @@
  */
 export function click_outside(node, callback) {
 	/** @param {MouseEvent} e */
-	const handleClick = (e) => {
+	const handleClick = async (e) => {
 		if (!node.contains(/** @type {HTMLElement} */ (e.target))) callback();
 	};
 
