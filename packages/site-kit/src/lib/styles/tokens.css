@@ -36,6 +36,8 @@ body {
 
 	/* Base colors */
 	--sk-theme-1: hsl(var(--sk-theme-1-hsl));
+	--sk-theme-1: color-mix(in hwb, hsl(var(--sk-theme-1-hsl)) 100%, var(--sk-text-1) 25%);
+
 	--sk-theme-2: hsl(var(--sk-theme-2-hsl));
 	--sk-theme-3: hsl(var(--sk-theme-3-hsl));
 

@@ -168,7 +168,6 @@ a {
 	position: relative;
 	padding: 0 0 1px 0;
 	color: var(--sk-theme-1);
-	color: color-mix(in hwb, var(--sk-theme-1) 100%, var(--sk-text-1) 25%);
 }
 
 /*  tables --------------------------------- */
