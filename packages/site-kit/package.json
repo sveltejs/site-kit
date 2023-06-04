@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"watch": "svelte-kit sync && svelte-package --watch",
+		"package:watch": "svelte-kit sync && svelte-package --watch",
 		"package": "svelte-kit sync && svelte-package"
 	},
 	"repository": {
