@@ -32,7 +32,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 	<slot name="top-nav" />
 {/if}
 
-<div class="overlay" class:visible={$overlay_open} aria-hidden="true" />
+<div class="modal-overlay" class:visible={$overlay_open} aria-hidden="true" />
 
 <main id="main" style:--sk-banner-bottom-height={banner_bottom_height}>
 	<slot />
@@ -45,7 +45,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 {/if}
 
 <style>
-	.overlay {
+	.modal-overlay {
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -63,7 +63,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 		transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 	}
 
-	.overlay.visible {
+	.modal-overlay.visible {
 		opacity: 1;
 		pointer-events: auto;
 	}

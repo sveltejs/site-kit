@@ -6,12 +6,24 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { page } from '$app/stores';
 	import { Search } from '$lib/search';
 	import { overlay_open, searching, theme } from '$lib/stores';
+	import { onMount } from 'svelte';
+	import { writable } from 'svelte/store';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
 	import Menu from './Menu.svelte';
 	import Separator from './Separator.svelte';
+	import { set_nav_context } from './nav.context';
 
 	export let home_title = 'Homepage';
+
+	const current_menu_view = writable(null);
+	const page_selected = writable(null);
+
+	set_nav_context({ current_menu_view, page_selected });
+
+	$: ({ component: context_component, props: context_component_props } = /** @type {any} */ (
+		$page.data.nav_context_menus[$current_menu_view ?? $page_selected ?? '']
+	) ?? { component: null, props: null });
 
 	let open = false;
 	let visible = $page.data.nav_initially_visible ?? true;
@@ -19,10 +31,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	/** @type {HTMLElement} */
 	let nav;
 
-	// hide nav whenever we navigate
-	page.subscribe(() => {
+	$: {
+		$page;
+
+		// Change every time $page changes
 		open = false;
-	});
+	}
 
 	// Prevents navbar to show/hide when clicking in docs sidebar
 	let hash_changed = false;
@@ -46,6 +60,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			open = false;
 		}
 	}
+
+	onMount(() => {
+		console.log($page_selected);
+		$current_menu_view = $page_selected;
+
+		console.log($current_menu_view);
+	});
 </script>
 
 <svelte:window
@@ -79,47 +100,52 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	</a>
 
 	<div class="buttons">
-		{#if $page.data.mobile_nav_start}
-			{@const { icon, component, props } = $page.data.mobile_nav_start}
-
-			<Menu --background="var(--sk-back-3)" let:open let:toggle>
-				<button
-					aria-label="Toggle contents"
-					aria-expanded={open}
-					class="menu-toggle start"
-					class:open
-					on:click={toggle}
-				>
-					<Icon name={icon} size="1em" />
-				</button>
-
-				<div slot="component" let:toggle>
-					<svelte:component this={component} {...props} on:select={toggle} />
-				</div>
-			</Menu>
-		{/if}
-
-		<Menu --padding="1rem" let:toggle let:open>
+		<Menu
+			--padding="0"
+			--background={$current_menu_view ? 'var(--sk-back-3)' : null}
+			translateY={$current_menu_view ? 0 : undefined}
+			let:toggle
+			let:open
+		>
 			<button
 				aria-label="Toggle menu"
 				aria-expanded={open}
 				class="menu-toggle"
 				class:open
-				on:click={toggle}
+				on:click={() => {
+					if (open && $current_menu_view !== null) $current_menu_view = null;
+
+					toggle();
+				}}
 			>
 				<Icon name={open ? 'close' : 'menu'} size="1em" />
 			</button>
 
-			<div class="mobile-main-menu" slot="component">
-				<ul>
-					<slot name="nav-right" />
-					<Separator />
-					<div style="height: 1rem" />
-					<Search />
-				</ul>
-				<div class="appearance">
-					<span class="caption">Theme</span>
-					<ThemeToggle />
+			<div class="mobile-main-menu" class:offset={$current_menu_view !== null} slot="popup">
+				<div class="universal">
+					<ul>
+						<slot name="nav-right" />
+						<Separator />
+						<div style="height: 1rem" />
+						<Search />
+						<li class="appearance">
+							<span class="caption">Theme</span>
+							<ThemeToggle />
+						</li>
+					</ul>
+				</div>
+
+				<div class="context">
+					{#if context_component}
+						<svelte:component this={context_component} {...context_component_props} />
+					{:else}
+						<div>Placeholder</div>
+					{/if}
+
+					<button class="back-button" on:click={() => ($current_menu_view = null)}>
+						<Icon name="arrow-left" size=".6em" />
+						<span>Back to main menu</span>
+					</button>
 				</div>
 			</div>
 		</Menu>
@@ -348,17 +374,67 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: block;
 		}
 
+		.mobile-main-menu {
+			display: grid;
+			width: 200%;
+			height: 100%;
+			grid-template-columns: 50% 50%;
+			transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+			grid-auto-rows: 100%;
+		}
+
+		.mobile-main-menu.offset {
+			transform: translate3d(-50%, 0, 0);
+		}
+
+		.mobile-main-menu > * {
+			overflow-y: auto;
+		}
+
+		.mobile-main-menu .universal {
+			padding: 1rem;
+		}
+
+		.mobile-main-menu .context {
+			position: relative;
+		}
+
+		.mobile-main-menu .context .back-button {
+			position: sticky;
+			bottom: 0;
+			left: 0;
+			z-index: 9;
+
+			display: flex;
+			align-items: center;
+			justify-content: start;
+			gap: 1rem;
+
+			font-size: 0.9em;
+			color: var(--sk-text-3);
+
+			background-color: var(--sk-back-2);
+
+			width: 100%;
+			height: 48px;
+			padding: 0 1.5rem;
+		}
+
+		.mobile-main-menu .context .back-button :global(svg) {
+			transform: scale(0.8);
+		}
+
 		.mobile-main-menu :global(li) {
 			padding: 0.3rem 0;
 		}
 
 		.mobile-main-menu :global(li a) {
-			display: block;
+			/* display: block; */
 
 			border-radius: var(--sk-border-radius);
 
 			width: 100%;
-			padding: 0.8rem;
+			/* padding: 0.8rem; */
 		}
 
 		.mobile-main-menu :global(li a[aria-current]) {

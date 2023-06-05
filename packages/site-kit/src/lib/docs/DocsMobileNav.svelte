@@ -1,33 +1,37 @@
 <script>
 	import { Separator } from '$lib/nav';
-
 	import DocsContents from './DocsContents.svelte';
 	import DocsOnThisPage from './DocsOnThisPage.svelte';
 	import TSToggle from './TSToggle.svelte';
 
-	/** @type {import('svelte').ComponentProps<DocsContents>['contents']} */
-	export let contents;
+	/** @type {import('svelte').ComponentProps<DocsContents>['contents'] | undefined} */
+	export let contents = undefined;
 
-	/** @type {import('svelte').ComponentProps<DocsOnThisPage>['details']} */
-	export let pageContents;
+	/** @type {import('svelte').ComponentProps<DocsOnThisPage>['details'] | undefined} */
+	export let pageContents = undefined;
 </script>
 
 <section>
-	<h3>ON THIS PAGE</h3>
-	<br />
-	<DocsOnThisPage details={pageContents} on:select />
+	{#if pageContents}
+		<h3>ON THIS PAGE</h3>
+		<br />
 
-	<Separator linear />
+		<DocsOnThisPage details={pageContents} on:select />
 
-	<h3>CONTENTS</h3>
-	<br />
-	<DocsContents {contents} show_ts_toggle={false} />
+		<Separator linear />
+	{/if}
 
-	<br /><br /><br />
+	{#if contents}
+		<h3>CONTENTS</h3>
+		<br />
+		<DocsContents {contents} show_ts_toggle={false} />
 
-	<div class="ts-toggle">
-		<TSToggle />
-	</div>
+		<br /><br /><br />
+
+		<div class="ts-toggle">
+			<TSToggle />
+		</div>
+	{/if}
 </section>
 
 <style>
@@ -43,7 +47,7 @@
 		z-index: 10;
 
 		text-transform: uppercase;
-		font-size: 1.1em !important;
+		font-size: 1em !important;
 		font-weight: 600;
 		color: var(--sk-text-2);
 

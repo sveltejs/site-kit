@@ -3,7 +3,10 @@
 	import { overlay_open, reduced_motion, theme } from '$lib/stores';
 	import { expoOut } from 'svelte/easing';
 
+	const DEFAULT_TRANSLATEY = 29;
+
 	export let visible = true;
+	export let translateY = DEFAULT_TRANSLATEY;
 
 	let open = false;
 
@@ -19,6 +22,7 @@
 
 	/**
 	 * @param {HTMLElement} _
+
 	 * @returns {import('svelte/transition').TransitionConfig}
 	 */
 	const slide_up = (_) => {
@@ -26,9 +30,9 @@
 			css: (t, u) =>
 				$reduced_motion
 					? `opacity: ${t}`
-					: `transform: translate3d(0, ${u * 120}%, 0) scale3d(${0.9 + 0.1 * t}, ${
-							0.9 + 0.1 * t
-					  }, 1)`,
+					: `transform: translate3d(0, ${
+							u * 120 + (translateY ?? DEFAULT_TRANSLATEY)
+					  }%, 0) scale3d(${0.9 + 0.1 * t}, ${0.9 + 0.1 * t}, 1)`,
 			easing: expoOut,
 			duration: 500
 		};
@@ -62,8 +66,14 @@
 		</div>
 
 		{#if open}
-			<div class="menu" class:dark={$theme.current === 'dark'} in:slide_up out:fade_out>
-				<slot name="component" {toggle} />
+			<div
+				class="menu"
+				class:dark={$theme.current === 'dark'}
+				style:--translateY="{translateY ?? DEFAULT_TRANSLATEY}%"
+				in:slide_up
+				out:fade_out
+			>
+				<slot name="popup" {toggle} />
 			</div>
 		{/if}
 	</div>
@@ -79,14 +89,18 @@
 		z-index: 1;
 
 		width: 100%;
-		max-height: 70vh;
+		height: 80vh;
 		padding: var(--padding);
+
+		transform: translate3d(0, var(--translateY, 20%), 0);
+		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+		transition-property: transform, background;
 
 		border-radius: 1rem 1rem 0 0;
 
 		background: var(--background, var(--sk-back-2));
 
-		overflow-y: auto;
+		overflow-y: hidden;
 		overflow-x: hidden;
 	}
 

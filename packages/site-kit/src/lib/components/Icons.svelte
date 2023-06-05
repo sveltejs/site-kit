@@ -14,6 +14,13 @@ Provides a list of svg icons that can be referenced through the `Icon` component
 			<polyline points="12 5 19 12 12 19" />
 		</symbol>
 
+		<symbol id="arrow-right-chevron" viewBox="0 0 24 24">
+			<path
+				fill="currentColor"
+				d="M8.7 17.3q-.275-.275-.275-.7t.275-.7l3.9-3.9l-3.9-3.9q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375q0 .2-.063.375t-.212.325l-4.6 4.6q-.275.275-.7.275t-.7-.275Z"
+			/>
+		</symbol>
+
 		<symbol id="arrow-up" class="icon" viewBox="0 0 24 24">
 			<line x1="12" y1="19" x2="12" y2="5" />
 			<polyline points="5 12 12 5 19 12" />
