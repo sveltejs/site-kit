@@ -17,7 +17,7 @@
 
 <style>
 	.terminal {
-		background: rgba(0,0,0,.9);
+		background: #212121;
 		margin: 0;
 		border-radius: var(--sk-border-radius);
 		overflow: hidden;
