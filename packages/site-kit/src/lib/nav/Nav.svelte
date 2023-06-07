@@ -13,6 +13,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import Menu from './Menu.svelte';
 	import Separator from './Separator.svelte';
 	import { set_nav_context } from './nav.context';
+	import NavContextMenu from './NavContextMenu.svelte';
+	import { browser } from '$app/environment';
 
 	export let home_title = 'Homepage';
 
@@ -21,9 +23,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	set_nav_context({ current_menu_view, page_selected });
 
-	$: ({ component: context_component, props: context_component_props } = /** @type {any} */ (
-		$page.data.nav_context_menus[$current_menu_view ?? $page_selected ?? '']
-	) ?? { component: null, props: null });
+	$: context_menu_content =
+		/** @type {import('svelte').ComponentProps<NavContextMenu>} */ $page.data.nav_context_list[
+			$current_menu_view ?? $page_selected ?? 'docs'
+		];
+
+	/** @type {NavContextMenu} */
+	let nav_context_instance;
 
 	let open = false;
 	let visible = $page.data.nav_initially_visible ?? true;
@@ -61,11 +67,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 	}
 
-	onMount(() => {
-		console.log($page_selected);
-		$current_menu_view = $page_selected;
+	$: {
+		if (browser && $current_menu_view !== null) {
+			nav_context_instance?.scrollToActive();
+		}
+	}
 
-		console.log($current_menu_view);
+	onMount(() => {
+		$current_menu_view = $page_selected;
 	});
 </script>
 
@@ -113,7 +122,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				class="menu-toggle"
 				class:open
 				on:click={() => {
-					if (open && $current_menu_view !== null) $current_menu_view = null;
+					if (open) {
+						$current_menu_view = $page_selected;
+					}
 
 					toggle();
 				}}
@@ -136,11 +147,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				</div>
 
 				<div class="context">
-					{#if context_component}
-						<svelte:component this={context_component} {...context_component_props} />
-					{:else}
-						<div>Placeholder</div>
-					{/if}
+					<NavContextMenu bind:this={nav_context_instance} contents={context_menu_content} />
 
 					<button class="back-button" on:click={() => ($current_menu_view = null)}>
 						<Icon name="arrow-left" size=".6em" />
@@ -182,7 +189,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		font-family: var(--sk-font);
 
 		user-select: none;
-		transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+		transition: 0.5s var(--quint-out);
+		transition-property: transform, background;
 
 		box-shadow: 0 -0.1px 6px 0.9px hsla(0, 0%, 0%, 0.1);
 

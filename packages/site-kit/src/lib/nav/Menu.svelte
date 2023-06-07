@@ -3,7 +3,7 @@
 	import { overlay_open, reduced_motion, theme } from '$lib/stores';
 	import { expoOut } from 'svelte/easing';
 
-	const DEFAULT_TRANSLATEY = 29;
+	const DEFAULT_TRANSLATEY = 18;
 
 	export let visible = true;
 	export let translateY = DEFAULT_TRANSLATEY;
@@ -89,7 +89,7 @@
 		z-index: 1;
 
 		width: 100%;
-		height: 80vh;
+		height: 70vh;
 		padding: var(--padding);
 
 		transform: translate3d(0, var(--translateY, 20%), 0);

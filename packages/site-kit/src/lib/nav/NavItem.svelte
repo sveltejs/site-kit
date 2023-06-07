@@ -38,10 +38,11 @@ Simple item component for use within `Nav`
 		aria-current={!external ? selected : null}
 		rel={external ? 'external' : null}
 		on:click={(e) => {
-			if (action) {
-				e.preventDefault();
-				action();
-			}
+			if (action || relatedMenuName) e.preventDefault();
+
+			action?.();
+
+			if (relatedMenuName) $current_menu_view = relatedMenuName ?? '';
 		}}
 	>
 		<span class="primary-icon"><slot name="primary-icon" /></span>
@@ -53,12 +54,7 @@ Simple item component for use within `Nav`
 
 		{#if relatedMenuName}
 			<span style="flex: 1 1 auto" />
-			<button
-				class="related-menu-arrow"
-				on:click|preventDefault={() => {
-					$current_menu_view = relatedMenuName ?? '';
-				}}
-			>
+			<button class="related-menu-arrow">
 				<Icon name="arrow-right-chevron" size="6rem" />
 			</button>
 		{/if}
