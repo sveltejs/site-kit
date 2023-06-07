@@ -4,10 +4,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 
-	const DEFAULT_TRANSLATEY = 18;
-
 	export let visible = true;
-	export let translateY = DEFAULT_TRANSLATEY;
 
 	const dispatch = createEventDispatcher();
 
@@ -36,9 +33,9 @@
 			css: (t, u) =>
 				$reduced_motion
 					? `opacity: ${t}`
-					: `transform: translate3d(0, ${
-							u * 120 + (translateY ?? DEFAULT_TRANSLATEY)
-					  }%, 0) scale3d(${0.9 + 0.1 * t}, ${0.9 + 0.1 * t}, 1)`,
+					: `transform: translate3d(0, ${u * 120}%, 0) scale3d(${0.9 + 0.1 * t}, ${
+							0.9 + 0.1 * t
+					  }, 1)`,
 			easing: expoOut,
 			duration: 500
 		};
@@ -72,13 +69,7 @@
 		</div>
 
 		{#if open}
-			<div
-				class="menu"
-				class:dark={$theme.current === 'dark'}
-				style:--translateY="{translateY ?? DEFAULT_TRANSLATEY}%"
-				in:slide_up
-				out:fade_out
-			>
+			<div class="menu" class:dark={$theme.current === 'dark'} in:slide_up out:fade_out>
 				<slot name="popup" {toggle} />
 			</div>
 		{/if}
@@ -98,7 +89,6 @@
 		height: 70vh;
 		padding: var(--padding);
 
-		transform: translate3d(0, var(--translateY, 20%), 0);
 		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		transition-property: transform, background;
 

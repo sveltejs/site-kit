@@ -121,7 +121,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<Menu
 			--padding="0"
 			--background={$current_menu_view ? 'var(--sk-back-3)' : null}
-			translateY={$current_menu_view ? 0 : undefined}
 			let:toggle
 			let:open
 			on:close={() => ($current_menu_view = $page_selected)}
