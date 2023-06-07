@@ -40,7 +40,7 @@
 							u * 120 + (translateY ?? DEFAULT_TRANSLATEY)
 					  }%, 0) scale3d(${0.9 + 0.1 * t}, ${0.9 + 0.1 * t}, 1)`,
 			easing: expoOut,
-			duration: 500
+			duration: 300
 		};
 	};
 
@@ -60,7 +60,7 @@
 							: ''
 					}`,
 			easing: expoOut,
-			duration: 500
+			duration: 200
 		};
 	};
 </script>

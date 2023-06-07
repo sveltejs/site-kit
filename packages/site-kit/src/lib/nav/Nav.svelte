@@ -391,7 +391,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			width: 200%;
 			height: 100%;
 			grid-template-columns: 50% 50%;
-			transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+			transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 			grid-auto-rows: 100%;
 		}
 
