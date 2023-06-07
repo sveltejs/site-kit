@@ -4,6 +4,7 @@ Simple item component for use within `Nav`
 
 <script>
 	import Icon from '$lib/components/Icon.svelte';
+	import { onMount } from 'svelte';
 	import { get_nav_context } from './nav.context';
 
 	/** @type {string | undefined} */
@@ -28,7 +29,9 @@ Simple item component for use within `Nav`
 
 	const { current_menu_view, page_selected } = get_nav_context();
 
-	$: $page_selected = (selected && relatedMenuName) ?? $page_selected;
+	$: if (selected && relatedMenuName) {
+		$page_selected = relatedMenuName;
+	}
 </script>
 
 <li data-primary={$$slots['primary-icon'] ? true : null} class:mobile-only={mobileOnly}>

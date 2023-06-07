@@ -73,6 +73,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 	}
 
+	page.subscribe(($page) => {
+		if ($page.url.pathname === '/') {
+			$current_menu_view = null;
+			$page_selected = null;
+		}
+	});
+
+	$: console.log($page_selected, $current_menu_view, context_menu_content);
+
 	onMount(() => {
 		$current_menu_view = $page_selected;
 	});
@@ -115,19 +124,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			translateY={$current_menu_view ? 0 : undefined}
 			let:toggle
 			let:open
+			on:close={() => ($current_menu_view = $page_selected)}
 		>
 			<button
 				aria-label="Toggle menu"
 				aria-expanded={open}
 				class="menu-toggle"
 				class:open
-				on:click={() => {
-					if (open) {
-						$current_menu_view = $page_selected;
-					}
-
-					toggle();
-				}}
+				on:click={toggle}
 			>
 				<Icon name={open ? 'close' : 'menu'} size="1em" />
 			</button>

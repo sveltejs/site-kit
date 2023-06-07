@@ -1,6 +1,7 @@
 <script>
 	import { click_outside, focus_outside } from '$lib/actions';
 	import { overlay_open, reduced_motion, theme } from '$lib/stores';
+	import { createEventDispatcher } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 
 	const DEFAULT_TRANSLATEY = 18;
@@ -8,13 +9,18 @@
 	export let visible = true;
 	export let translateY = DEFAULT_TRANSLATEY;
 
+	const dispatch = createEventDispatcher();
+
 	let open = false;
 
 	function toggle() {
 		open = !open;
+
+		if (!open) dispatch('close');
 	}
 
 	function close() {
+		dispatch('close');
 		open = false;
 	}
 

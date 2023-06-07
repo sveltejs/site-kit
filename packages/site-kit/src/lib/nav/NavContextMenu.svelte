@@ -28,8 +28,8 @@
 
 		if (active) {
 			const { top, bottom } = active.getBoundingClientRect();
-			const min = 100;
-			const max = window.innerHeight - 100;
+			const min = 50;
+			const max = containerEl.scrollHeight - 50;
 
 			if (top > max) {
 				containerEl.scrollBy({
@@ -75,6 +75,7 @@
 							{title}
 
 							{#if badge}
+								<span style="flex: 1 1 auto" />
 								<span class="badge">{badge}</span>
 							{/if}
 						</a>
@@ -119,6 +120,7 @@
 
 	a {
 		display: flex;
+		align-items: center;
 
 		border-radius: var(--sk-border-radius);
 
@@ -141,5 +143,24 @@
 		background-color: hsla(var(--sk-theme-1-hsl), 0.1) !important;
 		color: var(--sk-theme-1) !important;
 		font-weight: 400;
+	}
+
+	.badge {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		padding: 0.5rem 0.75rem;
+
+		border-radius: 30px;
+
+		font-size: 1.1rem;
+		font-weight: 600;
+		letter-spacing: 1px;
+		font-family: var(--sk-font);
+		line-height: 1;
+		color: var(--sk-theme-1);
+
+		background: hsla(var(--sk-theme-1-hsl), 0.1);
 	}
 </style>
