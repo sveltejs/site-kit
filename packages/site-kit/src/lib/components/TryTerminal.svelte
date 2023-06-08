@@ -25,8 +25,8 @@
 
 	.terminal .chrome {
 		position: relative;
-		background: #161317;
-		color: #555557;
+		background: #666;
+		color: #999;
 		display: flex;
 		align-items: center;
 		font-size: 1.8rem;
@@ -39,7 +39,7 @@
 		width: 1rem;
 		height: 1rem;
 		border-radius: 50%;
-		background-color: #333337;
+		background-color: #999;
 	}
 
 	.title {
