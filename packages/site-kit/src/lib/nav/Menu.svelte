@@ -4,10 +4,13 @@
 	import { createEventDispatcher } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 
-	const DEFAULT_TRANSLATEY = 11;
+	const DEFAULT_TRANSLATEY = '11%';
 
 	export let visible = true;
 	export let translateY = DEFAULT_TRANSLATEY;
+	export let height = 0;
+
+	$: console.log(translateY);
 
 	const dispatch = createEventDispatcher();
 
@@ -36,11 +39,11 @@
 			css: (t, u) =>
 				$reduced_motion.current
 					? `opacity: ${t}`
-					: `transform: translate3d(0, ${
-							u * 120 + (translateY ?? DEFAULT_TRANSLATEY)
-					  }%, 0) scale3d(${0.9 + 0.1 * t}, ${0.9 + 0.1 * t}, 1)`,
+					: `transform: translate3d(0, calc(${u * 120}% + ${translateY}), 0) scale3d(${
+							0.9 + 0.1 * t
+					  }, ${0.9 + 0.1 * t}, 1)`,
 			easing: expoOut,
-			duration: 500
+			duration: 300
 		};
 	};
 
@@ -60,7 +63,7 @@
 							: ''
 					}`,
 			easing: expoOut,
-			duration: 500
+			duration: 300
 		};
 	};
 </script>
@@ -75,7 +78,8 @@
 			<div
 				class="menu"
 				class:dark={$theme.current === 'dark'}
-				style:--translateY="{translateY ?? DEFAULT_TRANSLATEY}%"
+				style:--translateY={translateY}
+				bind:clientHeight={height}
 				in:slide_up
 				out:fade_out
 			>
@@ -99,7 +103,7 @@
 		padding: var(--padding);
 
 		transform: translate3d(0, var(--translateY, 20%), 0);
-		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+		transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 		transition-property: transform, background;
 
 		border-radius: 1rem 1rem 0 0;

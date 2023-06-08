@@ -45,6 +45,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		open = false;
 	}
 
+	let menu_height = 0;
+	let universal_menu_inner_height = 0;
+
+	$: console.log(universal_menu_inner_height);
+
 	// Prevents navbar to show/hide when clicking in docs sidebar
 	let hash_changed = false;
 	function handle_hashchange() {
@@ -122,9 +127,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<Menu
 			--padding="0"
 			--background={$current_menu_view ? 'var(--sk-back-3)' : null}
-			translateY={$current_menu_view ? 0 : undefined}
+			--height-difference={menu_height - universal_menu_inner_height + 'px'}
+			translateY={$current_menu_view
+				? 0 + 'px'
+				: menu_height - universal_menu_inner_height - 32 + 'px'}
 			let:toggle
 			let:open
+			bind:height={menu_height}
 			on:close={() => ($current_menu_view = $page_selected)}
 		>
 			<button
@@ -139,7 +148,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 			<div class="mobile-main-menu" class:offset={$current_menu_view !== null} slot="popup">
 				<div class="universal">
-					<ul>
+					<ul bind:clientHeight={universal_menu_inner_height}>
 						<slot name="nav-right" />
 						<Separator />
 						<div style="height: 1rem" />
@@ -398,7 +407,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			width: 200%;
 			height: 100%;
 			grid-template-columns: 50% 50%;
-			transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+			transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 			grid-auto-rows: 100%;
 		}
 
@@ -406,16 +415,31 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			transform: translate3d(-50%, 0, 0);
 		}
 
+		.mobile-main-menu.offset .universal {
+			transform: translate3d(0, var(--height-difference), 0);
+			opacity: 0;
+		}
+
+		.mobile-main-menu.offset .context {
+			transform: translate3d(0, 0, 0);
+			opacity: 1;
+		}
+
 		.mobile-main-menu > * {
 			overflow-y: auto;
+			transition: inherit;
+			transition-property: transform, opacity;
 		}
 
 		.mobile-main-menu .universal {
 			padding: 1rem;
+			opacity: 1;
 		}
 
 		.mobile-main-menu .context {
 			position: relative;
+			transform: translate3d(0, calc(-1 * var(--height-difference)), 0);
+			opacity: 0;
 		}
 
 		.mobile-main-menu .context .back-button {

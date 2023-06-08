@@ -100,7 +100,7 @@
 
 		padding-bottom: 0.8rem;
 
-		font-size: var(--sk-text-s);
+		font-size: var(--sk-text-xs);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-weight: 600;
