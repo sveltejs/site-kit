@@ -5,7 +5,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 <script>
 	import { page } from '$app/stores';
 	import { Search } from '$lib/search';
-	import { overlay_open, searching, theme } from '$lib/stores';
+	import { overlay_open, searching, theme, reduced_motion } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import Icon from '../components/Icon.svelte';
@@ -146,7 +146,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				<Icon name={open ? 'close' : 'menu'} size="1em" />
 			</button>
 
-			<div class="mobile-main-menu" class:offset={$current_menu_view !== null} slot="popup">
+			<div
+				class="mobile-main-menu"
+				class:offset={$current_menu_view !== null}
+				class:reduced-motion={$reduced_motion.current}
+				slot="popup"
+			>
 				<div class="universal">
 					<ul bind:clientHeight={universal_menu_inner_height}>
 						<slot name="nav-right" />
@@ -157,10 +162,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 							<div>
 								<span class="caption">Theme</span>
 								<ThemeToggle />
-							</div>
-							<div>
-								<span class="caption">Motion</span>
-								<MotionToggle />
 							</div>
 						</li>
 					</ul>
@@ -409,6 +410,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			grid-template-columns: 50% 50%;
 			transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 			grid-auto-rows: 100%;
+		}
+
+		.mobile-main-menu.reduced-motion {
+			transition: none;
 		}
 
 		.mobile-main-menu.offset {

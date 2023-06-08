@@ -78,6 +78,7 @@
 			<div
 				class="menu"
 				class:dark={$theme.current === 'dark'}
+				class:reduced_motion={$reduced_motion.current}
 				style:--translateY={translateY}
 				bind:clientHeight={height}
 				in:slide_up
@@ -116,5 +117,9 @@
 
 	.menu.dark {
 		border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
+	}
+
+	.menu.reduced_motion {
+		transition: none;
 	}
 </style>
