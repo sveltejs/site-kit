@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 5.2.2
+
+### Patch Changes
+
+- a6d1692: monochrome terminal chrome
+
 ## 5.2.1
 
 ### Patch Changes
