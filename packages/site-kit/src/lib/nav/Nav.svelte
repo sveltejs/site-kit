@@ -138,33 +138,35 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			</button>
 
 			<div class="mobile-main-menu" class:offset={$current_menu_view !== null} slot="popup">
-				<div class="universal">
-					<ul>
-						<slot name="nav-right" />
-						<Separator />
-						<div style="height: 1rem" />
-						<Search />
-						<li class="appearance">
-							<div>
-								<span class="caption">Theme</span>
-								<ThemeToggle />
-							</div>
-							<div>
-								<span class="caption">Motion</span>
-								<MotionToggle />
-							</div>
-						</li>
-					</ul>
-				</div>
+				{#if $current_menu_view === null}
+					<div class="universal">
+						<ul>
+							<slot name="nav-right" />
+							<Separator />
+							<div style="height: 1rem" />
+							<Search />
+							<li class="appearance">
+								<div>
+									<span class="caption">Theme</span>
+									<ThemeToggle />
+								</div>
+								<div>
+									<span class="caption">Motion</span>
+									<MotionToggle />
+								</div>
+							</li>
+						</ul>
+					</div>
+				{:else}
+					<div class="context">
+						<NavContextMenu bind:this={nav_context_instance} contents={context_menu_content} />
 
-				<div class="context">
-					<NavContextMenu bind:this={nav_context_instance} contents={context_menu_content} />
-
-					<button class="back-button" on:click={() => ($current_menu_view = null)}>
-						<Icon name="arrow-left" size=".6em" />
-						<span>Back to main menu</span>
-					</button>
-				</div>
+						<button class="back-button" on:click={() => ($current_menu_view = null)}>
+							<Icon name="arrow-left" size=".6em" />
+							<span>Back to main menu</span>
+						</button>
+					</div>
+				{/if}
 			</div>
 		</Menu>
 	</div>
@@ -394,28 +396,45 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		.mobile-main-menu {
-			display: grid;
-			width: 200%;
+			position: relative;
+
 			height: 100%;
-			grid-template-columns: 50% 50%;
-			transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-			grid-auto-rows: 100%;
 		}
 
-		.mobile-main-menu.offset {
-			transform: translate3d(-50%, 0, 0);
+		.mobile-main-menu.offset .universal {
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.mobile-main-menu.offset .context {
+			opacity: 1;
+			pointer-events: all;
 		}
 
 		.mobile-main-menu > * {
+			position: absolute;
+			top: 0;
+			left: 0;
+
 			overflow-y: auto;
+			grid-column: 1;
+			grid-row: 1;
+
+			width: 100%;
+			height: 100%;
 		}
 
 		.mobile-main-menu .universal {
 			padding: 1rem;
+			/* grid-row: 1 / span 1; */
+			opacity: 1;
 		}
 
 		.mobile-main-menu .context {
 			position: relative;
+			/* grid-row: 1 / span 1; */
+			opacity: 0;
+			pointer-events: none;
 		}
 
 		.mobile-main-menu .context .back-button {

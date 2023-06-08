@@ -4,7 +4,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 
-	const DEFAULT_TRANSLATEY = 11;
+	const DEFAULT_TRANSLATEY = 23;
 
 	export let visible = true;
 	export let translateY = DEFAULT_TRANSLATEY;
@@ -95,7 +95,7 @@
 		z-index: 1;
 
 		width: 100%;
-		height: 70vh;
+		height: 80vh;
 		padding: var(--padding);
 
 		transform: translate3d(0, var(--translateY, 20%), 0);

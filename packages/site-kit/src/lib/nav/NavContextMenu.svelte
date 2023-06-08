@@ -26,31 +26,11 @@
 
 		const active = navEl.querySelector('.active');
 
-		if (active) {
-			const { top, bottom } = active.getBoundingClientRect();
-			const min = 50;
-			const max = containerEl.scrollHeight - 50;
-
-			if (top > max) {
-				containerEl.scrollBy({
-					top: top - max,
-					left: 0,
-					behavior: 'auto'
-				});
-			} else if (bottom < min) {
-				containerEl.scrollBy({
-					top: bottom - min,
-					left: 0,
-					behavior: 'auto'
-				});
-			}
-		} else {
-			containerEl.scrollTo({
-				top: 0,
-				left: 0,
-				behavior: 'auto'
-			});
-		}
+		active?.scrollIntoView({
+			block: 'center',
+			inline: 'nearest',
+			behavior: 'auto'
+		});
 	}
 
 	/** @type {HTMLElement} */
