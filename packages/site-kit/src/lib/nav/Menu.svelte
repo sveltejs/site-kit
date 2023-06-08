@@ -75,6 +75,7 @@
 			<div
 				class="menu"
 				class:dark={$theme.current === 'dark'}
+				class:motion={!$reduced_motion.current}
 				style:--translateY="{translateY ?? DEFAULT_TRANSLATEY}%"
 				in:slide_up
 				out:fade_out
@@ -99,8 +100,6 @@
 		padding: var(--padding);
 
 		transform: translate3d(0, var(--translateY, 20%), 0);
-		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-		transition-property: transform, background;
 
 		border-radius: 1rem 1rem 0 0;
 
@@ -108,6 +107,11 @@
 
 		overflow-y: hidden;
 		overflow-x: hidden;
+	}
+
+	.menu.motion {
+		transition: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+		transition-property: transform, background;
 	}
 
 	.menu.dark {
