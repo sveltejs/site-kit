@@ -15,6 +15,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { set_nav_context } from './nav.context';
 	import NavContextMenu from './NavContextMenu.svelte';
 	import { browser } from '$app/environment';
+	import MotionToggle from '$lib/components/MotionToggle.svelte';
 
 	export let home_title = 'Homepage';
 
@@ -144,8 +145,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 						<div style="height: 1rem" />
 						<Search />
 						<li class="appearance">
-							<span class="caption">Theme</span>
-							<ThemeToggle />
+							<div>
+								<span class="caption">Theme</span>
+								<ThemeToggle />
+							</div>
+							<div>
+								<span class="caption">Motion</span>
+								<MotionToggle />
+							</div>
 						</li>
 					</ul>
 				</div>
@@ -472,15 +479,27 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			left: -1.25rem;
 			bottom: -1rem;
 
-			justify-content: space-between;
-			align-items: center;
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+
 			padding: 1.5rem 1.25rem;
 
 			width: calc(100% + 1.25rem);
 		}
 
+		.appearance > div {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			width: calc(100%);
+		}
+
 		.appearance .caption {
 			display: block;
+
+			font-size: var(--sk-text-s);
 		}
 	}
 

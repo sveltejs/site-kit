@@ -4,7 +4,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 
-	const DEFAULT_TRANSLATEY = 18;
+	const DEFAULT_TRANSLATEY = 11;
 
 	export let visible = true;
 	export let translateY = DEFAULT_TRANSLATEY;
@@ -34,7 +34,7 @@
 	const slide_up = (_) => {
 		return {
 			css: (t, u) =>
-				$reduced_motion
+				$reduced_motion.current
 					? `opacity: ${t}`
 					: `transform: translate3d(0, ${
 							u * 120 + (translateY ?? DEFAULT_TRANSLATEY)
@@ -55,7 +55,7 @@
 			css: (t, u) =>
 				`opacity: ${t}; 
 				 ${
-						!$reduced_motion
+						!$reduced_motion.current
 							? `transform: translate3d(0, 0, 0) scale3d(${1 - 0.1 * u}, ${1 - 0.1 * u}, 1})`
 							: ''
 					}`,
