@@ -24,10 +24,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	set_nav_context({ current_menu_view, page_selected });
 
-	$: context_menu_content =
-		/** @type {import('svelte').ComponentProps<NavContextMenu>} */ $page.data.nav_context_list[
-			$current_menu_view ?? $page_selected ?? 'docs'
-		];
+	$: context_menu_content = /** @type {import('svelte').ComponentProps<NavContextMenu>} */ (
+		($current_menu_view ?? $page_selected ?? '') in $page.data.nav_context_list
+			? $page.data.nav_context_list[$current_menu_view ?? $page_selected ?? '']
+			: null
+	);
 
 	/** @type {NavContextMenu} */
 	let nav_context_instance;
@@ -80,8 +81,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			$page_selected = null;
 		}
 	});
-
-	$: console.log($page_selected, $current_menu_view, context_menu_content);
 
 	onMount(() => {
 		$current_menu_view = $page_selected;

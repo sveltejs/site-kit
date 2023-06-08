@@ -3,8 +3,6 @@
 	import { BROWSER } from 'esm-env';
 	import { onDestroy } from 'svelte';
 
-	$: console.log($reduced_motion);
-
 	function toggle() {
 		const opposite = !$reduced_motion.current;
 
