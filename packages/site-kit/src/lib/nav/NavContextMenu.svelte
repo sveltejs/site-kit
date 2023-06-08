@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/stores';
-	import { createEventDispatcher, tick } from 'svelte';
+	import { tick } from 'svelte';
 
 	/**
 	 * @type {{
