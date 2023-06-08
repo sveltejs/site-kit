@@ -50,7 +50,7 @@
 
 	@media (min-width: 900px) {
 		.grid :global(h2) {
-			font-size: var(--sk-text-xxl);
+			font-size: var(--sk-text-xl);
 		}
 
 		.grid {

@@ -1,8 +1,8 @@
 <div class="terminal">
 	<div class="chrome">
-		<span class="red dot" />
-		<span class="yellow dot" />
-		<span class="green dot" />
+		<span class="dot" />
+		<span class="dot" />
+		<span class="dot" />
 		<span class="title">terminal</span>
 	</div>
 	<pre><code
@@ -17,7 +17,7 @@
 
 <style>
 	.terminal {
-		background: rgba(0, 0, 0, 0.7);
+		background: #212121;
 		margin: 0;
 		border-radius: var(--sk-border-radius);
 		overflow: hidden;
@@ -25,31 +25,21 @@
 
 	.terminal .chrome {
 		position: relative;
-		background: var(--sk-back-3);
-		color: var(--sk-text-3);
+		background: #666;
+		color: #999;
 		display: flex;
 		align-items: center;
-		font-size: var(--sk-text-s);
+		font-size: 1.8rem;
 		padding: 1rem;
 		gap: 1rem;
+		border-bottom: 1px #29252a solid;
 	}
 
 	.terminal .dot {
 		width: 1rem;
 		height: 1rem;
 		border-radius: 50%;
-	}
-
-	.red {
-		background-color: hsl(15, 100%, 65%);
-	}
-
-	.yellow {
-		background-color: hsl(48, 100%, 67%);
-	}
-
-	.green {
-		background-color: hsl(141, 53%, 53%);
+		background-color: #999;
 	}
 
 	.title {
@@ -59,6 +49,7 @@
 		top: 0;
 		width: 100%;
 		height: 100%;
+		padding-top: 0.4rem;
 		align-items: center;
 		justify-content: center;
 	}
