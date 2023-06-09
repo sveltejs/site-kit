@@ -17,6 +17,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { browser } from '$app/environment';
 	import { expoOut } from 'svelte/easing';
 	import MotionToggle from '$lib/components/MotionToggle.svelte';
+	import { afterNavigate } from '$app/navigation';
 
 	export let home_title = 'Homepage';
 
@@ -47,13 +48,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	/** @type {HTMLElement} */
 	let nav;
-
-	$: {
-		$page;
-
-		// Change every time $page changes
-		open = false;
-	}
 
 	let menu_height = 0;
 	let universal_menu_inner_height = 0;
@@ -88,15 +82,17 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 	}
 
-	page.subscribe(($page) => {
-		if ($page.url.pathname === '/') {
+	onMount(() => {
+		$current_menu_view = $page_selected;
+	});
+
+	afterNavigate(({ to }) => {
+		if (to?.url.pathname === '/') {
 			$current_menu_view = null;
 			$page_selected = null;
 		}
-	});
 
-	onMount(() => {
-		$current_menu_view = $page_selected;
+		open = false;
 	});
 
 	/**
