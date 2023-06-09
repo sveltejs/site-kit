@@ -15,7 +15,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { set_nav_context } from './nav.context';
 	import NavContextMenu from './NavContextMenu.svelte';
 	import { browser } from '$app/environment';
+	import { expoOut } from 'svelte/easing';
 	import MotionToggle from '$lib/components/MotionToggle.svelte';
+	import { fade } from 'svelte/transition';
 
 	export let home_title = 'Homepage';
 
@@ -47,8 +49,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	let menu_height = 0;
 	let universal_menu_inner_height = 0;
-
-	$: console.log(universal_menu_inner_height);
+	let ready = false;
 
 	// Prevents navbar to show/hide when clicking in docs sidebar
 	let hash_changed = false;
@@ -86,11 +87,46 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 	});
 
-	$: console.log($page_selected, $current_menu_view, context_menu_content);
-
 	onMount(() => {
 		$current_menu_view = $page_selected;
 	});
+
+	/**
+	 * @param {HTMLElement} node
+	 * @returns {import('svelte/transition').TransitionConfig}
+	 */
+	const slide_up = (node) => {
+		const height = $current_menu_view ? node.clientHeight : universal_menu_inner_height;
+
+		return {
+			css: (t, u) =>
+				$reduced_motion.current
+					? `opacity: ${t}`
+					: `transform: translate3d(0, ${height * u}px, 0) scale3d(${0.9 + 0.1 * t}, ${
+							0.9 + 0.1 * t
+					  }, 1)`,
+			easing: expoOut,
+			duration: 300
+		};
+	};
+
+	/**
+	 * @param {HTMLElement} _
+	 * @param {(current: boolean) => void} fn
+	 */
+	function mounted(_, fn) {
+		// this is necessary to ensure that the menu-background height
+		// is applied without an animation
+		setTimeout(() => {
+			fn(true);
+		});
+
+		return {
+			destroy() {
+				fn(false);
+			}
+		};
+	}
 </script>
 
 <svelte:window
@@ -128,12 +164,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			--padding="0"
 			--background={$current_menu_view ? 'var(--sk-back-3)' : null}
 			--height-difference={menu_height - universal_menu_inner_height + 'px'}
-			translateY={$current_menu_view
-				? 0 + 'px'
-				: menu_height - universal_menu_inner_height - 32 + 'px'}
 			let:toggle
 			let:open
-			bind:height={menu_height}
 			on:close={() => ($current_menu_view = $page_selected)}
 		>
 			<button
@@ -150,25 +182,39 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				class="mobile-main-menu"
 				class:offset={$current_menu_view !== null}
 				class:reduced-motion={$reduced_motion.current}
+				in:slide_up
+				out:fade={{ duration: 200 }}
 				slot="popup"
 			>
-				<div class="universal">
-					<ul bind:clientHeight={universal_menu_inner_height}>
-						<slot name="nav-right" />
-						<Separator />
-						<div style="height: 1rem" />
-						<Search />
-						<li class="appearance">
-							<div>
-								<span class="caption">Theme</span>
-								<ThemeToggle />
-							</div>
-						</li>
-					</ul>
-				</div>
+				<div
+					class="menu-background"
+					class:dark={$theme.current === 'dark'}
+					use:mounted={(mounted) => (ready = mounted)}
+					class:ready
+					style="height: {$current_menu_view !== null
+						? '100%'
+						: `${universal_menu_inner_height}px`}"
+				/>
 
-				<div class="context">
-					<NavContextMenu bind:this={nav_context_instance} contents={context_menu_content} />
+				<div class="viewport" bind:clientHeight={menu_height}>
+					<div class="universal">
+						<ul bind:clientHeight={universal_menu_inner_height}>
+							<slot name="nav-right" />
+							<Separator />
+							<div style="height: 1rem" />
+							<Search />
+							<li class="appearance">
+								<div>
+									<span class="caption">Theme</span>
+									<ThemeToggle />
+								</div>
+							</li>
+						</ul>
+					</div>
+
+					<div class="context">
+						<NavContextMenu bind:this={nav_context_instance} contents={context_menu_content} />
+					</div>
 
 					<button class="back-button" on:click={() => ($current_menu_view = null)}>
 						<Icon name="arrow-left" size=".6em" />
@@ -403,26 +449,58 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: block;
 		}
 
+		.menu-background {
+			position: absolute;
+			width: 100%;
+			left: 0;
+			bottom: 0;
+			height: 100%;
+			border-radius: 1rem 1rem 0 0;
+			background: var(--background, var(--sk-back-2));
+		}
+
+		.menu-background.ready {
+			transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+		}
+
+		.menu-background.dark {
+			border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
+		}
+
 		.mobile-main-menu {
+			height: 100%;
+		}
+
+		.mobile-main-menu .viewport {
+			position: relative;
 			display: grid;
 			width: 200%;
 			height: 100%;
 			grid-template-columns: 50% 50%;
-			transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+			transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 			grid-auto-rows: 100%;
+			clip-path: polygon(
+				0 var(--height-difference),
+				50% var(--height-difference),
+				50% 100%,
+				0 100%
+			);
 		}
 
-		.mobile-main-menu.reduced-motion {
+		.mobile-main-menu.reduced-motion .viewport {
 			transition: none;
 		}
 
-		.mobile-main-menu.offset {
+		.mobile-main-menu.offset .viewport {
 			transform: translate3d(-50%, 0, 0);
+			clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
 		}
 
-		.mobile-main-menu.offset .universal {
-			transform: translate3d(0, var(--height-difference), 0);
-			opacity: 0;
+		.mobile-main-menu .universal ul {
+			position: absolute;
+			width: 50%;
+			bottom: 0;
+			padding: 1rem;
 		}
 
 		.mobile-main-menu.offset .context {
@@ -430,27 +508,22 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			opacity: 1;
 		}
 
-		.mobile-main-menu > * {
+		.mobile-main-menu .viewport > * {
 			overflow-y: auto;
 			transition: inherit;
 			transition-property: transform, opacity;
 		}
 
-		.mobile-main-menu .universal {
-			padding: 1rem;
-			opacity: 1;
-		}
-
 		.mobile-main-menu .context {
 			position: relative;
-			transform: translate3d(0, calc(-1 * var(--height-difference)), 0);
-			opacity: 0;
+			height: 100%;
+			padding-bottom: 2rem;
 		}
 
-		.mobile-main-menu .context .back-button {
-			position: sticky;
+		.mobile-main-menu .back-button {
+			position: absolute;
 			bottom: 0;
-			left: 0;
+			right: 0;
 			z-index: 9;
 
 			display: flex;
@@ -463,12 +536,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 			background-color: var(--sk-back-2);
 
-			width: 100%;
+			width: 50%;
 			height: 48px;
 			padding: 0 1.5rem;
 		}
 
-		.mobile-main-menu .context .back-button :global(svg) {
+		.mobile-main-menu .back-button :global(svg) {
 			transform: scale(0.8);
 		}
 
@@ -477,12 +550,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		.mobile-main-menu :global(li a) {
-			/* display: block; */
-
 			border-radius: var(--sk-border-radius);
-
 			width: 100%;
-			/* padding: 0.8rem; */
 		}
 
 		.mobile-main-menu :global(li a[aria-current]) {

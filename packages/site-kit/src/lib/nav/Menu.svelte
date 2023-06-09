@@ -1,16 +1,10 @@
 <script>
 	import { click_outside, focus_outside } from '$lib/actions';
-	import { overlay_open, reduced_motion, theme } from '$lib/stores';
+	import { overlay_open } from '$lib/stores';
 	import { createEventDispatcher } from 'svelte';
-	import { expoOut } from 'svelte/easing';
-
-	const DEFAULT_TRANSLATEY = '11%';
 
 	export let visible = true;
-	export let translateY = DEFAULT_TRANSLATEY;
 	export let height = 0;
-
-	$: console.log(translateY);
 
 	const dispatch = createEventDispatcher();
 
@@ -28,44 +22,6 @@
 	}
 
 	$: $overlay_open = open;
-
-	/**
-	 * @param {HTMLElement} _
-
-	 * @returns {import('svelte/transition').TransitionConfig}
-	 */
-	const slide_up = (_) => {
-		return {
-			css: (t, u) =>
-				$reduced_motion.current
-					? `opacity: ${t}`
-					: `transform: translate3d(0, calc(${u * 120}% + ${translateY}), 0) scale3d(${
-							0.9 + 0.1 * t
-					  }, ${0.9 + 0.1 * t}, 1)`,
-			easing: expoOut,
-			duration: 300
-		};
-	};
-
-	/**
-	 * @param {HTMLElement} node
-	 * @returns {import('svelte/transition').TransitionConfig}
-	 */
-	const fade_out = (node) => {
-		node.style.overflow = 'hidden';
-
-		return {
-			css: (t, u) =>
-				`opacity: ${t}; 
-				 ${
-						!$reduced_motion.current
-							? `transform: translate3d(0, 0, 0) scale3d(${1 - 0.1 * u}, ${1 - 0.1 * u}, 1})`
-							: ''
-					}`,
-			easing: expoOut,
-			duration: 300
-		};
-	};
 </script>
 
 {#if visible}
@@ -75,15 +31,7 @@
 		</div>
 
 		{#if open}
-			<div
-				class="menu"
-				class:dark={$theme.current === 'dark'}
-				class:reduced_motion={$reduced_motion.current}
-				style:--translateY={translateY}
-				bind:clientHeight={height}
-				in:slide_up
-				out:fade_out
-			>
+			<div class="menu" bind:clientHeight={height}>
 				<slot name="popup" {toggle} />
 			</div>
 		{/if}
@@ -102,24 +50,8 @@
 		width: 100%;
 		height: 70vh;
 		padding: var(--padding);
-
-		transform: translate3d(0, var(--translateY, 20%), 0);
-		transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-		transition-property: transform, background;
-
 		border-radius: 1rem 1rem 0 0;
-
-		background: var(--background, var(--sk-back-2));
-
 		overflow-y: hidden;
 		overflow-x: hidden;
-	}
-
-	.menu.dark {
-		border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
-	}
-
-	.menu.reduced_motion {
-		transition: none;
 	}
 </style>
