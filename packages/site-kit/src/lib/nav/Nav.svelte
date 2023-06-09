@@ -21,14 +21,23 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	export let home_title = 'Homepage';
 
+	/** @type {import('svelte/store').Writable<string | null>} */
 	const current_menu_view = writable(null);
+
+	/** @type {import('svelte/store').Writable<string | null>} */
 	const page_selected = writable(null);
 
 	set_nav_context({ current_menu_view, page_selected });
 
+	let context_menu = 'docs';
+
+	$: if ($current_menu_view ?? $page_selected) {
+		context_menu = /** @type {string} */ ($current_menu_view ?? $page_selected);
+	}
+
 	$: context_menu_content =
 		/** @type {import('svelte').ComponentProps<NavContextMenu>} */ $page.data.nav_context_list[
-			$current_menu_view ?? $page_selected ?? 'docs'
+			context_menu
 		];
 
 	/** @type {NavContextMenu} */
