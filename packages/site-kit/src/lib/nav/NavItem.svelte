@@ -44,7 +44,7 @@ Simple item component for use within `Nav`
 			<button
 				class="related-menu-arrow"
 				on:click|preventDefault={() => {
-					$current_menu_view = relatedMenuName;
+					$current_menu_view = /** @type {string} */ (relatedMenuName);
 				}}
 			>
 				<Icon name="arrow-right-chevron" size="6rem" />
