@@ -20,9 +20,6 @@ Simple item component for use within `Nav`
 
 	export let mobileOnly = false;
 
-	/** @type {(() => void) | undefined} */
-	export let action = undefined;
-
 	/** @type {string | undefined} */
 	export let relatedMenuName = undefined;
 
@@ -47,8 +44,7 @@ Simple item component for use within `Nav`
 			<button
 				class="related-menu-arrow"
 				on:click|preventDefault={() => {
-					action?.();
-					if (relatedMenuName) $current_menu_view = relatedMenuName ?? '';
+					$current_menu_view = relatedMenuName;
 				}}
 			>
 				<Icon name="arrow-right-chevron" size="6rem" />
