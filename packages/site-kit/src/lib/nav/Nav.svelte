@@ -169,14 +169,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	</a>
 
 	<div class="buttons">
-		<Menu
-			--padding="0"
-			--background={$current_menu_view ? 'var(--sk-back-3)' : null}
-			--height-difference={menu_height - universal_menu_inner_height + 'px'}
-			let:toggle
-			let:open
-			on:close={() => ($current_menu_view = $page_selected)}
-		>
+		<Menu let:toggle let:open on:close={() => ($current_menu_view = $page_selected)}>
 			<button
 				aria-label="Toggle menu"
 				aria-expanded={open}
@@ -200,12 +193,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 					class:dark={$theme.current === 'dark'}
 					use:mounted={(mounted) => (ready = mounted)}
 					class:ready
-					style="height: {$current_menu_view !== null
-						? '100%'
-						: `${universal_menu_inner_height}px`}"
+					style:height={$current_menu_view !== null ? '100%' : `${universal_menu_inner_height}px`}
+					style:--background={$current_menu_view ? 'var(--sk-back-3)' : null}
 				/>
 
-				<div class="viewport" bind:clientHeight={menu_height}>
+				<div
+					class="viewport"
+					bind:clientHeight={menu_height}
+					style="--height-difference: {menu_height - universal_menu_inner_height + 'px'}"
+				>
 					<div class="universal">
 						<ul bind:clientHeight={universal_menu_inner_height}>
 							<slot name="nav-right" />

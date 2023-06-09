@@ -3,9 +3,6 @@
 	import { overlay_open } from '$lib/stores';
 	import { createEventDispatcher } from 'svelte';
 
-	export let visible = true;
-	export let height = 0;
-
 	const dispatch = createEventDispatcher();
 
 	let open = false;
@@ -24,19 +21,17 @@
 	$: $overlay_open = open;
 </script>
 
-{#if visible}
-	<div style="display: contents" use:click_outside={close} use:focus_outside={close}>
-		<div class="label">
-			<slot {toggle} {open} />
-		</div>
-
-		{#if open}
-			<div class="menu" bind:clientHeight={height}>
-				<slot name="popup" {toggle} />
-			</div>
-		{/if}
+<div style="display: contents" use:click_outside={close} use:focus_outside={close}>
+	<div class="label">
+		<slot {toggle} {open} />
 	</div>
-{/if}
+
+	{#if open}
+		<div class="menu">
+			<slot name="popup" {toggle} />
+		</div>
+	{/if}
+</div>
 
 <style>
 	.menu {
@@ -49,7 +44,6 @@
 
 		width: 100%;
 		height: 70vh;
-		padding: var(--padding);
 		border-radius: 1rem 1rem 0 0;
 		overflow-y: hidden;
 		overflow-x: hidden;
