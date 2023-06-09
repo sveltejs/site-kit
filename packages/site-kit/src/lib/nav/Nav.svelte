@@ -17,7 +17,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { browser } from '$app/environment';
 	import { expoOut } from 'svelte/easing';
 	import MotionToggle from '$lib/components/MotionToggle.svelte';
-	import { fade } from 'svelte/transition';
 
 	export let home_title = 'Homepage';
 
@@ -185,8 +184,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				class="mobile-main-menu"
 				class:offset={$current_menu_view !== null}
 				class:reduced-motion={$reduced_motion.current}
-				in:slide_up
-				out:fade={{ duration: 200 }}
+				transition:slide_up
 			>
 				<div
 					class="menu-background"
