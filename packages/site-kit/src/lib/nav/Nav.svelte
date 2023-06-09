@@ -181,20 +181,20 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			</button>
 
 			<div
+				slot="popup"
 				class="mobile-main-menu"
 				class:offset={$current_menu_view !== null}
 				class:reduced-motion={$reduced_motion.current}
 				in:slide_up
 				out:fade={{ duration: 200 }}
-				slot="popup"
 			>
 				<div
 					class="menu-background"
 					class:dark={$theme.current === 'dark'}
-					use:mounted={(mounted) => (ready = mounted)}
 					class:ready
 					style:height={$current_menu_view !== null ? '100%' : `${universal_menu_inner_height}px`}
 					style:--background={$current_menu_view ? 'var(--sk-back-3)' : null}
+					use:mounted={(mounted) => (ready = mounted)}
 				/>
 
 				<div
