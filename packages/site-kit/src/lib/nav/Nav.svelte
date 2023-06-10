@@ -98,7 +98,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	 * @param {HTMLElement} node
 	 * @returns {import('svelte/transition').TransitionConfig}
 	 */
-	const slide = (node) => {
+	const slide_up = (node) => {
 		const height = context_menu ? node.clientHeight : universal_menu_inner_height;
 
 		return {
@@ -199,7 +199,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				class="mobile-main-menu"
 				class:offset={$current_menu_view !== null}
 				class:reduced-motion={$reduced_motion.current}
-				in:slide
+				in:slide_up
 				out:fade_out
 			>
 				<div
