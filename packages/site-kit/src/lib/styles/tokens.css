@@ -36,8 +36,6 @@ body {
 
 	/* Base colors */
 	--sk-theme-1: hsl(var(--sk-theme-1-hsl));
-	--sk-theme-1: color-mix(in hwb, hsl(var(--sk-theme-1-hsl)) 100%, var(--sk-text-1) 25%);
-
 	--sk-theme-2: hsl(var(--sk-theme-2-hsl));
 	--sk-theme-3: hsl(var(--sk-theme-3-hsl));
 
@@ -58,7 +56,7 @@ body {
 		--sk-back-4: hsl(0, 0%, 22%);
 		--sk-back-5: hsl(0, 0%, 40%);
 		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
-		--sk-theme-1-hsl: 15, 100%, 55%;
+		--sk-theme-1-hsl: 12, 94%, 62%;
 		--sk-theme-2-hsl: 240, 8%, 44%;
 		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 90%);
@@ -100,7 +98,7 @@ body {
 		--sk-back-1: hsl(0, 0%, 100%);
 		--sk-back-4: hsl(206, 44%, 93%);
 		--sk-back-5: hsl(206, 20%, 80%);
-		--sk-theme-1-hsl: 15, 100%, 50%;
+		--sk-theme-1-hsl: 12, 93%, 43%;
 		--sk-theme-2-hsl: 240, 8%, 44%;
 		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 13%);
@@ -162,7 +160,7 @@ body {
 		--sk-back-1: hsl(0, 0%, 100%);
 		--sk-back-4: hsl(206, 44%, 93%);
 		--sk-back-5: hsl(206, 20%, 80%);
-		--sk-theme-1-hsl: 15, 100%, 50%;
+		--sk-theme-1-hsl: 12, 93%, 43%;
 		--sk-theme-2-hsl: 240, 8%, 44%;
 		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 13%);
@@ -208,7 +206,7 @@ body {
 		--sk-back-4: hsl(0, 0%, 22%);
 		--sk-back-5: hsl(0, 0%, 40%);
 		--sk-back-translucent: hsla(0, 0%, 100%, 0.1);
-		--sk-theme-1-hsl: 15, 100%, 55%;
+		--sk-theme-1-hsl: 12, 94%, 62%;
 		--sk-theme-2-hsl: 240, 8%, 44%;
 		--sk-theme-3-hsl: 204, 100%, 63%;
 		--sk-text-1: hsl(0, 0%, 90%);
