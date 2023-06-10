@@ -9,7 +9,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { Search } from '$lib/search';
 	import { overlay_open, reduced_motion, searching, theme } from '$lib/stores';
 	import { onMount } from 'svelte';
-	import { expoOut } from 'svelte/easing';
+	import { circOut, expoOut, quintOut, sineOut } from 'svelte/easing';
 	import { writable } from 'svelte/store';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -34,10 +34,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		context_menu = /** @type {string} */ ($current_menu_view ?? $page_selected);
 	}
 
-	$: context_menu_content =
-		/** @type {import('svelte').ComponentProps<NavContextMenu>} */ $page.data.nav_context_list[
-			context_menu
-		];
+	$: context_menu_content = $page.data.nav_context_list[context_menu];
 
 	/** @type {NavContextMenu} */
 	let nav_context_instance;
@@ -96,9 +93,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	/**
 	 * @param {HTMLElement} node
+	 * @param {{easing?: (t: number) => number, duration?: number }} [params]
 	 * @returns {import('svelte/transition').TransitionConfig}
 	 */
-	const slide_up = (node) => {
+	const slide = (node, { duration = 400, easing = expoOut } = {}) => {
 		const height = context_menu ? node.clientHeight : universal_menu_inner_height;
 
 		return {
@@ -108,28 +106,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 					: `transform: translate3d(0, ${height * u}px, 0) scale3d(${0.9 + 0.1 * t}, ${
 							0.9 + 0.1 * t
 					  }, 1)`,
-			easing: expoOut,
-			duration: 300
-		};
-	};
-
-	/**
-	 * @param {HTMLElement} node
-	 * @returns {import('svelte/transition').TransitionConfig}
-	 */
-	const fade_out = (node) => {
-		node.style.overflow = 'hidden';
-
-		return {
-			css: (t, u) =>
-				`opacity: ${t}; 
-				 ${
-						!$reduced_motion.current
-							? `transform: translate3d(0, 0, 0) scale3d(${1 - 0.3 * u}, ${1 - 0.3 * u}, 1})`
-							: ''
-					}`,
-			easing: expoOut,
-			duration: 500
+			easing,
+			duration
 		};
 	};
 
@@ -199,8 +177,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				class="mobile-main-menu"
 				class:offset={$current_menu_view !== null}
 				class:reduced-motion={$reduced_motion.current}
-				in:slide_up
-				out:fade_out
+				in:slide
+				out:slide={{ duration: 500, easing: quintOut }}
 			>
 				<div
 					class="menu-background"
