@@ -4,7 +4,6 @@ Simple item component for use within `Nav`
 
 <script>
 	import Icon from '$lib/components/Icon.svelte';
-	import { onMount } from 'svelte';
 	import { get_nav_context } from './nav.context';
 
 	/** @type {string | undefined} */
@@ -21,9 +20,6 @@ Simple item component for use within `Nav`
 
 	export let mobileOnly = false;
 
-	/** @type {(() => void) | undefined} */
-	export let action = undefined;
-
 	/** @type {string | undefined} */
 	export let relatedMenuName = undefined;
 
@@ -35,19 +31,7 @@ Simple item component for use within `Nav`
 </script>
 
 <li data-primary={$$slots['primary-icon'] ? true : null} class:mobile-only={mobileOnly}>
-	<a
-		{href}
-		{title}
-		aria-current={!external ? selected : null}
-		rel={external ? 'external' : null}
-		on:click={(e) => {
-			if (action || relatedMenuName) e.preventDefault();
-
-			action?.();
-
-			if (relatedMenuName) $current_menu_view = relatedMenuName ?? '';
-		}}
-	>
+	<a {href} {title} aria-current={!external ? selected : null} rel={external ? 'external' : null}>
 		<span class="primary-icon"><slot name="primary-icon" /></span>
 
 		<span class="large"><slot /></span>
@@ -57,7 +41,12 @@ Simple item component for use within `Nav`
 
 		{#if relatedMenuName}
 			<span style="flex: 1 1 auto" />
-			<button class="related-menu-arrow">
+			<button
+				class="related-menu-arrow"
+				on:click|preventDefault={() => {
+					$current_menu_view = /** @type {string} */ (relatedMenuName);
+				}}
+			>
 				<Icon name="arrow-right-chevron" size="6rem" />
 			</button>
 		{/if}
