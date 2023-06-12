@@ -3,7 +3,7 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 -->
 <script>
 	import { BROWSER } from 'esm-env';
-	import { query, searching } from './stores.js';
+	import { search_query, searching } from '../stores/search.js';
 
 	export let q = '';
 </script>
@@ -13,7 +13,7 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 		value={q}
 		on:input={(e) => {
 			$searching = true;
-			$query = e.currentTarget.value;
+			$search_query = e.currentTarget.value;
 			e.currentTarget.value = '';
 		}}
 		on:mousedown|preventDefault={() => ($searching = true)}
@@ -51,6 +51,7 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 	}
 
 	input {
+		position: relative;
 		padding: 0.5em 0.5em 0.4em 2em;
 		border: 1px solid var(--sk-back-translucent);
 		font-family: inherit;
@@ -59,9 +60,9 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 		appearance: none;
 		-webkit-appearance: none;
 		width: 100%;
-		height: 3.2rem;
-		border-radius: var(--sk-border-radius);
-		background: no-repeat 1rem 50% / 1em 1em url(../icons/search.svg);
+		height: 4.2rem;
+		border-radius: 3.5rem;
+		background: no-repeat 1rem 50% / 1em 1em url(../icons/search.svg), var(--sk-back-3);
 		color: var(--sk-text-3);
 	}
 
@@ -108,7 +109,8 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 		}
 
 		input {
-			border-radius: 1.6rem;
+			height: 3.4rem;
+			border-radius: 5.6rem;
 		}
 
 		input::placeholder {

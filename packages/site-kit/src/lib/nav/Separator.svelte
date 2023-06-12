@@ -1,7 +1,16 @@
 <!-- @component
 Simple separator component for use within `Nav`
 -->
-<li aria-hidden="true"><span class="separator" /></li>
+
+<script>
+	export let linear = false;
+</script>
+
+{#if linear}
+	<span class="separator" />
+{:else}
+	<li aria-hidden="true"><span class="separator" /></li>
+{/if}
 
 <style>
 	.separator {
@@ -9,7 +18,7 @@ Simple separator component for use within `Nav`
 		position: relative;
 		height: 1px;
 		margin: 0.5rem 0;
-		background: radial-gradient(circle at center, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
+		background: var(--sk-back-translucent);
 	}
 
 	@media (min-width: 800px) {

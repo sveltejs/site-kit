@@ -1,7 +1,7 @@
 <script>
 	import { BROWSER } from 'esm-env';
 	import { persisted } from 'svelte-local-storage-store';
-	import ToggleButton from './ToggleButton.svelte';
+	import ToggleButton from '../components/ToggleButton.svelte';
 
 	const checked = persisted('svelte:prefers-ts', false);
 
@@ -18,10 +18,11 @@
 	.input-output-toggle {
 		position: relative;
 		display: flex;
+		justify-content: center;
 		gap: 0.5em;
 		user-select: none;
 		align-items: center;
-		width: 100%;
+		width: max-width;
 		height: var(--ts-toggle-height);
 		z-index: 2;
 		padding: 0 var(--sk-page-padding-side);
@@ -30,7 +31,7 @@
 
 	@media (min-width: 832px) {
 		.input-output-toggle {
-			padding-left: 3.2rem;
+			padding: 0rem;
 			width: var(--sidebar-menu-width);
 			margin: 0 0 0 auto;
 		}

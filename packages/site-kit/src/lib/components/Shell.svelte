@@ -1,12 +1,14 @@
 <!-- @component
 The main shell of the application. It provides a slot for the top navigation, the main content, and the bottom banner.
 -->
+
 <script>
 	import { navigating } from '$app/stores';
+	import { overlay_open } from '$lib/stores';
+	import PreloadingIndicator from '../nav/PreloadingIndicator.svelte';
+	import SkipLink from '../nav/SkipLink.svelte';
 	import '../styles/index.css';
 	import Icons from './Icons.svelte';
-	import PreloadingIndicator from './PreloadingIndicator.svelte';
-	import SkipLink from './SkipLink.svelte';
 
 	/**
 	 * Height of the bottom banner. If '0px', the banner is not visible.
@@ -30,6 +32,8 @@ The main shell of the application. It provides a slot for the top navigation, th
 	<slot name="top-nav" />
 {/if}
 
+<div class="modal-overlay" class:visible={$overlay_open} aria-hidden="true" />
+
 <main id="main" style:--sk-banner-bottom-height={banner_bottom_height}>
 	<slot />
 </main>
@@ -41,12 +45,41 @@ The main shell of the application. It provides a slot for the top navigation, th
 {/if}
 
 <style>
+	.modal-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 99;
+
+		opacity: 0;
+		pointer-events: none;
+
+		width: 100%;
+		height: 100%;
+
+		background: hsla(0, 0%, 0%, 0.1);
+		backdrop-filter: blur(2px);
+
+		transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+	}
+
+	.modal-overlay.visible {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
 	main {
 		position: relative;
 		margin: 0 auto;
 		padding-top: var(--sk-nav-height);
 		padding-bottom: var(--sk-banner-bottom-height);
 		overflow: hidden;
+	}
+
+	@media (max-width: 800px) {
+		main {
+			padding-top: 0;
+		}
 	}
 
 	:global(body) {

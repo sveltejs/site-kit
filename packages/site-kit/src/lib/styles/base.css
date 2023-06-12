@@ -7,6 +7,10 @@ html {
 	border-collapse: collapse;
 }
 
+:root {
+	--quint-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 body {
 	font-size: 1.6rem;
 	font-family: var(--sk-font);
@@ -25,6 +29,10 @@ body {
 	scrollbar-width: thin;
 	scrollbar-color: var(--sk-scrollbar) transparent;
 	-webkit-overflow-scrolling: touch;
+	-webkit-tap-highlight-color: hsla(var(--sk-theme-1-hsl), 0.1);
+
+	transition: 0.5s var(--quint-out);
+	transition-property: background, background-color, background-image, border;
 }
 
 *:focus-visible {
@@ -167,7 +175,6 @@ a {
 	position: relative;
 	padding: 0 0 1px 0;
 	color: var(--sk-theme-1);
-	color: color-mix(in hwb, var(--sk-theme-1) 100%, var(--sk-text-1) 25%);
 }
 
 /*  tables --------------------------------- */
