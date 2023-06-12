@@ -14,6 +14,13 @@ Provides a list of svg icons that can be referenced through the `Icon` component
 			<polyline points="12 5 19 12 12 19" />
 		</symbol>
 
+		<symbol id="arrow-right-chevron" viewBox="0 0 24 24">
+			<path
+				fill="currentColor"
+				d="M8.7 17.3q-.275-.275-.275-.7t.275-.7l3.9-3.9l-3.9-3.9q-.275-.275-.275-.7t.275-.7q.275-.275.7-.275t.7.275l4.6 4.6q.15.15.213.325t.062.375q0 .2-.063.375t-.212.325l-4.6 4.6q-.275.275-.7.275t-.7-.275Z"
+			/>
+		</symbol>
+
 		<symbol id="arrow-up" class="icon" viewBox="0 0 24 24">
 			<line x1="12" y1="19" x2="12" y2="5" />
 			<polyline points="5 12 12 5 19 12" />
@@ -134,6 +141,14 @@ Provides a list of svg icons that can be referenced through the `Icon` component
 			<path d="M9,7L6,7A2 2 0 0 0 6,17L9,17" />
 			<path d="M15,7L18,7A2 2 0 0 1 18,17L15,17" />
 			<path d="M7,12L17,12" />
+		</symbol>
+
+		<symbol viewBox="0 0 24 24" id="external-link">
+			<path
+				fill="currentColor"
+				stroke-width=".5"
+				d="m16 8.4l-8.875 8.9q-.3.3-.713.3t-.712-.3q-.3-.3-.3-.713t.3-.712L14.6 7H7q-.425 0-.713-.288T6 6q0-.425.288-.713T7 5h10q.425 0 .713.288T18 6v10q0 .425-.288.713T17 17q-.425 0-.713-.288T16 16V8.4Z"
+			/>
 		</symbol>
 
 		<symbol id="chevron" class="icon" viewBox="0 0 24 24">

@@ -82,7 +82,7 @@
 	.section {
 		display: block;
 		padding-bottom: 0.8rem;
-		font-size: var(--sk-text-xs);
+		font-size: var(--sk-text-s);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-weight: 600;
@@ -114,11 +114,17 @@
 		margin-right: 0;
 		border-right: 1px solid var(--sk-back-5);
 		background-color: var(--sk-back-3);
+		box-shadow: 0 -0.1px 6px 0.9px hsla(0, 0%, 0%, 0.1);
 	}
 
 	@media (max-width: 831px) {
 		.sidebar {
-			padding: 2.4rem;
+			padding: 1rem;
+			padding-top: 1rem;
+		}
+
+		li {
+			margin-bottom: 2.5rem;
 		}
 
 		a {
@@ -126,7 +132,8 @@
 			line-height: 1;
 			vertical-align: center;
 			padding: 0.9rem 0.75rem !important;
-			transition: background-color 0.1s ease;
+			transition: 0.1s ease;
+			transition-property: background-color, color;
 		}
 
 		a:hover {
@@ -136,8 +143,8 @@
 		}
 
 		.active {
-			background-color: hsla(var(--sk-theme-1-hsl), 0.1);
-			color: var(--sk-theme-1);
+			background-color: hsla(var(--sk-theme-1-hsl), 0.1) !important;
+			color: var(--sk-theme-1) !important;
 			font-weight: 400;
 		}
 	}
@@ -154,24 +161,6 @@
 
 		nav {
 			min-height: calc(100vh - var(--ts-toggle-height));
-		}
-
-		nav::after {
-			content: '';
-			position: fixed;
-			left: 0;
-			bottom: var(--ts-toggle-height);
-			width: calc(var(--sidebar-width) - 1px);
-			height: 2em;
-			pointer-events: none;
-			background: linear-gradient(
-				to bottom,
-				hsla(var(--sk-back-3-hsl), 0) 0%,
-				hsla(var(--sk-back-3-hsl), 0.7) 50%,
-				hsl(var(--sk-back-3-hsl)) 100%
-			);
-			background-repeat: no-repeat;
-			background-size: calc(100% - 3rem) 100%; /* cover text but not scrollbar */
 		}
 
 		.active::after {

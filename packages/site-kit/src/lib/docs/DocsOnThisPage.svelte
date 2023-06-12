@@ -41,8 +41,11 @@
 	});
 
 	function update() {
-		// @ts-ignore
-		content = document.querySelector('.content');
+		const contentEl = /** @type {HTMLElement | null} */ (document.querySelector('.content'));
+
+		if (!contentEl) return;
+
+		content = contentEl;
 
 		const { top } = content.getBoundingClientRect();
 		headings = content.querySelectorAll('h2[id]');
