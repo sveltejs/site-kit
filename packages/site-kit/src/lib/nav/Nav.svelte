@@ -380,10 +380,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		line-height: 1;
 	}
 
-	button.open {
-		color: var(--sk-theme-1);
-	}
-
 	.appearance {
 		display: flex;
 		align-items: center;
