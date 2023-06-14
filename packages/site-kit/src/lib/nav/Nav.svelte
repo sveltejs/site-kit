@@ -436,7 +436,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			margin-left: 1rem;
 			padding: 0.5rem 0 0.5rem 1rem;
 			font-size: 1em;
-			color: var(--sk-text-3);
+			color: var(--sk-text-4);
 			line-height: 1;
 			height: 100%;
 		}
