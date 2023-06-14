@@ -9,7 +9,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { Search } from '$lib/search';
 	import { overlay_open, reduced_motion, searching, theme } from '$lib/stores';
 	import { onMount } from 'svelte';
-	import { circOut, expoOut, quintOut, sineOut } from 'svelte/easing';
+	import { expoOut, quintOut } from 'svelte/easing';
 	import { writable } from 'svelte/store';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -19,6 +19,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { set_nav_context } from './nav.context';
 
 	export let home_title = 'Homepage';
+
+	/** @type {string | undefined} */
+	export let title;
+
+	/** @type {import('../types').Menu} */
+	export let menu;
 
 	/** @type {import('svelte/store').Writable<string | null>} */
 	const current_menu_view = writable(null);
@@ -34,13 +40,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		context_menu = /** @type {string} */ ($current_menu_view ?? $page_selected);
 	}
 
-	$: context_menu_content = $page.data.nav_context_list[context_menu];
+	$: context_menu_content = menu[context_menu];
 
 	/** @type {NavContextMenu} */
 	let nav_context_instance;
 
 	let open = false;
-	let visible = $page.data.nav_initially_visible ?? true;
+	let visible = true;
 
 	/** @type {HTMLElement} */
 	let nav;
@@ -153,9 +159,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			<slot name="home-small" />
 		</span>
 
-		{#if $page.data.nav_title}
+		{#if title}
 			<div class="nav-title">
-				{$page.data.nav_title}
+				{title}
 			</div>
 		{/if}
 	</a>

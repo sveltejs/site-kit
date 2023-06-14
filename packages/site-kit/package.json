@@ -37,7 +37,11 @@
 		"@sveltejs/kit": "^1.0.0",
 		"svelte": "^3.54.0 || ^4.0.0-next.0 || ^4.0.0"
 	},
+	"types": "./dist/types.d.ts",
 	"exports": {
+		".": {
+			"types": "./dist/types.d.ts"
+		},
 		"./actions": {
 			"types": "./dist/actions/index.d.ts",
 			"default": "./dist/actions/index.js"
