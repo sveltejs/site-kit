@@ -152,15 +152,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		<span class="home-small">
 			<slot name="home-small" />
 		</span>
+	</a>
 
+	<div class="buttons">
 		{#if $page.data.nav_title}
 			<div class="nav-title">
 				{$page.data.nav_title}
 			</div>
 		{/if}
-	</a>
 
-	<div class="buttons">
 		<Menu let:toggle let:open on:close={() => ($current_menu_view = $page_selected)}>
 			<button
 				aria-label="Toggle menu"
@@ -355,20 +355,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		font-weight: inherit;
 	}
 
-	.home .nav-title {
-		display: flex;
-		align-items: center;
-
-		margin-left: 1rem;
-		padding: 0.5rem 0 0.5rem 1rem;
-		font-size: 0.7em;
-		color: var(--sk-text-3);
-		line-height: 1;
-		height: 40%;
-
-		border-left: solid 1px var(--sk-text-4);
-	}
-
 	.buttons {
 		display: flex;
 		gap: 0.5rem;
@@ -423,24 +409,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			bottom: 0;
 		}
 
-		nav::after {
-			content: '';
-
-			position: absolute;
-			left: 0;
-			bottom: 0;
-
-			width: 100%;
-			height: 100%;
-
-			border-radius: inherit;
-			box-shadow: inherit;
-
-			background-color: inherit;
-
-			z-index: 6;
-		}
-
 		.home {
 			position: absolute;
 			left: 0rem;
@@ -461,8 +429,16 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: none;
 		}
 
-		.home .home-small:empty + .nav-title {
-			margin-left: 0rem;
+		.nav-title {
+			display: flex;
+			align-items: center;
+
+			margin-left: 1rem;
+			padding: 0.5rem 0 0.5rem 1rem;
+			font-size: 1em;
+			color: var(--sk-text-3);
+			line-height: 1;
+			height: 100%;
 		}
 
 		.menu-section {
