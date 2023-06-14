@@ -193,6 +193,26 @@ Top navigation bar for the application. It provides a slot for the left side, th
 					class="viewport"
 					bind:clientHeight={menu_height}
 					style="--height-difference: {menu_height - universal_menu_inner_height + 'px'}"
+					on:transitionstart|self={(e) => {
+						if (e.propertyName === 'transform') {
+							// we need to apply a clip-path during the transition so that the contents
+							// are constrained to the menu background, but only while the transition
+							// is running, otherwise it prevents the contents from being scrolled
+							const universal = `polygon(0 var(--height-difference), 50% var(--height-difference), 50% 100%, 0 100%)`;
+							const contextual = `polygon(50% 0, 100% 0, 100% 100%, 50% 100%)`;
+
+							const viewport = e.currentTarget;
+
+							viewport.style.clipPath = $current_menu_view ? universal : contextual;
+
+							setTimeout(() => {
+								viewport.style.clipPath = $current_menu_view ? contextual : universal;
+							}, 0);
+						}
+					}}
+					on:transitionend|self={(e) => {
+						e.currentTarget.style.clipPath = '';
+					}}
 				>
 					<div class="universal">
 						<ul bind:clientHeight={universal_menu_inner_height}>
@@ -476,12 +496,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			grid-template-columns: 50% 50%;
 			transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 			grid-auto-rows: 100%;
-			clip-path: polygon(
-				0 var(--height-difference),
-				50% var(--height-difference),
-				50% 100%,
-				0 100%
-			);
 		}
 
 		.mobile-main-menu.reduced-motion .viewport {
@@ -490,7 +504,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		.mobile-main-menu.offset .viewport {
 			transform: translate3d(-50%, 0, 0);
-			clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
 		}
 
 		.mobile-main-menu .universal ul {
