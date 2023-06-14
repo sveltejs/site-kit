@@ -5,30 +5,20 @@
 
 	const dispatch = createEventDispatcher();
 
-	let open = false;
-
-	function toggle() {
-		open = !open;
-
-		if (!open) dispatch('close');
-	}
+	/** @type {boolean} */
+	export let open;
 
 	function close() {
 		dispatch('close');
-		open = false;
 	}
 
 	$: $overlay_open = open;
 </script>
 
 <div style="display: contents" use:click_outside={close} use:focus_outside={close}>
-	<div class="label">
-		<slot {toggle} {open} />
-	</div>
-
 	{#if open}
 		<div class="menu">
-			<slot name="popup" {toggle} />
+			<slot />
 		</div>
 	{/if}
 </div>

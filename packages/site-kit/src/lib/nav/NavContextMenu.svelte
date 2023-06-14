@@ -3,14 +3,7 @@
 	import { tick } from 'svelte';
 
 	/**
-	 * @type {{
-	 *  title: string;
-	 *  sections: {
-	 *    title: string;
-	 *    path: string;
-	 *    badge?: string;
-	 *  }[]
-	 * }[]}
+	 * @type {import('../types').Section[]}
 	 */
 	export let contents = [];
 

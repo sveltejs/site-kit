@@ -16,31 +16,22 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import Menu from './Menu.svelte';
 	import NavContextMenu from './NavContextMenu.svelte';
 	import Separator from './Separator.svelte';
-	import { set_nav_context } from './nav.context';
 
 	export let home_title = 'Homepage';
 
 	/** @type {string | undefined} */
 	export let title;
 
-	/** @type {import('../types').Menu} */
-	export let menu;
+	/** @type {import('../types').NavigationLink[]} */
+	export let links;
 
-	/** @type {import('svelte/store').Writable<string | null>} */
-	const current_menu_view = writable(null);
+	/** @type {import('../types').NavigationLink | undefined} */
+	let current_menu_view = undefined;
+
+	let show_context_menu = false;
 
 	/** @type {import('svelte/store').Writable<string | null>} */
 	const page_selected = writable(null);
-
-	set_nav_context({ current_menu_view, page_selected });
-
-	let context_menu = 'docs';
-
-	$: if ($current_menu_view ?? $page_selected) {
-		context_menu = /** @type {string} */ ($current_menu_view ?? $page_selected);
-	}
-
-	$: context_menu_content = menu[context_menu];
 
 	/** @type {NavContextMenu} */
 	let nav_context_instance;
@@ -79,20 +70,22 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	$: {
-		if (browser && $current_menu_view !== null) {
+		if (browser && current_menu_view) {
 			nav_context_instance?.scrollToActive();
 		}
 	}
 
 	onMount(() => {
-		$current_menu_view = $page_selected;
+		const segment = $page.url.pathname.split('/')[1];
+		current_menu_view = links.find((link) => link.prefix === segment);
 	});
 
 	afterNavigate(({ to }) => {
-		if (to?.url.pathname === '/') {
-			$current_menu_view = null;
-			$page_selected = null;
-		}
+		// if (to?.url.pathname === '/') {
+		// const segment = $page.url.pathname.split('/')[1];
+		// current_menu_view = links.find((link) => link.prefix === segment);
+		// show_context_menu = !!current_menu_view;
+		// }
 
 		open = false;
 	});
@@ -103,7 +96,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	 * @returns {import('svelte/transition').TransitionConfig}
 	 */
 	const slide = (node, { duration = 400, easing = expoOut } = {}) => {
-		const height = context_menu ? node.clientHeight : universal_menu_inner_height;
+		const height = current_menu_view ? node.clientHeight : universal_menu_inner_height;
 
 		return {
 			css: (t, u) =>
@@ -167,21 +160,20 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	</a>
 
 	<div class="buttons">
-		<Menu let:toggle let:open on:close={() => ($current_menu_view = $page_selected)}>
-			<button
-				aria-label="Toggle menu"
-				aria-expanded={open}
-				class="menu-toggle"
-				class:open
-				on:click={toggle}
-			>
-				<Icon name={open ? 'close' : 'menu'} size="1em" />
-			</button>
+		<button
+			aria-label="Toggle menu"
+			aria-expanded={open}
+			class="menu-toggle"
+			class:open
+			on:click={() => (open = !open)}
+		>
+			<Icon name={open ? 'close' : 'menu'} size="1em" />
+		</button>
 
+		<Menu {open} on:close={() => (open = false)}>
 			<div
-				slot="popup"
 				class="mobile-main-menu"
-				class:offset={$current_menu_view !== null}
+				class:offset={show_context_menu}
 				class:reduced-motion={$reduced_motion.current}
 				in:slide
 				out:slide={{ duration: 500, easing: quintOut }}
@@ -190,8 +182,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 					class="menu-background"
 					class:dark={$theme.current === 'dark'}
 					class:ready
-					style:height={$current_menu_view !== null ? '100%' : `${universal_menu_inner_height}px`}
-					style:--background={$current_menu_view ? 'var(--sk-back-3)' : null}
+					style:height={show_context_menu ? '100%' : `${universal_menu_inner_height}px`}
+					style:--background={show_context_menu ? 'var(--sk-back-3)' : null}
 					use:mounted={(mounted) => (ready = mounted)}
 				/>
 
@@ -210,8 +202,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 						const a = 'calc(var(--height-difference) + 10px)';
 						const b = '10px';
 
-						const start = $current_menu_view ? a : b;
-						const end = $current_menu_view ? b : a;
+						const start = current_menu_view ? a : b;
+						const end = current_menu_view ? b : a;
 
 						const container = e.currentTarget;
 
@@ -234,6 +226,25 @@ Top navigation bar for the application. It provides a slot for the left side, th
 						<div class="universal">
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
 								<ul>
+									{#each links as link}
+										<li>
+											<a href={link.pathname}>
+												{link.title}
+											</a>
+
+											{#if link.sections}
+												<button
+													class="related-menu-arrow"
+													on:click|preventDefault={() => {
+														current_menu_view = link;
+														show_context_menu = true;
+													}}
+												>
+													<Icon name="arrow-right-chevron" size="6rem" />
+												</button>
+											{/if}
+										</li>
+									{/each}
 									<slot name="nav-right" />
 								</ul>
 								<Separator linear />
@@ -247,10 +258,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 						</div>
 
 						<div class="context">
-							<NavContextMenu bind:this={nav_context_instance} contents={context_menu_content} />
+							{#if current_menu_view}
+								<NavContextMenu
+									bind:this={nav_context_instance}
+									contents={current_menu_view.sections}
+								/>
+							{/if}
 						</div>
 
-						<button class="back-button" on:click={() => ($current_menu_view = null)}>
+						<button class="back-button" on:click={() => (show_context_menu = false)}>
 							<Icon name="arrow-left" size=".6em" />
 							<span>Back to main menu</span>
 						</button>
@@ -266,8 +282,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	<div class="external menu-section">
 		<ul>
-			<slot name="nav-right" />
+			{#each links as link}
+				<a href={link.pathname}>
+					{link.title}
+				</a>
+			{/each}
 			<Separator />
+			<slot name="nav-right" />
 		</ul>
 		<div class="appearance">
 			<span class="caption">Theme</span>
@@ -581,19 +602,39 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		.mobile-main-menu :global(li) {
+			position: relative;
+			display: block;
+			align-items: center;
 			padding: 0.3rem 0;
+			height: 4rem;
+		}
+
+		.mobile-main-menu li button {
+			position: absolute;
+			right: 0;
+			top: 0;
+			width: 4rem;
+			height: 100%;
+		}
+
+		.mobile-main-menu li button :global(svg) {
+			stroke-width: 0;
 		}
 
 		.mobile-main-menu :global(li a) {
+			display: flex;
+			align-items: center;
 			border-radius: var(--sk-border-radius);
 			width: 100%;
+			height: 100%;
+			padding-left: 1rem;
 		}
 
 		.mobile-main-menu :global(li a[aria-current]) {
 			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
 		}
 
-		.mobile-main-menu :global(li a:hover) {
+		.mobile-main-menu :global(li:hover a) {
 			border-radius: var(--sk-border-radius);
 
 			color: initial;
@@ -623,6 +664,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 			font-size: var(--sk-text-s);
 		}
+
+		nav :global(.large) {
+			display: none;
+		}
 	}
 
 	@media (min-width: 800px) {
@@ -640,7 +685,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		ul :global(li) {
-			margin: 0 0.5rem;
 			padding: 0;
 		}
 
@@ -648,6 +692,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: flex;
 			align-items: center;
 			height: 100%;
+			padding: 0.5rem;
+		}
+
+		ul :global(a:hover) {
+			color: var(--sk-theme-3);
 		}
 
 		.external {
@@ -656,6 +705,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 
 		.buttons {
+			display: none;
+		}
+
+		nav :global(.small) {
 			display: none;
 		}
 	}
