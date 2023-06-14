@@ -33,13 +33,13 @@
 			</li>
 		{/each}
 	</ul>
-
-	{#if show_ts_toggle}
-		<div class="ts-toggle">
-			<TSToggle />
-		</div>
-	{/if}
 </nav>
+
+{#if show_ts_toggle}
+	<div class="ts-toggle">
+		<TSToggle />
+	</div>
+{/if}
 
 <style>
 	nav {
@@ -108,7 +108,7 @@
 	.ts-toggle {
 		position: sticky;
 		width: var(--sidebar-width);
-		bottom: 0;
+		bottom: calc(-1 * var(--ts-toggle-height));
 		left: 0;
 		z-index: 1;
 		margin-right: 0;
@@ -160,7 +160,9 @@
 		}
 
 		nav {
-			min-height: calc(100vh - var(--ts-toggle-height));
+			max-height: calc(100vh - var(--ts-toggle-height) - var(--sk-nav-height));
+			overflow-x: hidden;
+			overflow-y: auto;
 		}
 
 		.active::after {
