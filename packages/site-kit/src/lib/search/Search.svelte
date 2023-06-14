@@ -47,7 +47,6 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 		display: flex;
 		align-items: center;
 		width: 100%;
-		height: 100%;
 	}
 
 	input {

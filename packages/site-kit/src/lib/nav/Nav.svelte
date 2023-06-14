@@ -215,18 +215,18 @@ Top navigation bar for the application. It provides a slot for the left side, th
 					}}
 				>
 					<div class="universal">
-						<ul bind:clientHeight={universal_menu_inner_height}>
-							<slot name="nav-right" />
-							<Separator />
+						<div class="contents" bind:clientHeight={universal_menu_inner_height}>
+							<ul>
+								<slot name="nav-right" />
+							</ul>
+							<Separator linear />
 							<div style="height: 1rem" />
 							<Search />
-							<li class="appearance">
-								<div>
-									<span class="caption">Theme</span>
-									<ThemeToggle />
-								</div>
-							</li>
-						</ul>
+							<div class="appearance">
+								<span class="caption">Theme</span>
+								<ThemeToggle />
+							</div>
+						</div>
 					</div>
 
 					<div class="context">
@@ -388,7 +388,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	.appearance {
 		display: flex;
-		height: 100%;
 		align-items: center;
 		margin-left: 0.75rem;
 	}
@@ -506,11 +505,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			transform: translate3d(-50%, 0, 0);
 		}
 
-		.mobile-main-menu .universal ul {
+		.mobile-main-menu .universal .contents {
 			position: absolute;
 			width: 50%;
 			bottom: 0;
 			padding: 1rem;
+			max-height: 70vh;
+			height: 100%;
+			overflow-y: scroll;
 		}
 
 		.mobile-main-menu.offset .context {
@@ -586,22 +588,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			position: relative;
 			left: -1.25rem;
 			bottom: -1rem;
-
 			display: flex;
-			flex-direction: column;
 			gap: 2rem;
-
 			padding: 1.5rem 1.25rem;
-
-			width: calc(100% + 1.25rem);
-		}
-
-		.appearance > div {
-			display: flex;
-			align-items: center;
 			justify-content: space-between;
-
-			width: calc(100%);
+			width: calc(100% + 1.25rem);
 		}
 
 		.appearance .caption {
@@ -622,6 +613,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: flex;
 			width: auto;
 			height: 100%;
+			align-items: center;
 		}
 
 		ul :global(li) {
