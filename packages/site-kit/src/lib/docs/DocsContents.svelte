@@ -106,15 +106,15 @@
 	}
 
 	.ts-toggle {
-		position: sticky;
+		position: fixed;
 		width: var(--sidebar-width);
-		bottom: calc(-1 * var(--ts-toggle-height));
+		bottom: 0;
 		left: 0;
 		z-index: 1;
 		margin-right: 0;
+		border-top: 1px solid var(--sk-back-4);
 		border-right: 1px solid var(--sk-back-5);
 		background-color: var(--sk-back-3);
-		box-shadow: 0 -0.1px 6px 0.9px hsla(0, 0%, 0%, 0.1);
 	}
 
 	@media (max-width: 831px) {
