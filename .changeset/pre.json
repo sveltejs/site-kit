@@ -5,6 +5,7 @@
     "@sveltejs/site-kit": "5.2.1"
   },
   "changesets": [
-    "afraid-panthers-hide"
+    "afraid-panthers-hide",
+    "twenty-queens-talk"
   ]
 }
