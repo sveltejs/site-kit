@@ -190,33 +190,65 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				/>
 
 				<div
-					class="viewport"
-					bind:clientHeight={menu_height}
-					style="--height-difference: {menu_height - universal_menu_inner_height + 'px'}"
+					class="clip"
+					style:--height-difference="{menu_height - universal_menu_inner_height}px"
+					on:transitionstart={(e) => {
+						const target = /** @type {HTMLElement} */ (e.target);
+
+						if (!target?.classList.contains('viewport')) return;
+						if (e.propertyName !== 'transform') return;
+
+						// we need to apply a clip-path during the transition so that the contents
+						// are constrained to the menu background, but only while the transition
+						// is running, otherwise it prevents the contents from being scrolled
+						const a = 'calc(var(--height-difference) + 10px)';
+						const b = '10px';
+
+						const start = $current_menu_view ? a : b;
+						const end = $current_menu_view ? b : a;
+
+						const container = e.currentTarget;
+
+						container.style.clipPath = `polygon(0% ${start}, 100% ${start}, 100% 100%, 0% 100%)`;
+
+						setTimeout(() => {
+							container.style.clipPath = `polygon(0% ${end}, 100% ${end}, 100% 100%, 0% 100%)`;
+						}, 0);
+					}}
+					on:transitionend={(e) => {
+						const target = /** @type {HTMLElement} */ (e.target);
+
+						if (!target?.classList.contains('viewport')) return;
+						if (e.propertyName !== 'transform') return;
+
+						e.currentTarget.style.clipPath = '';
+					}}
 				>
-					<div class="universal">
-						<ul bind:clientHeight={universal_menu_inner_height}>
-							<slot name="nav-right" />
-							<Separator />
-							<div style="height: 1rem" />
-							<Search />
-							<li class="appearance">
-								<div>
+					<div class="viewport" bind:clientHeight={menu_height}>
+						<div class="universal">
+							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
+								<ul>
+									<slot name="nav-right" />
+								</ul>
+								<Separator linear />
+								<div style="height: 1rem" />
+								<Search />
+								<div class="appearance">
 									<span class="caption">Theme</span>
 									<ThemeToggle />
 								</div>
-							</li>
-						</ul>
-					</div>
+							</div>
+						</div>
 
-					<div class="context">
-						<NavContextMenu bind:this={nav_context_instance} contents={context_menu_content} />
-					</div>
+						<div class="context">
+							<NavContextMenu bind:this={nav_context_instance} contents={context_menu_content} />
+						</div>
 
-					<button class="back-button" on:click={() => ($current_menu_view = null)}>
-						<Icon name="arrow-left" size=".6em" />
-						<span>Back to main menu</span>
-					</button>
+						<button class="back-button" on:click={() => ($current_menu_view = null)}>
+							<Icon name="arrow-left" size=".6em" />
+							<span>Back to main menu</span>
+						</button>
+					</div>
 				</div>
 			</div>
 		</Menu>
@@ -368,7 +400,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	.appearance {
 		display: flex;
-		height: 100%;
 		align-items: center;
 		margin-left: 0.75rem;
 	}
@@ -468,20 +499,20 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			height: 100%;
 		}
 
+		.mobile-main-menu .clip {
+			width: 100%;
+			height: 100%;
+			transition: clip-path 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+		}
+
 		.mobile-main-menu .viewport {
 			position: relative;
 			display: grid;
 			width: 200%;
 			height: 100%;
 			grid-template-columns: 50% 50%;
-			transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+			transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 			grid-auto-rows: 100%;
-			clip-path: polygon(
-				0 var(--height-difference),
-				50% var(--height-difference),
-				50% 100%,
-				0 100%
-			);
 		}
 
 		.mobile-main-menu.reduced-motion .viewport {
@@ -490,14 +521,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		.mobile-main-menu.offset .viewport {
 			transform: translate3d(-50%, 0, 0);
-			clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
 		}
 
-		.mobile-main-menu .universal ul {
+		.mobile-main-menu .universal .contents {
 			position: absolute;
 			width: 50%;
 			bottom: 0;
 			padding: 1rem;
+			max-height: 70vh;
+			overflow-y: scroll;
 		}
 
 		.mobile-main-menu.offset .context {
@@ -573,22 +605,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			position: relative;
 			left: -1.25rem;
 			bottom: -1rem;
-
 			display: flex;
-			flex-direction: column;
 			gap: 2rem;
-
 			padding: 1.5rem 1.25rem;
-
-			width: calc(100% + 1.25rem);
-		}
-
-		.appearance > div {
-			display: flex;
-			align-items: center;
 			justify-content: space-between;
-
-			width: calc(100%);
+			width: calc(100% + 1.25rem);
 		}
 
 		.appearance .caption {
@@ -609,6 +630,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: flex;
 			width: auto;
 			height: 100%;
+			align-items: center;
 		}
 
 		ul :global(li) {
