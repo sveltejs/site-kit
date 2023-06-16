@@ -155,7 +155,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		</a>
 
 		{#if $page.data.nav_title}
-			<div class="nav-title">
+			<div class="current-section">
 				｜ {$page.data.nav_title}
 			</div>
 		{/if}
@@ -436,7 +436,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: none;
 		}
 
-		.nav-title {
+		.current-section {
 			display: flex;
 			align-items: center;
 			font-size: 0.8em;
