@@ -87,7 +87,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 				</a>
 			{/each}
 
-			<Separator />
+			<Separator vertical />
 
 			<slot name="external-links" />
 

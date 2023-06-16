@@ -2,10 +2,18 @@
 Simple separator component for use within `Nav`
 -->
 
-<span class="separator" />
+<script>
+	export let vertical = false;
+</script>
+
+<hr class:vertical />
 
 <style>
-	.separator {
+	hr {
+		border: none;
+	}
+
+	hr:not(.vertical) {
 		display: block;
 		position: relative;
 		height: 1px;
@@ -13,22 +21,15 @@ Simple separator component for use within `Nav`
 		background: var(--sk-back-translucent);
 	}
 
-	@media (min-width: 800px) {
-		.separator {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: none;
-			height: 100%;
-			margin: 0;
-			border: none;
-			text-align: center;
-		}
+	hr.vertical {
+		display: flex;
+		align-items: center;
+		height: 100%;
+	}
 
-		.separator::before {
-			content: '•';
-			margin: 0 0.3rem;
-			color: #ccc;
-		}
+	hr.vertical::before {
+		content: '•';
+		margin: 0 0.3rem;
+		color: #ccc;
 	}
 </style>
