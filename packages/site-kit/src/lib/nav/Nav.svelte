@@ -368,20 +368,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		font-weight: inherit;
 	}
 
-	.home .nav-title {
-		display: flex;
-		align-items: center;
-
-		margin-left: 1rem;
-		padding: 0.5rem 0 0.5rem 1rem;
-		font-size: 0.7em;
-		color: var(--sk-text-3);
-		line-height: 1;
-		height: 40%;
-
-		border-left: solid 1px var(--sk-text-4);
-	}
-
 	.mobile {
 		display: flex;
 		position: absolute;
@@ -407,10 +393,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	.search {
 		padding-left: 2rem;
-	}
-
-	.menu-toggle {
-		padding-right: 2rem;
 	}
 
 	.appearance {
