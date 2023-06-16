@@ -124,8 +124,8 @@
 						// we need to apply a clip-path during the transition so that the contents
 						// are constrained to the menu background, but only while the transition
 						// is running, otherwise it prevents the contents from being scrolled
-						const a = 'calc(var(--height-difference) + 10px)';
-						const b = '10px';
+						const a = 'calc(var(--height-difference) + 1px)';
+						const b = '1px';
 
 						const start = show_context_menu ? a : b;
 						const end = show_context_menu ? b : a;
