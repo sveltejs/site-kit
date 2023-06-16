@@ -439,11 +439,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		.nav-title {
 			display: flex;
 			align-items: center;
-
 			font-size: 0.8em;
 			color: var(--sk-text-4);
-			line-height: 1;
-			height: 100%;
 			margin-left: 0.4em;
 		}
 
