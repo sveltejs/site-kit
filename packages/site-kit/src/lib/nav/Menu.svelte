@@ -62,8 +62,4 @@
 
 		line-height: 1;
 	}
-
-	button.open {
-		color: var(--sk-theme-1);
-	}
 </style>
