@@ -163,6 +163,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	<div class="buttons">
 		<button
+			aria-label="Search"
 			class="search"
 			on:click={() => {
 				$searching = true;
