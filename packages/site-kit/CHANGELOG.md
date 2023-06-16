@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.2
+
+### Patch Changes
+
+- 3fce2fa: remove subtitle from desktop nav, separate it from homepage link
+
 ## 6.0.0-next.1
 
 ### Patch Changes
