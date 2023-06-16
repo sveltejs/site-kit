@@ -300,7 +300,7 @@
 
 	.back-button {
 		position: absolute;
-		bottom: 0;
+		bottom: -1px;
 		right: 0;
 		z-index: 9;
 
