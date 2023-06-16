@@ -357,6 +357,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	.home .home-large {
 		display: block;
+		color: var(--sk-text-4);
 	}
 
 	.home :global(strong) {
@@ -606,6 +607,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			width: auto;
 			height: 100%;
 			align-items: center;
+		}
+
+		.current-section {
+			display: none;
 		}
 
 		ul :global(li) {
