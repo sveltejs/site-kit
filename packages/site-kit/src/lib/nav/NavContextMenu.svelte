@@ -1,62 +1,36 @@
 <script>
 	import { page } from '$app/stores';
-	import { tick } from 'svelte';
+	import { onMount } from 'svelte';
 
 	/**
 	 * @type {import('../types').Section[]}
 	 */
 	export let contents = [];
 
-	export async function scrollToActive() {
-		if (!navEl) return;
+	/** @type {HTMLElement} */
+	let nav;
 
-		// div class="context"
-		const containerEl = navEl.parentElement;
+	onMount(() => {
+		const parent = /** @type {HTMLElement} */ (nav.parentElement);
 
-		if (!containerEl) return;
-
-		await tick();
-
-		const active = navEl.querySelector('.active');
+		const active = nav.querySelector('[aria-current="true"]');
 
 		if (active) {
-			const { top, bottom } = active.getBoundingClientRect();
-			const min = 50;
-			const max = containerEl.scrollHeight - 50;
+			const { top } = active.getBoundingClientRect();
+			const max = parent.scrollHeight - 50;
 
 			if (top > max) {
-				containerEl.scrollBy({
+				parent.scrollBy({
 					top: top - max,
 					left: 0,
 					behavior: 'auto'
 				});
-			} else if (bottom < min) {
-				containerEl.scrollBy({
-					top: bottom - min,
-					left: 0,
-					behavior: 'auto'
-				});
 			}
-		} else {
-			containerEl.scrollTo({
-				top: 0,
-				left: 0,
-				behavior: 'auto'
-			});
 		}
-	}
-
-	/** @type {HTMLElement} */
-	let navEl;
-
-	$: {
-		if (contents) {
-			scrollToActive();
-		}
-	}
+	});
 </script>
 
-<nav bind:this={navEl}>
+<nav bind:this={nav}>
 	{#each contents as { sections, title }}
 		<section>
 			<h3>{title}</h3>
@@ -64,7 +38,7 @@
 			<ul>
 				{#each sections as { path, title, badge }}
 					<li>
-						<a href={path} class:active={path === $page.url.pathname}>
+						<a href={path} aria-current={path === $page.url.pathname}>
 							{title}
 
 							{#if badge}
@@ -82,17 +56,13 @@
 <style>
 	nav {
 		padding: 2rem;
-
 		font-family: var(--sk-font);
-
 		overflow-y: auto;
 	}
 
 	h3 {
 		display: block;
-
 		padding-bottom: 0.8rem;
-
 		font-size: var(--sk-text-xs);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
@@ -102,7 +72,6 @@
 
 	ul {
 		list-style-type: none;
-
 		margin: 0;
 		margin-bottom: 2.5rem;
 	}
@@ -114,25 +83,20 @@
 	a {
 		display: flex;
 		align-items: center;
-
 		border-radius: var(--sk-border-radius);
-
 		line-height: 1;
 		color: var(--sk-text-2);
-
 		padding: 0.9rem 0.75rem !important;
-
 		transition: 0.1s ease;
 		transition-property: background-color, color;
 	}
 
 	a:hover {
 		text-decoration: none;
-
 		background-color: var(--sk-back-4);
 	}
 
-	.active {
+	[aria-current='true'] {
 		background-color: hsla(var(--sk-theme-1-hsl), 0.1) !important;
 		color: var(--sk-theme-1) !important;
 		font-weight: 400;
@@ -142,18 +106,14 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-
 		padding: 0.5rem 0.75rem;
-
 		border-radius: 30px;
-
 		font-size: 1.1rem;
 		font-weight: 600;
 		letter-spacing: 1px;
 		font-family: var(--sk-font);
 		line-height: 1;
 		color: var(--sk-theme-1);
-
 		background: hsla(var(--sk-theme-1-hsl), 0.1);
 	}
 </style>

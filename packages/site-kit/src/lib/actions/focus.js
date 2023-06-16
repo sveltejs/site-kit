@@ -45,6 +45,13 @@ export function focusable_children(node) {
 }
 
 export function trap(node) {
+	const previous = /** @type HTMLElement} */ (document.activeElement);
+
+	console.log('trapping focus', {
+		node,
+		previous
+	});
+
 	const handle_keydown = (e) => {
 		if (e.key === 'Tab') {
 			e.preventDefault();
@@ -63,6 +70,7 @@ export function trap(node) {
 	return {
 		destroy: () => {
 			node.removeEventListener('keydown', handle_keydown);
+			previous?.focus({ preventScroll: true });
 		}
 	};
 }

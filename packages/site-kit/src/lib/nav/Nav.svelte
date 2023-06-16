@@ -3,16 +3,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 -->
 
 <script>
-	import { browser } from '$app/environment';
-	import { page } from '$app/stores';
-	import { overlay_open, reduced_motion, searching, theme } from '$lib/stores';
-	import { onMount } from 'svelte';
-	import { expoOut, quintOut } from 'svelte/easing';
-	import { writable } from 'svelte/store';
+	import { overlay_open, searching, theme } from '$lib/stores';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
 	import Menu from './Menu.svelte';
-	import NavContextMenu from './NavContextMenu.svelte';
 	import Separator from './Separator.svelte';
 
 	export let home_title = 'Homepage';
@@ -23,26 +17,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	/** @type {import('../types').NavigationLink[]} */
 	export let links;
 
-	/** @type {import('../types').NavigationLink | undefined} */
-	let current_menu_view = undefined;
-
-	let show_context_menu = false;
-
-	/** @type {import('svelte/store').Writable<string | null>} */
-	const page_selected = writable(null);
-
-	/** @type {NavContextMenu} */
-	let nav_context_instance;
-
 	let open = false;
 	let visible = true;
 
 	/** @type {HTMLElement} */
 	let nav;
-
-	let menu_height = 0;
-	let universal_menu_inner_height = 0;
-	let ready = false;
 
 	// Prevents navbar to show/hide when clicking in docs sidebar
 	let hash_changed = false;
@@ -65,55 +44,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		if (open && !nav.contains(document.activeElement)) {
 			open = false;
 		}
-	}
-
-	$: {
-		if (browser && current_menu_view) {
-			nav_context_instance?.scrollToActive();
-		}
-	}
-
-	onMount(() => {
-		const segment = $page.url.pathname.split('/')[1];
-		current_menu_view = links.find((link) => link.prefix === segment);
-	});
-
-	/**
-	 * @param {HTMLElement} node
-	 * @param {{easing?: (t: number) => number, duration?: number }} [params]
-	 * @returns {import('svelte/transition').TransitionConfig}
-	 */
-	const slide = (node, { duration = 400, easing = expoOut } = {}) => {
-		const height = current_menu_view ? node.clientHeight : universal_menu_inner_height;
-
-		return {
-			css: (t, u) =>
-				$reduced_motion.current
-					? `opacity: ${t}`
-					: `transform: translate3d(0, ${height * u}px, 0) scale3d(${0.9 + 0.1 * t}, ${
-							0.9 + 0.1 * t
-					  }, 1)`,
-			easing,
-			duration
-		};
-	};
-
-	/**
-	 * @param {HTMLElement} _
-	 * @param {(current: boolean) => void} fn
-	 */
-	function mounted(_, fn) {
-		// this is necessary to ensure that the menu-background height
-		// is applied without an animation
-		setTimeout(() => {
-			fn(true);
-		});
-
-		return {
-			destroy() {
-				fn(false);
-			}
-		};
 	}
 </script>
 
@@ -179,107 +109,16 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			<Icon name="search" size=".6em" />
 		</button>
 
-		<Menu bind:open>
-			<div
-				class="mobile-main-menu"
-				class:offset={show_context_menu}
-				class:reduced-motion={$reduced_motion.current}
-				in:slide
-				out:slide={{ duration: 500, easing: quintOut }}
-			>
-				<div
-					class="menu-background"
-					class:dark={$theme.current === 'dark'}
-					class:ready
-					style:height={show_context_menu ? '100%' : `${universal_menu_inner_height}px`}
-					style:--background={show_context_menu ? 'var(--sk-back-3)' : null}
-					use:mounted={(mounted) => (ready = mounted)}
-				/>
+		<Menu bind:open {links}>
+			<Separator />
 
-				<div
-					class="clip"
-					style:--height-difference="{menu_height - universal_menu_inner_height}px"
-					on:transitionstart={(e) => {
-						const target = /** @type {HTMLElement} */ (e.target);
+			<slot name="external-links" />
 
-						if (!target?.classList.contains('viewport')) return;
-						if (e.propertyName !== 'transform') return;
+			<Separator />
 
-						// we need to apply a clip-path during the transition so that the contents
-						// are constrained to the menu background, but only while the transition
-						// is running, otherwise it prevents the contents from being scrolled
-						const a = 'calc(var(--height-difference) + 10px)';
-						const b = '10px';
-
-						const start = show_context_menu ? a : b;
-						const end = show_context_menu ? b : a;
-
-						const container = e.currentTarget;
-
-						container.style.clipPath = `polygon(0% ${start}, 100% ${start}, 100% 100%, 0% 100%)`;
-
-						setTimeout(() => {
-							container.style.clipPath = `polygon(0% ${end}, 100% ${end}, 100% 100%, 0% 100%)`;
-						}, 0);
-					}}
-					on:transitionend={(e) => {
-						const target = /** @type {HTMLElement} */ (e.target);
-
-						if (!target?.classList.contains('viewport')) return;
-						if (e.propertyName !== 'transform') return;
-
-						e.currentTarget.style.clipPath = '';
-					}}
-				>
-					<div class="viewport" bind:clientHeight={menu_height}>
-						<div class="universal">
-							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
-								{#each links as link}
-									<a href={link.pathname}>
-										{link.title}
-
-										{#if link.sections}
-											<button
-												class="related-menu-arrow"
-												on:click|preventDefault={() => {
-													current_menu_view = link;
-													show_context_menu = true;
-												}}
-											>
-												<Icon name="arrow-right-chevron" size="6rem" />
-											</button>
-										{/if}
-									</a>
-								{/each}
-
-								<Separator />
-
-								<slot name="external-links" />
-
-								<Separator />
-
-								<div class="appearance">
-									<span class="caption">Theme</span>
-									<ThemeToggle />
-								</div>
-							</div>
-						</div>
-
-						<div class="context">
-							{#if current_menu_view}
-								<NavContextMenu
-									bind:this={nav_context_instance}
-									contents={current_menu_view.sections}
-								/>
-							{/if}
-						</div>
-
-						<button class="back-button" on:click={() => (show_context_menu = false)}>
-							<Icon name="arrow-left" size=".6em" />
-							<span>Back to main menu</span>
-						</button>
-					</div>
-				</div>
+			<div class="appearance">
+				<span class="caption">Theme</span>
+				<ThemeToggle />
 			</div>
 		</Menu>
 	</div>
@@ -416,17 +255,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			bottom: 0;
 		}
 
-		/* .home {
-			position: absolute;
-			left: 0rem;
-			bottom: 0;
-
-			display: flex;
-			align-items: center;
-
-			height: var(--sk-nav-height);
-		} */
-
 		.home-small {
 			display: block;
 		}
@@ -441,161 +269,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			width: 100%;
 			background: var(--sk-back-1);
 			padding: 1rem var(--sk-page-padding-side);
-		}
-
-		.menu-background {
-			position: absolute;
-			width: 100%;
-			left: 0;
-			bottom: 0;
-			height: 100%;
-			border-radius: 1rem 1rem 0 0;
-			background: var(--background, var(--sk-back-2));
-		}
-
-		.menu-background.ready {
-			transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-		}
-
-		.menu-background.dark {
-			border-top: solid 1.1px hsla(0, 0%, 100%, 0.2);
-		}
-
-		.mobile-main-menu {
-			height: 100%;
-		}
-
-		.mobile-main-menu .clip {
-			width: 100%;
-			height: 100%;
-			transition: clip-path 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-		}
-
-		.mobile-main-menu .viewport {
-			position: relative;
-			display: grid;
-			width: 200%;
-			height: 100%;
-			grid-template-columns: 50% 50%;
-			transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-			grid-auto-rows: 100%;
-		}
-
-		.mobile-main-menu.reduced-motion .viewport {
-			transition: none;
-		}
-
-		.mobile-main-menu.offset .viewport {
-			transform: translate3d(-50%, 0, 0);
-		}
-
-		.mobile-main-menu .universal .contents {
-			position: absolute;
-			width: 50%;
-			bottom: 0;
-			padding: 1rem;
-			max-height: 70vh;
-			overflow-y: scroll;
-		}
-
-		.mobile-main-menu.offset .context {
-			transform: translate3d(0, 0, 0);
-			opacity: 1;
-		}
-
-		.mobile-main-menu .viewport > * {
-			overflow-y: auto;
-			transition: inherit;
-			transition-property: transform, opacity;
-		}
-
-		.mobile-main-menu .context {
-			position: relative;
-			height: 100%;
-			padding-bottom: 2rem;
-		}
-
-		.mobile-main-menu .back-button {
-			position: absolute;
-			bottom: 0;
-			right: 0;
-			z-index: 9;
-
-			display: flex;
-			align-items: center;
-			justify-content: start;
-			gap: 1rem;
-
-			font-size: 0.9em;
-			color: var(--sk-text-3);
-
-			background-color: var(--sk-back-2);
-
-			width: 50%;
-			height: 48px;
-			padding: 0 1.5rem;
-		}
-
-		.mobile-main-menu .back-button :global(svg) {
-			transform: scale(0.8);
-		}
-
-		.mobile-main-menu :global(a) {
-			position: relative;
-			display: block;
-			align-items: center;
-			padding: 0.3rem 0;
-			height: 4rem;
-			color: var(--sk-text-2);
-		}
-
-		.mobile-main-menu .universal .contents,
-		.mobile-main-menu .context,
-		.mobile-main-menu .back-button {
-			pointer-events: all;
-		}
-
-		.mobile-main-menu .universal a {
-			position: relative;
-		}
-
-		.mobile-main-menu .universal button {
-			position: absolute;
-			right: 0;
-			top: 0;
-			width: 4rem;
-			height: 100%;
-		}
-
-		.mobile-main-menu :global(a svg) {
-			stroke-width: 0;
-		}
-
-		.mobile-main-menu :global(a) {
-			display: flex;
-			align-items: center;
-			border-radius: var(--sk-border-radius);
-			width: 100%;
-			height: 100%;
-			padding-left: 1rem;
-		}
-
-		.mobile-main-menu :global(a[aria-current]) {
-			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
-		}
-
-		.mobile-main-menu :global(a:hover) {
-			border-radius: var(--sk-border-radius);
-
-			color: initial;
-			text-decoration: none;
-
-			background-color: var(--sk-back-4);
-		}
-
-		.mobile-main-menu :global(a[aria-current]:hover) {
-			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
-			color: var(--sk-theme-1);
 		}
 
 		.appearance {
