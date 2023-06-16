@@ -327,6 +327,7 @@
 		display: block;
 		align-items: center;
 		padding: 0.3rem 0;
+		margin: 0.3rem 0;
 		height: 4rem;
 		color: var(--sk-text-2);
 	}
