@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.4
+
+### Patch Changes
+
+- 2911dad: require props to be set on <Nav> instead of reading $page.data
+
 ## 6.0.0-next.3
 
 ### Patch Changes
