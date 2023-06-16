@@ -28,6 +28,10 @@
 			}
 		}
 	});
+
+	export function reset() {
+		nav.parentElement?.scrollTo(0, 0);
+	}
 </script>
 
 <nav bind:this={nav}>

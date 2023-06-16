@@ -164,6 +164,7 @@
 												class="related-menu-arrow"
 												on:click|preventDefault={() => {
 													current_menu_view = link;
+													nav_context_instance.reset();
 													show_context_menu = true;
 												}}
 											>
