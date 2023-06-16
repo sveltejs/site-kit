@@ -143,23 +143,25 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	style:z-index={$overlay_open && $searching ? 80 : null}
 	aria-label="Primary"
 >
-	<a href="/" title={home_title} class="nav-spot home">
-		<span class="home-large">
-			<slot name="home-large" />
-		</span>
+	<span class="nav-spot home">
+		<a href="/" title={home_title}>
+			<span class="home-large">
+				<slot name="home-large" />
+			</span>
 
-		<span class="home-small">
-			<slot name="home-small" />
-		</span>
-	</a>
+			<span class="home-small">
+				<slot name="home-small" />
+			</span>
+		</a>
 
-	<div class="buttons">
 		{#if $page.data.nav_title}
 			<div class="nav-title">
-				{$page.data.nav_title}
+				｜ {$page.data.nav_title}
 			</div>
 		{/if}
+	</span>
 
+	<div class="buttons">
 		<button
 			class="search"
 			on:click={() => {
@@ -437,10 +439,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: flex;
 			align-items: center;
 
-			font-size: 1em;
+			font-size: 0.8em;
 			color: var(--sk-text-4);
 			line-height: 1;
 			height: 100%;
+			margin-left: 0.4em;
 		}
 
 		.menu-section {
