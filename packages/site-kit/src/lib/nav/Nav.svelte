@@ -131,23 +131,21 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	style:z-index={$overlay_open && $searching ? 80 : null}
 	aria-label="Primary"
 >
-	<span class="home">
-		<a href="/" title={home_title}>
-			<span class="home-large">
-				<slot name="home-large" />
-			</span>
+	<a class="home-link" href="/" title={home_title}>
+		<span class="home-large">
+			<slot name="home-large" />
+		</span>
 
-			<span class="home-small">
-				<slot name="home-small" />
-			</span>
-		</a>
+		<span class="home-small">
+			<slot name="home-small" />
+		</span>
+	</a>
 
-		{#if title}
-			<div class="current-section">
-				｜ {title}
-			</div>
-		{/if}
-	</span>
+	{#if title}
+		<div class="current-section mobile">
+			｜ {title}
+		</div>
+	{/if}
 
 	<div class="desktop">
 		<slot name="search" />
@@ -170,7 +168,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		</div>
 	</div>
 
-	<div class="mobile">
+	<div class="mobile mobile-menu">
 		<button
 			aria-label="Search"
 			class="search"
@@ -290,6 +288,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 <style>
 	nav {
 		position: fixed;
+		display: flex;
 		top: 0;
 		z-index: 100;
 		width: 100vw;
@@ -313,6 +312,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		background: linear-gradient(to top, rgba(0, 0, 0, 0.05), transparent);
 	}
 
+	.current-section {
+		display: flex;
+		align-items: center;
+		font-size: 0.8em;
+		color: var(--sk-text-4);
+		margin-left: 0.4em;
+	}
+
 	@media (max-width: 800px) {
 		nav:not(.visible) {
 			transform: translate(0, calc(var(--sk-nav-height)));
@@ -331,13 +338,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		padding: 0 0.3em;
 	}
 
-	.home {
-		height: 100%;
-		display: flex;
-		align-items: center;
-	}
-
-	.home a {
+	.home-link {
 		height: 100%;
 		display: flex;
 		background-image: url(../branding/svelte-logo.svg);
@@ -353,28 +354,23 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		color: var(--sk-text-4);
 	}
 
-	.home {
-		display: flex;
-		align-items: center;
-	}
-
-	.home .home-small {
+	.home-small {
 		display: none;
 
 		margin-left: -0.75rem;
 	}
 
-	.home .home-large {
+	.home-large {
 		display: block;
 		color: var(--sk-text-4);
 	}
 
-	.home :global(strong) {
+	.home-link :global(strong) {
 		color: var(--sk-text-1);
 		font-weight: inherit;
 	}
 
-	.mobile {
+	.mobile-menu {
 		display: flex;
 		position: absolute;
 		bottom: 0;
@@ -420,7 +416,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			bottom: 0;
 		}
 
-		.home {
+		/* .home {
 			position: absolute;
 			left: 0rem;
 			bottom: 0;
@@ -429,22 +425,14 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			align-items: center;
 
 			height: var(--sk-nav-height);
-		}
+		} */
 
-		.home .home-small {
+		.home-small {
 			display: block;
 		}
 
-		.home .home-large {
+		.home-large {
 			display: none;
-		}
-
-		.current-section {
-			display: flex;
-			align-items: center;
-			font-size: 0.8em;
-			color: var(--sk-text-4);
-			margin-left: 0.4em;
 		}
 
 		.menu {
