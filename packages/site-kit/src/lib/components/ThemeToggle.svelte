@@ -68,7 +68,7 @@
 		width: 40px;
 		height: 22px;
 		flex-shrink: 0;
-		border: 1px solid var(--sk-text-3);
+		border: 1px solid var(--sk-text-4);
 		background-color: var(--sk-back-2);
 		transition: border-color 0.25s;
 	}

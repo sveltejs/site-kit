@@ -1,4 +1,4 @@
-export interface Section {
+interface Section {
 	title: string;
 	sections: {
 		title: string;
@@ -7,4 +7,9 @@ export interface Section {
 	}[];
 }
 
-export type Menu = Record<string, Section[]>;
+export interface NavigationLink {
+	title: string;
+	prefix: string;
+	pathname: string;
+	sections?: Section[];
+}
