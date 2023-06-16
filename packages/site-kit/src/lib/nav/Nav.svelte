@@ -5,7 +5,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 <script>
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
-	import { Search } from '$lib/search';
 	import { overlay_open, reduced_motion, searching, theme } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { expoOut, quintOut } from 'svelte/easing';
@@ -132,21 +131,23 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	style:z-index={$overlay_open && $searching ? 80 : null}
 	aria-label="Primary"
 >
-	<a href="/" title={home_title} class="nav-spot home">
-		<span class="home-large">
-			<slot name="home-large" />
-		</span>
+	<span class="nav-spot home">
+		<a href="/" title={home_title}>
+			<span class="home-large">
+				<slot name="home-large" />
+			</span>
 
-		<span class="home-small">
-			<slot name="home-small" />
-		</span>
+			<span class="home-small">
+				<slot name="home-small" />
+			</span>
+		</a>
 
 		{#if title}
-			<div class="nav-title">
-				{title}
+			<div class="current-section">
+				｜ {title}
 			</div>
 		{/if}
-	</a>
+	</span>
 
 	<div class="desktop">
 		<slot name="search" />
@@ -170,6 +171,16 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	</div>
 
 	<div class="mobile">
+		<button
+			aria-label="Search"
+			class="search"
+			on:click={() => {
+				$searching = true;
+			}}
+		>
+			<Icon name="search" size=".6em" />
+		</button>
+
 		<Menu bind:open>
 			<div
 				class="mobile-main-menu"
@@ -248,10 +259,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 								<slot name="external-links" />
 
 								<Separator />
-
-								<div style="height: 1rem" />
-
-								<Search />
 
 								<div class="appearance">
 									<span class="caption">Theme</span>
@@ -353,6 +360,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	.home .home-large {
 		display: block;
+		color: var(--sk-text-4);
 	}
 
 	.home :global(strong) {
@@ -376,17 +384,33 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	.mobile {
 		display: flex;
-		gap: 0.5rem;
-
 		position: absolute;
 		bottom: 0;
-		right: 1rem;
-
+		right: 0;
 		height: 100%;
 	}
 
 	.desktop {
 		display: none;
+	}
+
+	button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		display: flex;
+		gap: 1.5rem;
+		padding: 0 1rem;
+		line-height: 1;
+	}
+
+	.search {
+		padding-left: 2rem;
+	}
+
+	.menu-toggle {
+		padding-right: 2rem;
 	}
 
 	.appearance {
@@ -433,8 +457,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			display: none;
 		}
 
-		.home .home-small:empty + .nav-title {
-			margin-left: 0rem;
+		.current-section {
+			display: flex;
+			align-items: center;
+			font-size: 0.8em;
+			color: var(--sk-text-4);
+			margin-left: 0.4em;
 		}
 
 		.menu {
@@ -602,13 +630,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		.appearance {
 			position: relative;
-			left: -1.25rem;
-			bottom: -1rem;
 			display: flex;
-			gap: 2rem;
-			padding: 1.5rem 1.25rem;
+			padding: 1.5rem 0;
 			justify-content: space-between;
-			width: calc(100% + 1.25rem);
 		}
 
 		.appearance .caption {
