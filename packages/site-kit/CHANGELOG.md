@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.3
+
+### Patch Changes
+
+- 2422a25: fix homepage link colour, remove subtitle on desktop
+
 ## 6.0.0-next.2
 
 ### Patch Changes
