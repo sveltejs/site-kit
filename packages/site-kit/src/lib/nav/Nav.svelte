@@ -4,7 +4,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 <script>
 	import { browser } from '$app/environment';
-	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Search } from '$lib/search';
 	import { overlay_open, reduced_motion, searching, theme } from '$lib/stores';
@@ -80,16 +79,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		current_menu_view = links.find((link) => link.prefix === segment);
 	});
 
-	afterNavigate(({ to }) => {
-		// if (to?.url.pathname === '/') {
-		// const segment = $page.url.pathname.split('/')[1];
-		// current_menu_view = links.find((link) => link.prefix === segment);
-		// show_context_menu = !!current_menu_view;
-		// }
-
-		open = false;
-	});
-
 	/**
 	 * @param {HTMLElement} node
 	 * @param {{easing?: (t: number) => number, duration?: number }} [params]
@@ -159,18 +148,29 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		{/if}
 	</a>
 
-	<div class="buttons">
-		<button
-			aria-label="Toggle menu"
-			aria-expanded={open}
-			class="menu-toggle"
-			class:open
-			on:click={() => (open = !open)}
-		>
-			<Icon name={open ? 'close' : 'menu'} size="1em" />
-		</button>
+	<div class="desktop">
+		<slot name="search" />
 
-		<Menu {open} on:close={() => (open = false)}>
+		<div class="menu">
+			{#each links as link}
+				<a href={link.pathname}>
+					{link.title}
+				</a>
+			{/each}
+
+			<Separator />
+
+			<slot name="external-links" />
+
+			<div class="appearance">
+				<span class="caption">Theme</span>
+				<ThemeToggle />
+			</div>
+		</div>
+	</div>
+
+	<div class="mobile">
+		<Menu bind:open>
 			<div
 				class="mobile-main-menu"
 				class:offset={show_context_menu}
@@ -202,8 +202,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 						const a = 'calc(var(--height-difference) + 10px)';
 						const b = '10px';
 
-						const start = current_menu_view ? a : b;
-						const end = current_menu_view ? b : a;
+						const start = show_context_menu ? a : b;
+						const end = show_context_menu ? b : a;
 
 						const container = e.currentTarget;
 
@@ -225,31 +225,34 @@ Top navigation bar for the application. It provides a slot for the left side, th
 					<div class="viewport" bind:clientHeight={menu_height}>
 						<div class="universal">
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
-								<ul>
-									{#each links as link}
-										<li>
-											<a href={link.pathname}>
-												{link.title}
-											</a>
+								{#each links as link}
+									<a href={link.pathname}>
+										{link.title}
 
-											{#if link.sections}
-												<button
-													class="related-menu-arrow"
-													on:click|preventDefault={() => {
-														current_menu_view = link;
-														show_context_menu = true;
-													}}
-												>
-													<Icon name="arrow-right-chevron" size="6rem" />
-												</button>
-											{/if}
-										</li>
-									{/each}
-									<slot name="nav-right" />
-								</ul>
-								<Separator linear />
+										{#if link.sections}
+											<button
+												class="related-menu-arrow"
+												on:click|preventDefault={() => {
+													current_menu_view = link;
+													show_context_menu = true;
+												}}
+											>
+												<Icon name="arrow-right-chevron" size="6rem" />
+											</button>
+										{/if}
+									</a>
+								{/each}
+
+								<Separator />
+
+								<slot name="external-links" />
+
+								<Separator />
+
 								<div style="height: 1rem" />
+
 								<Search />
+
 								<div class="appearance">
 									<span class="caption">Theme</span>
 									<ThemeToggle />
@@ -275,26 +278,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			</div>
 		</Menu>
 	</div>
-
-	<ul class="menu-section">
-		<slot name="nav-center" />
-	</ul>
-
-	<div class="external menu-section">
-		<ul>
-			{#each links as link}
-				<a href={link.pathname}>
-					{link.title}
-				</a>
-			{/each}
-			<Separator />
-			<slot name="nav-right" />
-		</ul>
-		<div class="appearance">
-			<span class="caption">Theme</span>
-			<ThemeToggle />
-		</div>
-	</div>
 </nav>
 
 <style>
@@ -302,22 +285,25 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		position: fixed;
 		top: 0;
 		z-index: 100;
-
 		width: 100vw;
 		height: var(--sk-nav-height);
 		margin: 0 auto;
-
 		background-color: var(--sk-back-2);
-
 		font-family: var(--sk-font);
-
 		user-select: none;
 		transition: 0.5s var(--quint-out);
 		transition-property: transform, background;
-
-		box-shadow: 0 -0.1px 6px 0.9px hsla(0, 0%, 0%, 0.1);
-
 		isolation: isolate;
+	}
+
+	nav::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: -4px;
+		width: 100%;
+		height: 4px;
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.05), transparent);
 	}
 
 	@media (max-width: 800px) {
@@ -326,24 +312,16 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		}
 	}
 
-	.menu-section {
+	.menu {
 		position: relative;
+		display: flex;
 		width: 100%;
 	}
 
-	ul {
-		padding: 0;
-		margin: 0;
-		list-style: none;
-	}
-
-	ul :global(a) {
+	.menu :global(a) {
 		color: var(--sk-text-2);
 		line-height: 1;
-	}
-
-	.nav-spot {
-		position: relative;
+		padding: 0 0.3em;
 	}
 
 	.home {
@@ -396,7 +374,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		border-left: solid 1px var(--sk-text-4);
 	}
 
-	.buttons {
+	.mobile {
 		display: flex;
 		gap: 0.5rem;
 
@@ -407,22 +385,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		height: 100%;
 	}
 
-	button {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-
-		height: 100%;
-		width: var(--sk-nav-height);
-
-		display: flex;
-		gap: 1.5rem;
-
-		line-height: 1;
-	}
-
-	button.open {
-		color: var(--sk-theme-1);
+	.desktop {
+		display: none;
 	}
 
 	.appearance {
@@ -440,32 +404,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	@media (max-width: 799px) {
 		.nav-spot,
-		nav .buttons :global(button) {
-			position: relative;
+		nav .mobile :global(button) {
 			z-index: 7;
 		}
 
 		nav {
 			top: unset;
 			bottom: 0;
-		}
-
-		nav::after {
-			content: '';
-
-			position: absolute;
-			left: 0;
-			bottom: 0;
-
-			width: 100%;
-			height: 100%;
-
-			border-radius: inherit;
-			box-shadow: inherit;
-
-			background-color: inherit;
-
-			z-index: 6;
 		}
 
 		.home {
@@ -492,16 +437,12 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			margin-left: 0rem;
 		}
 
-		.menu-section {
+		.menu {
 			position: relative;
 			display: none;
 			width: 100%;
 			background: var(--sk-back-1);
 			padding: 1rem var(--sk-page-padding-side);
-		}
-
-		.open .menu-section {
-			display: block;
 		}
 
 		.menu-background {
@@ -601,15 +542,26 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			transform: scale(0.8);
 		}
 
-		.mobile-main-menu :global(li) {
+		.mobile-main-menu :global(a) {
 			position: relative;
 			display: block;
 			align-items: center;
 			padding: 0.3rem 0;
 			height: 4rem;
+			color: var(--sk-text-2);
 		}
 
-		.mobile-main-menu li button {
+		.mobile-main-menu .universal .contents,
+		.mobile-main-menu .context,
+		.mobile-main-menu .back-button {
+			pointer-events: all;
+		}
+
+		.mobile-main-menu .universal a {
+			position: relative;
+		}
+
+		.mobile-main-menu .universal button {
 			position: absolute;
 			right: 0;
 			top: 0;
@@ -617,11 +569,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			height: 100%;
 		}
 
-		.mobile-main-menu li button :global(svg) {
+		.mobile-main-menu :global(a svg) {
 			stroke-width: 0;
 		}
 
-		.mobile-main-menu :global(li a) {
+		.mobile-main-menu :global(a) {
 			display: flex;
 			align-items: center;
 			border-radius: var(--sk-border-radius);
@@ -630,11 +582,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			padding-left: 1rem;
 		}
 
-		.mobile-main-menu :global(li a[aria-current]) {
+		.mobile-main-menu :global(a[aria-current]) {
 			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
 		}
 
-		.mobile-main-menu :global(li:hover a) {
+		.mobile-main-menu :global(a:hover) {
 			border-radius: var(--sk-border-radius);
 
 			color: initial;
@@ -643,7 +595,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			background-color: var(--sk-back-4);
 		}
 
-		.mobile-main-menu :global(li a[aria-current]:hover) {
+		.mobile-main-menu :global(a[aria-current]:hover) {
 			background-color: hsla(var(--sk-theme-1-hsl), 0.05);
 			color: var(--sk-theme-1);
 		}
@@ -676,36 +628,27 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			grid-template-columns: 1fr auto 1fr;
 		}
 
-		ul,
-		.menu-section {
+		nav::after {
+			top: auto;
+			bottom: -4px;
+			background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), transparent);
+		}
+
+		.menu {
 			display: flex;
 			width: auto;
 			height: 100%;
 			align-items: center;
-		}
-
-		ul :global(li) {
-			padding: 0;
-		}
-
-		ul :global(a) {
-			display: flex;
-			align-items: center;
-			height: 100%;
-			padding: 0.5rem;
-		}
-
-		ul :global(a:hover) {
-			color: var(--sk-theme-3);
-		}
-
-		.external {
 			padding: 0 var(--sk-page-padding-side) 0 0;
 			justify-content: end;
 		}
 
-		.buttons {
+		.mobile {
 			display: none;
+		}
+
+		.desktop {
+			display: contents;
 		}
 
 		nav :global(.small) {
