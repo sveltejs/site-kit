@@ -131,7 +131,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	style:z-index={$overlay_open && $searching ? 80 : null}
 	aria-label="Primary"
 >
-	<span class="nav-spot home">
+	<span class="home">
 		<a href="/" title={home_title}>
 			<span class="home-large">
 				<slot name="home-large" />
@@ -332,7 +332,13 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	.home {
-		height: var(--sk-nav-height);
+		height: 100%;
+		display: flex;
+		align-items: center;
+	}
+
+	.home a {
+		height: 100%;
 		display: flex;
 		background-image: url(../branding/svelte-logo.svg);
 		background-position: calc(var(--sk-page-padding-side) - 1rem) 50%;
@@ -340,16 +346,16 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		background-size: auto 70%;
 		align-items: center;
 		padding-left: calc(var(--sk-page-padding-side) + 4rem);
-	}
-
-	.home {
-		display: flex;
-		align-items: center;
 		text-decoration: none;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		font-size: 1.8rem;
 		color: var(--sk-text-4);
+	}
+
+	.home {
+		display: flex;
+		align-items: center;
 	}
 
 	.home .home-small {
@@ -409,11 +415,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	@media (max-width: 799px) {
-		.nav-spot,
-		nav .mobile :global(button) {
-			z-index: 7;
-		}
-
 		nav {
 			top: unset;
 			bottom: 0;
@@ -428,7 +429,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			align-items: center;
 
 			height: var(--sk-nav-height);
-			padding-left: calc(var(--sk-page-padding-side) + 4rem);
 		}
 
 		.home .home-small {
