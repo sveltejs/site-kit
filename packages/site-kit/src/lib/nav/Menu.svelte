@@ -6,6 +6,7 @@
 	import Icon from '../components/Icon.svelte';
 	import NavContextMenu from './NavContextMenu.svelte';
 	import { page } from '$app/stores';
+	import { tick } from 'svelte';
 
 	/** @type {boolean} */
 	export let open;
@@ -162,8 +163,11 @@
 										{#if link.sections}
 											<button
 												class="related-menu-arrow"
-												on:click|preventDefault={() => {
+												on:click|preventDefault={async () => {
 													current_menu_view = link;
+
+													await tick();
+
 													nav_context_instance.reset();
 													show_context_menu = true;
 												}}
