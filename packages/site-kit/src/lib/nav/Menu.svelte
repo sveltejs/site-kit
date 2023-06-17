@@ -1,11 +1,12 @@
 <script>
-	import { expoOut, quintOut } from 'svelte/easing';
 	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { click_outside, focus_outside, trap } from '$lib/actions';
 	import { overlay_open, reduced_motion, theme } from '$lib/stores';
+	import { tick } from 'svelte';
+	import { expoOut, quintOut } from 'svelte/easing';
 	import Icon from '../components/Icon.svelte';
 	import NavContextMenu from './NavContextMenu.svelte';
-	import { page } from '$app/stores';
 
 	/** @type {boolean} */
 	export let open;
@@ -162,8 +163,11 @@
 										{#if link.sections}
 											<button
 												class="related-menu-arrow"
-												on:click|preventDefault={() => {
+												on:click|preventDefault={async () => {
 													current_menu_view = link;
+
+													await tick();
+
 													nav_context_instance.reset();
 													show_context_menu = true;
 												}}
