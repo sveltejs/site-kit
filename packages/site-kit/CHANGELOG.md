@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.5
+
+### Patch Changes
+
+- e4bcc56: Fix clicking on context menu arrow throws error
+
 ## 6.0.0-next.4
 
 ### Patch Changes
