@@ -1,12 +1,12 @@
 <script>
-	import { expoOut, quintOut } from 'svelte/easing';
 	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { click_outside, focus_outside, trap } from '$lib/actions';
 	import { overlay_open, reduced_motion, theme } from '$lib/stores';
+	import { tick } from 'svelte';
+	import { expoOut, quintOut } from 'svelte/easing';
 	import Icon from '../components/Icon.svelte';
 	import NavContextMenu from './NavContextMenu.svelte';
-	import { page } from '$app/stores';
-	import { tick } from 'svelte';
 
 	/** @type {boolean} */
 	export let open;
