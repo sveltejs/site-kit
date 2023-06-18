@@ -84,16 +84,16 @@
 }
 
 .text a:where(:not(.permalink)) {
-	--color: var(--primary-hsl, var(--sk-theme-1));
+	--color: var(--primary-hsl, var(--sk-theme-1-hsl));
 
-	color: var(--color);
-	box-shadow: inset 0 -1px 0 0 var(--color);
+	color: hsl(var(--color));
+	box-shadow: inset 0 -1px 0 0 hsl(var(--color));
 	transition: box-shadow 0.1s ease-in-out;
 }
 
 .text a:where(:not(.permalink)):hover {
 	text-decoration: none;
-	box-shadow: inset 0 -2px 0 0px var(--color);
+	box-shadow: inset 0 -2px 0 0px hsl(var(--color));
 }
 
 .text a:where(:not(.permalink)) code {
@@ -335,7 +335,7 @@
 
 .text blockquote.deprecated {
 	--primary-hsl: var(--sk-text-warning-hsl);
-	--color: hsl(var(--primary-hsl));
+	--color: var(--primary-hsl);
 }
 
 .text blockquote.deprecated::before {
@@ -343,7 +343,7 @@
 }
 
 .text blockquote.deprecated a {
-	--color: hsl(var(--primary-hsl));
+	--color: var(--primary-hsl);
 }
 
 .text section a:hover {
