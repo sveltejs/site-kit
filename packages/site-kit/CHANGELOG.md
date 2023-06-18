@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.6
+
+### Patch Changes
+
+- d8d64f8: fix link styles inside blockquotes
+
 ## 6.0.0-next.5
 
 ### Patch Changes
