@@ -95,7 +95,6 @@ export async function render_content_markdown(
 			const options = { file: null, link: null };
 
 			source = collect_options(source, options);
-			console.log(source);
 			source = adjust_tab_indentation(source, language);
 
 			let version_class = '';
