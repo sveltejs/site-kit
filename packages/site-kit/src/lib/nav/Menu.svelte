@@ -25,6 +25,12 @@
 	let ready = false;
 	let show_context_menu = false;
 
+	/** @type {HTMLElement} */
+	let universal_menu;
+
+	/** @type {HTMLElement} */
+	let context_menu;
+
 	function close() {
 		open = false;
 	}
@@ -146,6 +152,13 @@
 						if (e.propertyName !== 'transform') return;
 
 						e.currentTarget.style.clipPath = '';
+
+						// whenever we transition from one menu to the other, we need to move focus to the first item in the new menu
+						if (show_context_menu) {
+							context_menu.querySelector('a')?.focus();
+						} else {
+							universal_menu.querySelector('a')?.focus();
+						}
 					}}
 				>
 					<div
@@ -154,7 +167,7 @@
 						class:offset={show_context_menu}
 						bind:clientHeight={menu_height}
 					>
-						<div class="universal" inert={show_context_menu}>
+						<div class="universal" inert={show_context_menu} bind:this={universal_menu}>
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
 								{#each links as link}
 									<a href={link.pathname}>
@@ -182,7 +195,7 @@
 							</div>
 						</div>
 
-						<div class="context" inert={!show_context_menu}>
+						<div class="context" inert={!show_context_menu} bind:this={context_menu}>
 							{#if current_menu_view}
 								<NavContextMenu
 									bind:this={nav_context_instance}
