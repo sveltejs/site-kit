@@ -53,7 +53,7 @@ const METADATA_REGEX = /(?:<!---\s*|\/\/\/\s*)(?<key>file|link):\s*(?<value>.*?)
  *
  * Provided at the top. Should be under `file:` if present.
  *
- * This doesn't allow the imported members from `svelte/*` or `@sveltejs/kit` to be linked, as in they are not wrapped with an <a href="#type-onmount"></a>.
+ * This doesn't allow the imported members from `svelte/*` or `@sveltejs/kit` to be linked, as in they are not wrapped with an `<a href="#type-onmount"></a>`.
  *
  * ````md
  * ```js
@@ -73,15 +73,16 @@ const METADATA_REGEX = /(?:<!---\s*|\/\/\/\s*)(?<key>file|link):\s*(?<value>.*?)
  * @param {TwoslashBanner} [options.twoslashBanner] - A function that returns a string to be prepended to the code snippet before running the code with twoslash. Helps in adding imports from svelte or sveltekit or whichever modules are being globally referenced in all or most code snippets.
  * @param {import('.').Modules} [options.modules] Module info generated from type-gen script. Used to create type links and type information blocks
  * @param {boolean} [options.cacheCodeSnippets] Whether to cache code snippets or not. Defaults to true.
+ * @param {Parameters<typeof create_type_links>['1']} [options.resolveTypeLinks] Whether to cache code snippets or not. Defaults to true.
  */
 export async function render_content_markdown(
 	filename,
 	body,
-	{ twoslashBanner, modules = [], cacheCodeSnippets = true } = {}
+	{ twoslashBanner, modules = [], cacheCodeSnippets = true, resolveTypeLinks } = {}
 ) {
 	const highlighter = await createShikiHighlighter({ theme: 'css-variables' });
 
-	const { type_links, type_regex } = create_type_links(modules);
+	const { type_links, type_regex } = create_type_links(modules, resolveTypeLinks);
 	const SNIPPET_CACHE = await create_snippet_cache(cacheCodeSnippets);
 
 	return parse({
@@ -489,7 +490,7 @@ export function replace_export_type_placeholders(content, modules) {
 
 	return (
 		content
-			.replace(/> EXPANDED_TYPES: (.+?)#(.+)$/gm, (_, name, id) => {
+			.replace(REGEXES.EXPANDED_TYPES, (_, name, id) => {
 				const module = modules.find((module) => module.name === name);
 				if (!module) throw new Error(`Could not find module ${name}`);
 				if (!module.types) return '';
@@ -523,7 +524,7 @@ export function replace_export_type_placeholders(content, modules) {
 						.join('\n\n')
 				);
 			})
-			.replace(/> TYPES: (.+?)(?:#(.+))?$/gm, (_, name, id) => {
+			.replace(REGEXES.TYPES, (_, name, id) => {
 				const module = modules.find((module) => module.name === name);
 				if (!module) throw new Error(`Could not find module ${name}`);
 				if (!module.types) return '';
@@ -543,6 +544,11 @@ export function replace_export_type_placeholders(content, modules) {
 				return `${module.comment}\n\n${module.types
 					.map((t) => {
 						let children = t.children?.map((val) => stringify(val, 'dts')).join('\n\n');
+						if (t.name === 'Config' || t.name === 'KitConfig') {
+							// special case — we want these to be on a separate page
+							children =
+								'<div class="ts-block-property-details">\n\nSee the [configuration reference](/docs/configuration) for details.</div>';
+						}
 
 						const deprecated = t.deprecated
 							? ` <blockquote class="tag deprecated">${transform(t.deprecated)}</blockquote>`
@@ -550,6 +556,7 @@ export function replace_export_type_placeholders(content, modules) {
 
 						const markdown =
 							`<div class="ts-block">${fence(t.snippet, 'dts')}` + children + `</div>`;
+
 						return `### [TYPE]: ${t.name}\n\n${deprecated}\n\n${
 							t.comment ?? ''
 						}\n\n${markdown}\n\n`;
@@ -557,7 +564,7 @@ export function replace_export_type_placeholders(content, modules) {
 					.join('')}`;
 			})
 			// @ts-ignore
-			.replace(/> EXPORT_SNIPPET: (.+?)#(.+)?$/gm, (_, name, id) => {
+			.replace(REGEXES.EXPORT_SNIPPET, (_, name, id) => {
 				const module = modules.find((module) => module.name === name);
 				if (!module) throw new Error(`Could not find module ${name} for EXPORT_SNIPPET clause`);
 
@@ -571,7 +578,7 @@ export function replace_export_type_placeholders(content, modules) {
 					?.map((exportVal) => `<div class="ts-block">${fence(exportVal.snippet, 'dts')}</div>`)
 					.join('\n\n');
 			})
-			.replace('> MODULES', () => {
+			.replace(REGEXES.MODULES, () => {
 				return modules
 					.map((module) => {
 						if (!module.exports) return;
@@ -604,7 +611,7 @@ export function replace_export_type_placeholders(content, modules) {
 					})
 					.join('\n\n');
 			})
-			.replace(/> EXPORTS: (.+)/, (_, name) => {
+			.replace(REGEXES.EXPORTS, (_, name) => {
 				const module = modules.find((module) => module.name === name);
 				if (!module) throw new Error(`Could not find module ${name} for EXPORTS: clause`);
 				if (!module.exports) return '';
@@ -663,12 +670,12 @@ function stringify(member, lang = 'ts') {
 	if (!member) return '';
 
 	const bullet_block =
-		member.bullets?.length ?? 0 > 0
+		(member.bullets?.length ?? 0) > 0
 			? `\n\n<div class="ts-block-property-bullets">\n\n${member.bullets?.join('\n')}</div>`
 			: '';
 
 	const child_block =
-		member.children?.length ?? 0 > 0
+		(member.children?.length ?? 0) > 0
 			? `\n\n<div class="ts-block-property-children">${member.children
 					?.map((val) => stringify(val, lang))
 					.join('\n')}</div>`
@@ -762,10 +769,12 @@ async function create_snippet_cache(should) {
 
 /**
  * @param {import('.').Modules | undefined} modules
+ * @param {((module_name: string, type_name: string) => string) | undefined} resolve_link
  * @returns {{ type_regex: RegExp | null, type_links: Map<string, string> | null }}
  */
-function create_type_links(modules) {
-	if (!modules || modules.length === 0) return { type_regex: null, type_links: null };
+function create_type_links(modules, resolve_link) {
+	if (!modules || modules.length === 0 || !resolve_link)
+		return { type_regex: null, type_links: null };
 
 	const type_regex = new RegExp(
 		`(import\\(&apos;(?:svelte|@sveltejs\\/kit)&apos;\\)\\.)?\\b(${modules
@@ -778,10 +787,10 @@ function create_type_links(modules) {
 	const type_links = new Map();
 
 	for (const module of modules) {
-		const slug = slugify(module.name ?? '');
+		if (!module || !module.name) continue;
 
 		for (const type of module.types ?? []) {
-			const link = `/docs/${slug}#type-${slugify(type.name)}`;
+			const link = resolve_link(module.name, type.name);
 			type_links.set(type.name, link);
 		}
 	}
