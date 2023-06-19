@@ -346,13 +346,8 @@
 	--color: var(--primary-hsl);
 }
 
-.text section a:hover {
-	text-decoration: underline;
-}
-
 .text section a code {
 	color: inherit;
-	background: rgba(255, 62, 0, 0.1) !important;
 }
 
 .text ul ul {
