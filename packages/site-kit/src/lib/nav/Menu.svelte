@@ -94,7 +94,8 @@
 
 				const segment = $page.url.pathname.split('/')[1];
 				current_menu_view = links.find((link) => link.prefix === segment);
-				show_context_menu = !!current_menu_view;
+
+				show_context_menu = !!(current_menu_view?.sections && !!current_menu_view);
 			}
 		}}
 	>
