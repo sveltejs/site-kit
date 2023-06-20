@@ -3,6 +3,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 -->
 
 <script>
+	import { root_scroll } from '$lib/actions';
+	import { root_scroll_element } from '$lib/actions/root-scroll';
 	import { overlay_open, searching, theme } from '$lib/stores';
 	import Icon from '../components/Icon.svelte';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -31,7 +33,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 	let last_scroll = 0;
 	function handle_scroll() {
-		const scroll = window.pageYOffset;
+		if (!root_scroll_element) return;
+
+		const scroll = root_scroll_element.scrollTop;
 		if (!hash_changed) {
 			visible = scroll < 50 || scroll < last_scroll;
 		}
@@ -48,8 +52,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 </script>
 
 <svelte:window
+	use:root_scroll={handle_scroll}
 	on:hashchange={handle_hashchange}
-	on:scroll={handle_scroll}
 	on:focusin={handle_focus}
 />
 
