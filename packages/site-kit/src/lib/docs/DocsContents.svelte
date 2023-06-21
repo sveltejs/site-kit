@@ -147,6 +147,10 @@
 			color: var(--sk-theme-1) !important;
 			font-weight: 400;
 		}
+
+		.ts-toggle {
+			display: none;
+		}
 	}
 
 	@media (min-width: 832px) {

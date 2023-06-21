@@ -49,7 +49,7 @@
 		content = contentEl;
 
 		const { top } = content.getBoundingClientRect();
-		headings = content.querySelectorAll('h2[id]');
+		headings = content.querySelectorAll('h2[id], h3[id]');
 		positions = Array.from(headings).map((heading) => {
 			const style = getComputedStyle(heading);
 			return heading.getBoundingClientRect().top - parseFloat(style.scrollMarginTop) - top;
