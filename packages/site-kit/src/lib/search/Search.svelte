@@ -72,6 +72,8 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 	input::placeholder {
 		font-size: 1.2rem;
 		text-transform: uppercase;
+		color: var(--sk-text-3);
+		transform: translateY(-1px);
 	}
 
 	.shortcut {

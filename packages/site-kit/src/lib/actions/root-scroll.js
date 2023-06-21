@@ -6,11 +6,11 @@ import { browser } from '$app/environment';
 export function root_scroll(_, callback = () => {}) {
 	const root_el = /** @type {HTMLElement} */ (document.querySelector('main#main'));
 
-	root_el.addEventListener('scroll', callback);
+	root_el?.addEventListener('scroll', callback);
 
 	return {
 		destroy() {
-			root_el.removeEventListener('scroll', callback);
+			root_el?.removeEventListener('scroll', callback);
 		}
 	};
 }
