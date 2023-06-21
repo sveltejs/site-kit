@@ -164,7 +164,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	@media (max-width: 800px) {
-		nav:not(.visible) {
+		nav:not(.visible):not(:focus-within) {
 			transform: translate(0, calc(var(--sk-nav-height)));
 		}
 	}
