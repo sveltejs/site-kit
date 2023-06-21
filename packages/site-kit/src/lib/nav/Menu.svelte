@@ -170,9 +170,10 @@
 						<div class="universal" inert={show_context_menu} bind:this={universal_menu}>
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
 								{#each links as link}
-									<a href={link.pathname}>
-										{link.title}
-
+									<div class="link-item">
+										<a href={link.pathname}>
+											{link.title}
+										</a>
 										{#if link.sections}
 											<button
 												class="related-menu-arrow"
@@ -184,11 +185,12 @@
 													nav_context_instance.reset();
 													show_context_menu = true;
 												}}
+												aria-label="Show {link.title} submenu"
 											>
 												<Icon name="arrow-right-chevron" size="6rem" />
 											</button>
 										{/if}
-									</a>
+									</div>
 								{/each}
 
 								<slot />
@@ -356,19 +358,21 @@
 		pointer-events: all;
 	}
 
-	.universal :global(a) {
+	.universal .link-item {
+		--button-width: 4rem;
 		position: relative;
+		padding-right: var(--button-width);
 	}
 
-	.universal .contents :global(a button) {
+	.universal .contents .link-item button {
 		position: absolute;
 		right: 0;
 		top: 0;
-		width: 4rem;
+		width: var(--button-width);
 		height: 100%;
 	}
 
-	.viewport :global(a svg) {
+	.viewport .link-item :global(svg) {
 		stroke-width: 0;
 	}
 
@@ -385,7 +389,8 @@
 		background-color: hsla(var(--sk-theme-1-hsl), 0.05);
 	}
 
-	.viewport :global(a:hover) {
+	.viewport :global(a:hover),
+	.related-menu-arrow:hover {
 		border-radius: var(--sk-border-radius);
 
 		color: initial;
