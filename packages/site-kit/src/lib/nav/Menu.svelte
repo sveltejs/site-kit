@@ -268,10 +268,12 @@
 		border-radius: 1rem 1rem 0 0;
 		background: var(--background, var(--sk-back-2));
 		will-change: height;
+		transition: 0.4s var(--quint-out);
+		transition-property: background;
 	}
 
 	.menu-background.ready {
-		transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+		transition-property: height, background;
 	}
 
 	.menu-background.dark {

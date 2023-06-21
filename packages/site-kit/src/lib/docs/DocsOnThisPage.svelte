@@ -3,6 +3,7 @@
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import { root_scroll } from '$lib/actions';
+	import Icon from '$lib/components/Icon.svelte';
 	import { afterUpdate, createEventDispatcher, onMount } from 'svelte';
 
 	/** @type {import('./types').Page} */
@@ -120,7 +121,7 @@
 />
 
 <aside class="on-this-page" bind:this={containerEl}>
-	<h2>On this page</h2>
+	<h2><Icon name="contents" size="1em" /> <span>On this page</span></h2>
 	<nav aria-label="On this page">
 		<ul>
 			<li>
@@ -135,8 +136,12 @@
 					<a
 						href={`#${slug}`}
 						class:active={`#${slug}` === hash}
-						on:click={() => dispatch('select')}>{title}</a
+						on:click={() => dispatch('select')}
 					>
+						{title}
+					</a>
+
+					<hr />
 				</li>
 			{/each}
 		</ul>
@@ -156,6 +161,9 @@
 	}
 
 	h2 {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
 		text-transform: uppercase;
 		font-size: 1.4rem !important;
 		font-weight: 400;
@@ -164,15 +172,38 @@
 		color: var(--sk-text-3);
 	}
 
+	h2 :global(svg) {
+		display: none;
+
+		transform: translateY(-1px);
+	}
+
 	ul {
-		list-style: none;
+		list-style: none !important;
+		margin-left: 0 !important;
+	}
+
+	li {
+		margin: 0.2rem !important;
+	}
+
+	li::before {
+		content: none !important;
+	}
+
+	hr {
+		display: none;
 	}
 
 	a {
 		display: block;
 		padding: 0.3rem 0.5rem;
-		color: var(--sk-text-3);
+		color: var(--sk-text-3) !important;
 		border-left: 2px solid transparent;
+		box-shadow: none !important;
+
+		transition: 0.4s var(--quint-out) !important;
+		transition-property: background, border-left;
 	}
 
 	a:hover {
@@ -185,30 +216,79 @@
 		border-left-color: var(--sk-theme-1);
 	}
 
-	@media screen and (max-width: 832px) {
+	@media screen and (max-width: 1200px) {
 		.on-this-page {
 			position: relative;
-			top: 1.4rem;
+			top: 0;
+			left: 0;
+
+			display: block;
+
+			width: 100%;
+			height: max-content;
+
+			margin-top: 3rem;
+			padding: 0.5rem;
+
+			border-radius: var(--sk-border-radius);
+			box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
+
+			background-color: var(--sk-back-3);
 		}
 
 		h2 {
+			font-size: var(--sk-text-s) !important;
+
+			padding: 0.8rem 1rem;
+
+			border: none;
+		}
+
+		h2 span {
+			line-height: 1;
+		}
+
+		h2 :global(svg) {
+			display: block;
+		}
+
+		ul {
+			margin: 0;
+		}
+
+		li:first-child {
 			display: none;
 		}
 
 		a {
-			padding: 0.6rem 0.75rem;
-			padding-left: 2.4rem;
+			padding: 0.4rem 0.75rem;
 			box-sizing: border-box;
+
+			color: var(--sk-text-2) !important;
 		}
 
 		a.active {
 			background-color: transparent;
-			border-left: 4px solid var(--sk-theme-1);
+			border-left: 0;
 		}
 
 		a:hover {
 			text-decoration: none;
 			background-color: initial;
+		}
+
+		hr {
+			display: block;
+			border: none;
+
+			background-color: var(--sk-back-4);
+
+			height: 1px;
+			widows: 100%;
+		}
+
+		li:last-child hr {
+			display: none;
 		}
 	}
 </style>

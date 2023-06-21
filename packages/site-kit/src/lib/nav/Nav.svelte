@@ -140,7 +140,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		background-color: var(--sk-back-2);
 		font-family: var(--sk-font);
 		user-select: none;
-		transition: 0.5s var(--quint-out);
+		transition: 0.4s var(--quint-out);
 		transition-property: transform, background;
 		isolation: isolate;
 	}
