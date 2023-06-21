@@ -85,8 +85,6 @@ export async function render_content_markdown(
 	const { type_links, type_regex } = create_type_links(modules, resolveTypeLinks);
 	const SNIPPET_CACHE = await create_snippet_cache(cacheCodeSnippets);
 
-	console.log(type_links);
-
 	return parse({
 		body: generate_ts_from_js(replace_export_type_placeholders(body, modules)),
 		type_links,
