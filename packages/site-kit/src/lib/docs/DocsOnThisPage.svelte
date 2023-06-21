@@ -2,6 +2,7 @@
 	import { afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
+	import { root_scroll } from '$lib/actions';
 	import { afterUpdate, createEventDispatcher, onMount } from 'svelte';
 
 	/** @type {import('./types').Page} */
@@ -112,11 +113,15 @@
 	});
 </script>
 
-<svelte:window on:scroll={highlight} on:resize={update} on:hashchange={() => select($page.url)} />
+<svelte:window
+	use:root_scroll={highlight}
+	on:resize={update}
+	on:hashchange={() => select($page.url)}
+/>
 
 <aside class="on-this-page" bind:this={containerEl}>
 	<h2>On this page</h2>
-	<nav>
+	<nav aria-label="On this page">
 		<ul>
 			<li>
 				<a

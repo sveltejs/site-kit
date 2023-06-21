@@ -1,5 +1,17 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.8
+
+### Patch Changes
+
+- 7b60778: Relative heights and units, perf improvments on nav animation, more contrast on page indicator
+
+## 6.0.0-next.7
+
+### Patch Changes
+
+- e601284: fix: Open context menu only if current link has sections
+
 ## 6.0.0-next.6
 
 ### Patch Changes
