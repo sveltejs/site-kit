@@ -44,7 +44,7 @@ export function focusable_children(node) {
 	};
 }
 
-export function trap(node) {
+export function trap(node, { reset_focus = true }) {
 	const previous = /** @type HTMLElement} */ (document.activeElement);
 
 	const handle_keydown = (e) => {
@@ -65,7 +65,9 @@ export function trap(node) {
 	return {
 		destroy: () => {
 			node.removeEventListener('keydown', handle_keydown);
-			previous?.focus({ preventScroll: true });
+			if (reset_focus) {
+				previous?.focus({ preventScroll: true });
+			}
 		}
 	};
 }
