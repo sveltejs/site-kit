@@ -394,7 +394,6 @@
 	.related-menu-arrow:hover {
 		border-radius: var(--sk-border-radius);
 
-		color: initial;
 		text-decoration: none;
 
 		background-color: var(--sk-back-4);
