@@ -280,6 +280,9 @@
 
 	.mobile-main-menu {
 		height: 100%;
+		contain: layout paint;
+		transform: translateZ(0);
+		backface-visibility: hidden;
 	}
 
 	.clip {

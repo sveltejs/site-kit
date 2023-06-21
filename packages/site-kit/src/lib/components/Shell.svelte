@@ -64,6 +64,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 
 		width: 100%;
 		height: 100%;
+		height: 100dvh;
 
 		background: hsla(0, 0%, 0%, 0.1);
 		backdrop-filter: blur(2px);

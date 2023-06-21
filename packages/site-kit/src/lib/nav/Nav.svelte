@@ -159,7 +159,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		display: flex;
 		align-items: center;
 		font-size: 0.8em;
-		color: var(--sk-text-4);
+		color: var(--sk-text-3);
 		margin-left: 0.4em;
 	}
 
