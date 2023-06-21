@@ -116,7 +116,7 @@
 
 <aside class="on-this-page" bind:this={containerEl}>
 	<h2>On this page</h2>
-	<nav>
+	<nav aria-label="On this page">
 		<ul>
 			<li>
 				<a

@@ -25,6 +25,15 @@
 	let ready = false;
 	let show_context_menu = false;
 
+	/** @type {HTMLElement} */
+	let universal_menu;
+
+	/** @type {HTMLElement} */
+	let context_menu;
+
+	/** @type {HTMLButtonElement} */
+	let menu_button;
+
 	function close() {
 		open = false;
 	}
@@ -76,6 +85,9 @@
 	on:keydown={(e) => {
 		if (e.key === 'Escape') {
 			close();
+			// we only manage focus when Esc is hit
+			// otherwise, the navigation will reset focus
+			tick().then(() => menu_button.focus());
 		}
 	}}
 />
@@ -86,6 +98,7 @@
 		aria-expanded={open}
 		class="menu-toggle"
 		class:open
+		bind:this={menu_button}
 		on:click={() => {
 			if (open) {
 				close();
@@ -103,7 +116,7 @@
 	</button>
 
 	{#if open}
-		<div class="menu" use:trap>
+		<div class="menu" use:trap={{ reset_focus: false }}>
 			<div class="mobile-main-menu" in:slide out:slide={{ duration: 500, easing: quintOut }}>
 				<div
 					class="menu-background"
@@ -147,6 +160,13 @@
 						if (e.propertyName !== 'transform') return;
 
 						e.currentTarget.style.clipPath = '';
+
+						// whenever we transition from one menu to the other, we need to move focus to the first item in the new menu
+						if (show_context_menu) {
+							context_menu.querySelector('a')?.focus();
+						} else {
+							universal_menu.querySelector('a')?.focus();
+						}
 					}}
 				>
 					<div
@@ -155,12 +175,13 @@
 						class:offset={show_context_menu}
 						bind:clientHeight={menu_height}
 					>
-						<div class="universal" inert={show_context_menu}>
+						<div class="universal" inert={show_context_menu} bind:this={universal_menu}>
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
 								{#each links as link}
-									<a href={link.pathname}>
-										{link.title}
-
+									<div class="link-item">
+										<a href={link.pathname}>
+											{link.title}
+										</a>
 										{#if link.sections}
 											<button
 												class="related-menu-arrow"
@@ -172,18 +193,19 @@
 													nav_context_instance.reset();
 													show_context_menu = true;
 												}}
+												aria-label="Show {link.title} submenu"
 											>
 												<Icon name="arrow-right-chevron" size="6rem" />
 											</button>
 										{/if}
-									</a>
+									</div>
 								{/each}
 
 								<slot />
 							</div>
 						</div>
 
-						<div class="context" inert={!show_context_menu}>
+						<div class="context" inert={!show_context_menu} bind:this={context_menu}>
 							{#if current_menu_view}
 								<NavContextMenu
 									bind:this={nav_context_instance}
@@ -275,7 +297,8 @@
 	}
 
 	.viewport.reduced-motion {
-		transition: none;
+		/* we still want the transition events to fire for focus management */
+		transition-duration: 0.01ms;
 	}
 
 	.viewport.offset {
@@ -344,19 +367,21 @@
 		pointer-events: all;
 	}
 
-	.universal :global(a) {
+	.universal .link-item {
+		--button-width: 4rem;
 		position: relative;
+		padding-right: var(--button-width);
 	}
 
-	.universal .contents :global(a button) {
+	.universal .contents .link-item button {
 		position: absolute;
 		right: 0;
 		top: 0;
-		width: 4rem;
+		width: var(--button-width);
 		height: 100%;
 	}
 
-	.viewport :global(a svg) {
+	.viewport .link-item :global(svg) {
 		stroke-width: 0;
 	}
 
@@ -373,10 +398,10 @@
 		background-color: hsla(var(--sk-theme-1-hsl), 0.05);
 	}
 
-	.viewport :global(a:hover) {
+	.viewport :global(a:hover),
+	.related-menu-arrow:hover {
 		border-radius: var(--sk-border-radius);
 
-		color: initial;
 		text-decoration: none;
 
 		background-color: var(--sk-back-4);
