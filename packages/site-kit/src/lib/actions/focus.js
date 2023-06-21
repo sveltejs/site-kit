@@ -45,10 +45,8 @@ export function focusable_children(node) {
 }
 
 /**
- *
  * @param {HTMLElement} node
- * @param {{ reset_focus?: boolean }} param1
- * @returns
+ * @param {{ reset_focus?: boolean }} opts
  */
 export function trap(node, { reset_focus = true } = {}) {
 	const previous = /** @type HTMLElement} */ (document.activeElement);
