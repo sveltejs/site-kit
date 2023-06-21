@@ -283,7 +283,7 @@ function generate_ts_from_js(markdown) {
  * @param {string} js_code
  * @param {string} [indent]
  * @param {string} [offset]
- *  */
+ */
 function convert_to_ts(js_code, indent = '', offset = '') {
 	js_code = js_code
 		.replaceAll('// @filename: index.js', '// @filename: index.ts')
