@@ -183,7 +183,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		color: var(--sk-text-2);
 		line-height: 1;
 		margin: 0 0.3em;
-
 		white-space: nowrap;
 	}
 
