@@ -1,5 +1,16 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.9
+
+### Minor Changes
+
+- 4c4d4f0: feat: markdown renderer
+
+### Patch Changes
+
+- 47075f4: fix: manually scroll to URL hash
+- 0f4a684: fix: external links
+
 ## 6.0.0-next.8
 
 ### Patch Changes
