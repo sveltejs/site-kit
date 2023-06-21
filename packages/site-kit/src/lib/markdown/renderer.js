@@ -5,7 +5,7 @@ import path from 'node:path';
 import { format } from 'prettier';
 import { createShikiHighlighter, renderCodeToHTML, runTwoSlash } from 'shiki-twoslash';
 import ts from 'typescript';
-import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, slugify, transform } from './utils.js';
+import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils.js';
 
 /**
  * @typedef {Record<'file' | 'link', string | null>} SnippetOptions
@@ -73,7 +73,7 @@ const METADATA_REGEX = /(?:<!---\s*|\/\/\/\s*)(?<key>file|link):\s*(?<value>.*?)
  * @param {TwoslashBanner} [options.twoslashBanner] - A function that returns a string to be prepended to the code snippet before running the code with twoslash. Helps in adding imports from svelte or sveltekit or whichever modules are being globally referenced in all or most code snippets.
  * @param {import('.').Modules} [options.modules] Module info generated from type-gen script. Used to create type links and type information blocks
  * @param {boolean} [options.cacheCodeSnippets] Whether to cache code snippets or not. Defaults to true.
- * @param {Parameters<typeof create_type_links>['1']} [options.resolveTypeLinks] Whether to cache code snippets or not. Defaults to true.
+ * @param {Parameters<typeof create_type_links>['1']} [options.resolveTypeLinks] Resolve types into its slugs(used on the page itself).
  */
 export async function render_content_markdown(
 	filename,
@@ -85,9 +85,11 @@ export async function render_content_markdown(
 	const { type_links, type_regex } = create_type_links(modules, resolveTypeLinks);
 	const SNIPPET_CACHE = await create_snippet_cache(cacheCodeSnippets);
 
+	console.log(type_links);
+
 	return parse({
-		file: filename,
 		body: generate_ts_from_js(replace_export_type_placeholders(body, modules)),
+		type_links,
 		code: (source, language, current) => {
 			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
 			if (cached_snippet.code) return cached_snippet.code;
@@ -135,7 +137,9 @@ export async function render_content_markdown(
 						return match;
 					}
 
-					const link = type_links ? `<a href="${type_links.get(name)}">${name}</a>` : '';
+					const link = type_links?.get(name)
+						? `<a href="${type_links.get(name)?.relativeURL}">${name}</a>`
+						: '';
 					return `${prefix || ''}${link}`;
 				});
 			}
@@ -154,7 +158,9 @@ export async function render_content_markdown(
 				'<code>' +
 				(type_regex
 					? text.replace(type_regex, (_, prefix, name) => {
-							const link = type_links ? `<a href="${type_links.get(name)}">${name}</a>` : '';
+							const link = type_links?.get(name)
+								? `<a href="${type_links.get(name)?.relativeURL}">${name}</a>`
+								: '';
 							return `${prefix || ''}${link}`;
 					  })
 					: text) +
@@ -166,13 +172,13 @@ export async function render_content_markdown(
 
 /**
  * @param {{
- *   file: string;
  *   body: string;
+ *   type_links: Map<string, { relativeURL: string; slug: string; page: string}> | null;
  *   code: (source: string, language: string, current: string) => string;
  *   codespan: (source: string) => string;
  * }} opts
  */
-function parse({ body, code, codespan }) {
+function parse({ body, code, codespan, type_links }) {
 	const headings = [];
 
 	// this is a bit hacky, but it allows us to prevent type declarations
@@ -197,7 +203,9 @@ function parse({ body, code, codespan }) {
 
 			const type_heading_match = /^\[TYPE\]:\s+(.+)/.exec(raw);
 
-			const slug = normalizeSlugify(type_heading_match ? `type-${type_heading_match[1]}` : raw);
+			const slug = normalizeSlugify(
+				type_heading_match ? type_links?.get(type_heading_match[1])?.slug ?? '' : raw
+			);
 
 			return `<h${level} id="${slug}">${html
 				.replace(/<\/?code>/g, '')
@@ -769,8 +777,8 @@ async function create_snippet_cache(should) {
 
 /**
  * @param {import('.').Modules | undefined} modules
- * @param {((module_name: string, type_name: string) => string) | undefined} resolve_link
- * @returns {{ type_regex: RegExp | null, type_links: Map<string, string> | null }}
+ * @param {((module_name: string, type_name: string) => { slug: string; page: string; }) | undefined} resolve_link
+ * @returns {{ type_regex: RegExp | null, type_links: Map<string, { slug: string; page: string; relativeURL: string }> | null }}
  */
 function create_type_links(modules, resolve_link) {
 	if (!modules || modules.length === 0 || !resolve_link)
@@ -784,6 +792,7 @@ function create_type_links(modules, resolve_link) {
 		'g'
 	);
 
+	/** @type {Map<string, { slug: string; page: string; relativeURL: string; }>} */
 	const type_links = new Map();
 
 	for (const module of modules) {
@@ -791,7 +800,7 @@ function create_type_links(modules, resolve_link) {
 
 		for (const type of module.types ?? []) {
 			const link = resolve_link(module.name, type.name);
-			type_links.set(type.name, link);
+			type_links.set(type.name, { ...link, relativeURL: link.page + '#' + link.slug });
 		}
 	}
 
