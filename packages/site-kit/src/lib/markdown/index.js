@@ -14,21 +14,21 @@ export {
 
 /**
  * @typedef {{
-	name?: string;
-	comment?: string;
-	exempt?: boolean;
-	types?: ModuleChild[];
-	exports?: ModuleChild[];
-}[]} Modules
+ *   name?: string;
+ *   comment?: string;
+ *   exempt?: boolean;
+ *   types?: ModuleChild[];
+ *   exports?: ModuleChild[];
+ * }[]} Modules
  */
 
 /**
  * @typedef {{
-	name: string;
-	snippet: string;
-	comment: string;
-	deprecated?: string;
-	bullets?: string[];
-	children?: ModuleChild[];
-}} ModuleChild
+ *   name: string;
+ *   snippet: string;
+ *   comment: string;
+ *   deprecated?: string;
+ *   bullets?: string[];
+ *   children?: ModuleChild[];
+ * }} ModuleChild
  */
