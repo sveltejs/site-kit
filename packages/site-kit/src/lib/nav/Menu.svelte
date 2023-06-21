@@ -108,7 +108,7 @@
 				const segment = $page.url.pathname.split('/')[1];
 				current_menu_view = links.find((link) => link.prefix === segment);
 
-				show_context_menu = !!(current_menu_view?.sections && !!current_menu_view);
+				show_context_menu = !!current_menu_view?.sections && !!current_menu_view;
 			}
 		}}
 	>
@@ -178,10 +178,21 @@
 						<div class="universal" inert={show_context_menu} bind:this={universal_menu}>
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
 								{#each links as link}
-									<div class="link-item">
-										<a href={link.pathname}>
+									{@const is_external = /^https?:\/\//i.test(link.pathname)}
+
+									<div class="link-item" style:--button-width={link.sections ? '4rem' : '0'}>
+										<a href={link.pathname} rel={is_external ? 'external' : null}>
 											{link.title}
+
+											{#if is_external}
+												<span style="flex: 1 1 auto" />
+												<span class="badge">
+													NEW TAB
+													<Icon name="external-link" size="1.2em" />
+												</span>
+											{/if}
 										</a>
+
 										{#if link.sections}
 											<button
 												class="related-menu-arrow"
@@ -216,6 +227,7 @@
 
 						<button
 							class="back-button"
+							class:dark={$theme.current === 'dark'}
 							on:click={() => (show_context_menu = false)}
 							inert={!show_context_menu}
 						>
@@ -259,6 +271,21 @@
 		line-height: 1;
 	}
 
+	.badge {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0.5rem 0.75rem;
+		border-radius: 30px;
+		font-size: 1.1rem;
+		font-weight: 600;
+		letter-spacing: 1px;
+		font-family: var(--sk-font);
+		line-height: 1;
+		color: var(--sk-theme-1);
+		background: hsla(var(--sk-theme-1-hsl), 0.1);
+	}
+
 	.menu-background {
 		position: absolute;
 		width: 100%;
@@ -268,6 +295,7 @@
 		border-radius: 1rem 1rem 0 0;
 		background: var(--background, var(--sk-back-2));
 		will-change: height;
+		box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.19);
 	}
 
 	.menu-background.ready {
@@ -346,11 +374,18 @@
 		font-size: 0.9em;
 		color: var(--sk-text-3);
 
-		background-color: var(--sk-back-2);
+		background-color: var(--sk-back-3);
+
+		box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.19);
 
 		width: 50%;
 		height: 48px;
 		padding: 0 1.5rem;
+	}
+
+	.back-button.dark {
+		border-top: solid 1px var(--sk-back-4);
+		box-shadow: none;
 	}
 
 	.back-button :global(svg) {
@@ -374,7 +409,6 @@
 	}
 
 	.universal .link-item {
-		--button-width: 4rem;
 		position: relative;
 		padding-right: var(--button-width);
 	}

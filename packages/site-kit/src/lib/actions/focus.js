@@ -44,7 +44,13 @@ export function focusable_children(node) {
 	};
 }
 
-export function trap(node, { reset_focus = true }) {
+/**
+ *
+ * @param {HTMLElement} node
+ * @param {{ reset_focus?: boolean }} param1
+ * @returns
+ */
+export function trap(node, { reset_focus = true } = {}) {
 	const previous = /** @type HTMLElement} */ (document.activeElement);
 
 	const handle_keydown = (e) => {
