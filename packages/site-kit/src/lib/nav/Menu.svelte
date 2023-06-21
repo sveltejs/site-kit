@@ -31,6 +31,9 @@
 	/** @type {HTMLElement} */
 	let context_menu;
 
+	/** @type {HTMLButtonElement} */
+	let menu_button;
+
 	function close() {
 		open = false;
 	}
@@ -82,6 +85,9 @@
 	on:keydown={(e) => {
 		if (e.key === 'Escape') {
 			close();
+			// we only manage focus when Esc is hit
+			// otherwise, the navigation will reset focus
+			tick().then(() => menu_button.focus());
 		}
 	}}
 />
@@ -92,6 +98,7 @@
 		aria-expanded={open}
 		class="menu-toggle"
 		class:open
+		bind:this={menu_button}
 		on:click={() => {
 			if (open) {
 				close();
