@@ -289,7 +289,8 @@
 	}
 
 	.viewport.reduced-motion {
-		transition: none;
+		/* we still want the transition events to fire for focus management */
+		transition-duration: 0.01ms;
 	}
 
 	.viewport.offset {
