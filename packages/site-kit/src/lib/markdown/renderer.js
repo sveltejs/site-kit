@@ -839,7 +839,6 @@ function replace_blank_lines(html) {
 }
 
 /**
- *
  * @param {{
  * source: string,
  * filename: string,
