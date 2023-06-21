@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.10
+
+### Patch Changes
+
+- 9cd354a: fix: remove debug logging
+
 ## 6.0.0-next.9
 
 ### Minor Changes
