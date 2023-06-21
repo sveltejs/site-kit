@@ -3,6 +3,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 -->
 
 <script>
+	import { afterNavigate } from '$app/navigation';
 	import { navigating } from '$app/stores';
 	import { overlay_open } from '$lib/stores';
 	import PreloadingIndicator from '../nav/PreloadingIndicator.svelte';
@@ -18,6 +19,13 @@ The main shell of the application. It provides a slot for the top navigation, th
 	 * Whether the navigation is visible.
 	 */
 	export let nav_visible = true;
+
+	/** @type {HTMLElement} */
+	let main_el;
+
+	afterNavigate(() => {
+		main_el.scrollTop = 0;
+	});
 </script>
 
 <Icons />
@@ -34,7 +42,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 
 <div class="modal-overlay" class:visible={$overlay_open} aria-hidden="true" />
 
-<main id="main" style:--sk-banner-bottom-height={banner_bottom_height}>
+<main id="main" bind:this={main_el} style:--sk-banner-bottom-height={banner_bottom_height}>
 	<slot />
 </main>
 
@@ -56,6 +64,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 
 		width: 100%;
 		height: 100%;
+		height: 100dvh;
 
 		background: hsla(0, 0%, 0%, 0.1);
 		backdrop-filter: blur(2px);
@@ -75,6 +84,8 @@ The main shell of the application. It provides a slot for the top navigation, th
 		padding-top: var(--sk-nav-height);
 		padding-bottom: var(--sk-banner-bottom-height);
 		overflow: hidden;
+		overflow-y: auto;
+		height: 100%;
 	}
 
 	@media (max-width: 800px) {

@@ -242,6 +242,7 @@
 		overflow-y: hidden;
 		overflow-x: hidden;
 		pointer-events: none;
+		transform: translate3d(0, 0, 0);
 	}
 
 	button {
@@ -266,6 +267,7 @@
 		height: 100%;
 		border-radius: 1rem 1rem 0 0;
 		background: var(--background, var(--sk-back-2));
+		will-change: height;
 	}
 
 	.menu-background.ready {
@@ -278,12 +280,16 @@
 
 	.mobile-main-menu {
 		height: 100%;
+		contain: layout paint;
+		transform: translateZ(0);
+		backface-visibility: hidden;
 	}
 
 	.clip {
 		width: 100%;
 		height: 100%;
 		transition: clip-path 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+		will-change: clip-path;
 	}
 
 	.viewport {
