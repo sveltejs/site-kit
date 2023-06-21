@@ -359,12 +359,6 @@ function convert_to_ts(js_code, indent = '', offset = '') {
 							throw new Error('Unhandled @type JsDoc->TS conversion: ' + js_code);
 						}
 					} else if (ts.isJSDocParameterTag(tag) && ts.isFunctionDeclaration(node)) {
-						// if (node.parameters.length !== 1) {
-						// 	throw new Error(
-						// 		'Unhandled @type JsDoc->TS conversion; needs more params logic: ' + node.getText()
-						// 	);
-						// }
-
 						const sanitised_param = tag
 							.getFullText()
 							.replace(/\s+/g, '')
