@@ -178,19 +178,9 @@
 						<div class="universal" inert={show_context_menu} bind:this={universal_menu}>
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
 								{#each links as link}
-									{@const is_external = /^https?:\/\//i.test(link.pathname)}
-
 									<div class="link-item" style:--button-width={link.sections ? '4rem' : '0'}>
-										<a href={link.pathname} rel={is_external ? 'external' : null}>
+										<a href={link.pathname}>
 											{link.title}
-
-											{#if is_external}
-												<span style="flex: 1 1 auto" />
-												<span class="badge">
-													NEW TAB
-													<Icon name="external-link" size="1.2em" />
-												</span>
-											{/if}
 										</a>
 
 										{#if link.sections}
@@ -269,21 +259,6 @@
 		gap: 1.5rem;
 
 		line-height: 1;
-	}
-
-	.badge {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 0.5rem 0.75rem;
-		border-radius: 30px;
-		font-size: 1.1rem;
-		font-weight: 600;
-		letter-spacing: 1px;
-		font-family: var(--sk-font);
-		line-height: 1;
-		color: var(--sk-theme-1);
-		background: hsla(var(--sk-theme-1-hsl), 0.1);
 	}
 
 	.menu-background {

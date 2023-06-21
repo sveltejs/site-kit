@@ -87,16 +87,11 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		<div class="menu">
 			{#each links as link}
-				{@const is_external = /^https?:\/\//i.test(link.pathname)}
-
 				<a
 					href={link.pathname}
-					rel={is_external ? 'external' : null}
 					aria-current={$page.url.pathname.startsWith(`/${link.prefix}`) ? 'page' : null}
 				>
-					{link.title}{#if is_external}
-						<Icon name="external-link" size="1em" />
-					{/if}
+					{link.title}
 				</a>
 			{/each}
 
