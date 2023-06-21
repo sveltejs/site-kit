@@ -34,6 +34,11 @@
 		await document.fonts.ready;
 		update();
 		highlight();
+
+		const hash = $page.url.hash.replace(/^#/, '');
+
+		const el = document.getElementById(hash);
+		el?.scrollIntoView({ behavior: 'auto', block: 'start' });
 	});
 
 	afterNavigate(() => {
