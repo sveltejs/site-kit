@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.12
+
+### Patch Changes
+
+- 3640de4: fix: body & html height 100%
+
 ## 6.0.0-next.11
 
 ### Patch Changes
