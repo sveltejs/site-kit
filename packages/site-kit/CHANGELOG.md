@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.17
+
+### Patch Changes
+
+- 2bdd8c8: Make backdrop blur more pronounced
+
 ## 6.0.0-next.16
 
 ### Patch Changes
