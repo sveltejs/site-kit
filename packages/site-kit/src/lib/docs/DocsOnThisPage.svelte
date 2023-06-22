@@ -3,7 +3,7 @@
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import { root_scroll } from '$lib/actions';
-	import { afterUpdate, createEventDispatcher, onMount } from 'svelte';
+	import { afterUpdate, createEventDispatcher, onMount, tick } from 'svelte';
 
 	/** @type {import('./types').Page} */
 	export let details;
@@ -41,7 +41,7 @@
 		highlight();
 	});
 
-	function update() {
+	async function update() {
 		const contentEl = /** @type {HTMLElement | null} */ (document.querySelector('.content'));
 
 		if (!contentEl) return;
@@ -59,6 +59,8 @@
 		const hash = $page.url.hash.replace(/^#/, '');
 
 		const el = document.getElementById(hash);
+
+		await tick();
 		el?.scrollIntoView({ behavior: 'auto', block: 'start' });
 	}
 
