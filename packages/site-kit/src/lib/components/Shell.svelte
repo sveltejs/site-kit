@@ -67,7 +67,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 		height: 100dvh;
 
 		background: hsla(0, 0%, 0%, 0.1);
-		backdrop-filter: blur(2px);
+		backdrop-filter: blur(7px);
 		-webkit-backdrop-filter: blur(2px);
 
 		transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
