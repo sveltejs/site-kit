@@ -50,8 +50,6 @@
 			const hash = $page.url.hash.replace(/^#/, '');
 			const el = document.getElementById(hash);
 
-			console.log(el);
-
 			await tick();
 			el?.scrollIntoView({ behavior: 'auto', block: 'start' });
 		}
