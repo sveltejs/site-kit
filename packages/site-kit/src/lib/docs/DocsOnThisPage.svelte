@@ -48,9 +48,11 @@
 	async function emulate_autoscroll() {
 		if (browser) {
 			const hash = $page.url.hash.replace(/^#/, '');
-			const el = document.getElementById(hash);
 
 			await tick();
+
+			const el = document.getElementById(hash);
+
 			el?.scrollIntoView({ behavior: 'auto', block: 'start' });
 		}
 	}
