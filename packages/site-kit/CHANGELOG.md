@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.16
+
+### Patch Changes
+
+- cd9443a: tick() before getting element
+
 ## 6.0.0-next.15
 
 ### Patch Changes
