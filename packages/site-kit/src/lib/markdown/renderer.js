@@ -89,9 +89,7 @@ export async function render_content_markdown(
 		body: generate_ts_from_js(replace_export_type_placeholders(body, modules)),
 		type_links,
 		code: (source, language, current) => {
-			const cached_snippet = SNIPPET_CACHE.get(
-				source + language + current + (cacheCodeSnippets ? '' : +new Date() + '')
-			);
+			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
 			if (cached_snippet.code) return cached_snippet.code;
 
 			/** @type {Record<'file' | 'link', string | null>} */
