@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.11
+
+### Patch Changes
+
+- 88568b0: Only look at h2, OnThisPage
+
 ## 6.0.0-next.10
 
 ### Patch Changes
