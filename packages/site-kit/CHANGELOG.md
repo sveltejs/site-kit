@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.14
+
+### Patch Changes
+
+- 1f883c9: Wait for hash element to be created
+
 ## 6.0.0-next.13
 
 ### Patch Changes
