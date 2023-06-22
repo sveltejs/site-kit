@@ -7,6 +7,12 @@ html {
 	border-collapse: collapse;
 }
 
+html,
+body {
+	height: 100%;
+	width: 100%;
+}
+
 :root {
 	--quint-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
