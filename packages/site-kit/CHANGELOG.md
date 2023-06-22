@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.15
+
+### Patch Changes
+
+- 637073a: fix: horrifically stupid bug with scrolling to IDs
+
 ## 6.0.0-next.14
 
 ### Patch Changes
