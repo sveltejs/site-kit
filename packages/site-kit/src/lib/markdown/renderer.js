@@ -89,7 +89,9 @@ export async function render_content_markdown(
 		body: generate_ts_from_js(replace_export_type_placeholders(body, modules)),
 		type_links,
 		code: (source, language, current) => {
-			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
+			const cached_snippet = SNIPPET_CACHE.get(
+				source + language + current + (cacheCodeSnippets ? '' : +new Date() + '')
+			);
 			if (cached_snippet.code) return cached_snippet.code;
 
 			/** @type {Record<'file' | 'link', string | null>} */
@@ -177,6 +179,7 @@ export async function render_content_markdown(
  * }} opts
  */
 function parse({ body, code, codespan, type_links }) {
+	/** @type {string[]} */
 	const headings = [];
 
 	// this is a bit hacky, but it allows us to prevent type declarations
@@ -196,14 +199,10 @@ function parse({ body, code, codespan, type_links }) {
 
 			const normalized = normalizeSlugify(raw);
 
-			headings[level] = normalized;
+			headings[level - 1] = normalized;
 			headings.length = level;
 
-			const type_heading_match = /^\[TYPE\]:\s+(.+)/.exec(raw);
-
-			const slug = normalizeSlugify(
-				type_heading_match ? type_links?.get(type_heading_match[1])?.slug ?? '' : raw
-			);
+			const slug = headings.filter(Boolean).join('-');
 
 			return `<h${level} id="${slug}">${html
 				.replace(/<\/?code>/g, '')
@@ -557,9 +556,7 @@ export function replace_export_type_placeholders(content, modules) {
 						const markdown =
 							`<div class="ts-block">${fence(t.snippet, 'dts')}` + children + `</div>`;
 
-						return `### [TYPE]: ${t.name}\n\n${deprecated}\n\n${
-							t.comment ?? ''
-						}\n\n${markdown}\n\n`;
+						return `### ${t.name}\n\n${deprecated}\n\n${t.comment ?? ''}\n\n${markdown}\n\n`;
 					})
 					.join('')}`;
 			})
