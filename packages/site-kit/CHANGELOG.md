@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.13
+
+### Patch Changes
+
+- d997ad9: Fallthrough headings like Kit
+
 ## 6.0.0-next.12
 
 ### Patch Changes
