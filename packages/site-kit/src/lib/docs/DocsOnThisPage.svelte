@@ -34,11 +34,6 @@
 		await document.fonts.ready;
 		update();
 		highlight();
-
-		const hash = $page.url.hash.replace(/^#/, '');
-
-		const el = document.getElementById(hash);
-		el?.scrollIntoView({ behavior: 'auto', block: 'start' });
 	});
 
 	afterNavigate(() => {
@@ -60,6 +55,11 @@
 			return heading.getBoundingClientRect().top - parseFloat(style.scrollMarginTop) - top;
 		});
 		height = window.innerHeight;
+
+		const hash = $page.url.hash.replace(/^#/, '');
+
+		const el = document.getElementById(hash);
+		el?.scrollIntoView({ behavior: 'auto', block: 'start' });
 	}
 
 	function highlight() {
