@@ -1,4 +1,5 @@
 <script>
+	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
@@ -36,6 +37,26 @@
 		highlight();
 	});
 
+	$: pathname = $page.url.pathname;
+
+	$: {
+		pathname;
+
+		emulate_autoscroll();
+	}
+
+	async function emulate_autoscroll() {
+		if (browser) {
+			const hash = $page.url.hash.replace(/^#/, '');
+			const el = document.getElementById(hash);
+
+			console.log(el);
+
+			await tick();
+			el?.scrollIntoView({ behavior: 'auto', block: 'start' });
+		}
+	}
+
 	afterNavigate(() => {
 		update();
 		highlight();
@@ -55,13 +76,6 @@
 			return heading.getBoundingClientRect().top - parseFloat(style.scrollMarginTop) - top;
 		});
 		height = window.innerHeight;
-
-		const hash = $page.url.hash.replace(/^#/, '');
-
-		const el = document.getElementById(hash);
-
-		await tick();
-		el?.scrollIntoView({ behavior: 'auto', block: 'start' });
 	}
 
 	function highlight() {
