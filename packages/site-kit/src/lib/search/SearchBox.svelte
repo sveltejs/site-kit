@@ -233,8 +233,6 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		width: 100vw;
 		height: 100vh;
 		z-index: 100;
-		background: var(--sk-back-1);
-		opacity: 0.7;
 	}
 
 	input {

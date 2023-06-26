@@ -66,11 +66,12 @@ The main shell of the application. It provides a slot for the top navigation, th
 		height: 100%;
 		height: 100dvh;
 
+		background: var(--sk-back-1);
 		transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 	}
 
 	.modal-overlay.visible {
-		opacity: 1;
+		opacity: 0.7;
 		pointer-events: auto;
 	}
 
