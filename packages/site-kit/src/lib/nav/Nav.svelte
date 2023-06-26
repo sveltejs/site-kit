@@ -191,6 +191,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		box-shadow: inset 0 -1px 0 0 var(--sk-theme-1);
 	}
 
+	.menu :global(a[aria-current='page']:hover) {
+		text-decoration: none;
+	}
+
 	.home-link {
 		height: 100%;
 		display: flex;
