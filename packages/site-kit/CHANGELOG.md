@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.18
+
+### Minor Changes
+
+- 8413c76: Add chevron-up and chevron-down icons
+
 ## 6.0.0-next.17
 
 ### Patch Changes
