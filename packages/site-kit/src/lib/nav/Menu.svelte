@@ -108,7 +108,7 @@
 				const segment = $page.url.pathname.split('/')[1];
 				current_menu_view = links.find((link) => link.prefix === segment);
 
-				show_context_menu = !!(current_menu_view?.sections && !!current_menu_view);
+				show_context_menu = !!current_menu_view?.sections && !!current_menu_view;
 			}
 		}}
 	>
@@ -178,10 +178,11 @@
 						<div class="universal" inert={show_context_menu} bind:this={universal_menu}>
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
 								{#each links as link}
-									<div class="link-item">
+									<div class="link-item" style:--button-width={link.sections ? '4rem' : '0'}>
 										<a href={link.pathname}>
 											{link.title}
 										</a>
+
 										{#if link.sections}
 											<button
 												class="related-menu-arrow"
@@ -216,6 +217,7 @@
 
 						<button
 							class="back-button"
+							class:dark={$theme.current === 'dark'}
 							on:click={() => (show_context_menu = false)}
 							inert={!show_context_menu}
 						>
@@ -270,6 +272,7 @@
 		will-change: height;
 		transition: 0.4s var(--quint-out);
 		transition-property: background;
+		box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.19);
 	}
 
 	.menu-background.ready {
@@ -348,11 +351,18 @@
 		font-size: 0.9em;
 		color: var(--sk-text-3);
 
-		background-color: var(--sk-back-2);
+		background-color: var(--sk-back-3);
+
+		box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.19);
 
 		width: 50%;
 		height: 48px;
 		padding: 0 1.5rem;
+	}
+
+	.back-button.dark {
+		border-top: solid 1px var(--sk-back-4);
+		box-shadow: none;
 	}
 
 	.back-button :global(svg) {
@@ -376,7 +386,6 @@
 	}
 
 	.universal .link-item {
-		--button-width: 4rem;
 		position: relative;
 		padding-right: var(--button-width);
 	}

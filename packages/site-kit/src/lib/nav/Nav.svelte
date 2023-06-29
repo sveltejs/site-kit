@@ -7,6 +7,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	import { root_scroll_element } from '$lib/actions/root-scroll';
 	import { overlay_open, searching, theme } from '$lib/stores';
 	import Icon from '../components/Icon.svelte';
+	import { page } from '$app/stores';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
 	import Menu from './Menu.svelte';
 	import Separator from './Separator.svelte';
@@ -86,12 +87,15 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		<div class="menu">
 			{#each links as link}
-				<a href={link.pathname}>
+				<a
+					href={link.pathname}
+					aria-current={$page.url.pathname.startsWith(`/${link.prefix}`) ? 'page' : null}
+				>
 					{link.title}
 				</a>
 			{/each}
 
-			<Separator vertical />
+			<Separator />
 
 			<slot name="external-links" />
 
@@ -178,7 +182,17 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	.menu :global(a) {
 		color: var(--sk-text-2);
 		line-height: 1;
-		padding: 0 0.3em;
+		margin: 0 0.3em;
+		white-space: nowrap;
+	}
+
+	.menu :global(a[aria-current='page']) {
+		color: var(--sk-theme-1);
+		box-shadow: inset 0 -1px 0 0 var(--sk-theme-1);
+	}
+
+	.menu :global(a[aria-current='page']:hover) {
+		text-decoration: none;
 	}
 
 	.home-link {

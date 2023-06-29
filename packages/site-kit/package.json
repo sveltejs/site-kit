@@ -1,6 +1,6 @@
 {
 	"name": "@sveltejs/site-kit",
-	"version": "6.0.0-next.8",
+	"version": "6.0.0-next.18",
 	"description": "Styles and components for use in *.svelte.dev websites",
 	"type": "module",
 	"scripts": {
@@ -20,22 +20,29 @@
 	"homepage": "https://github.com/sveltejs/site-kit#readme",
 	"dependencies": {
 		"esm-env": "^1.0.0",
-		"svelte-local-storage-store": "^0.4.0"
+		"svelte-local-storage-store": "^0.5.0"
 	},
 	"devDependencies": {
-		"@sveltejs/kit": "^1.15.5",
+		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/package": "^2.0.2",
+		"@types/marked": "^5.0.0",
+		"@types/node": "^20.3.1",
+		"@types/prettier": "^2.7.3",
 		"flexsearch": "^0.7.31",
-		"svelte": "^3.58.0",
-		"typescript": "^5.0.4",
-		"vite": "^4.2.1"
+		"magic-string": "^0.30.0",
+		"marked": "^5.1.0",
+		"prettier": "^2.8.8",
+		"shiki-twoslash": "^3.1.2",
+		"svelte": "^3.59.1",
+		"typescript": "^5.1.3",
+		"vite": "^4.3.9"
 	},
 	"publishConfig": {
 		"access": "public"
 	},
 	"peerDependencies": {
 		"@sveltejs/kit": "^1.0.0",
-		"svelte": "^3.54.0 || ^4.0.0-next.0 || ^4.0.0"
+		"svelte": "^3.54.0 || ^4.0.0-next.1 || ^4.0.0"
 	},
 	"types": "./dist/types.d.ts",
 	"exports": {
@@ -60,6 +67,11 @@
 			"types": "./dist/docs/index.d.ts",
 			"default": "./dist/docs/index.js",
 			"svelte": "./dist/docs/index.js"
+		},
+		"./markdown": {
+			"types": "./dist/markdown/index.d.ts",
+			"default": "./dist/markdown/index.js",
+			"svelte": "./dist/markdown/index.js"
 		},
 		"./nav": {
 			"types": "./dist/nav/index.d.ts",

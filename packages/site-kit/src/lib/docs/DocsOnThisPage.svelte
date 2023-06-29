@@ -1,10 +1,11 @@
 <script>
+	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import { root_scroll } from '$lib/actions';
 	import Icon from '$lib/components/Icon.svelte';
-	import { afterUpdate, createEventDispatcher, onMount } from 'svelte';
+	import { afterUpdate, createEventDispatcher, onMount, tick } from 'svelte';
 
 	/** @type {import('./types').Page} */
 	export let details;
@@ -37,12 +38,32 @@
 		highlight();
 	});
 
+	$: pathname = $page.url.pathname;
+
+	$: {
+		pathname;
+
+		emulate_autoscroll();
+	}
+
+	async function emulate_autoscroll() {
+		if (browser) {
+			const hash = $page.url.hash.replace(/^#/, '');
+
+			await tick();
+
+			const el = document.getElementById(hash);
+
+			el?.scrollIntoView({ behavior: 'auto', block: 'start' });
+		}
+	}
+
 	afterNavigate(() => {
 		update();
 		highlight();
 	});
 
-	function update() {
+	async function update() {
 		const contentEl = /** @type {HTMLElement | null} */ (document.querySelector('.content'));
 
 		if (!contentEl) return;

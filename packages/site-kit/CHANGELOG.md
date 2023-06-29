@@ -1,5 +1,70 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.18
+
+### Minor Changes
+
+- 8413c76: Add chevron-up and chevron-down icons
+
+## 6.0.0-next.17
+
+### Patch Changes
+
+- 2bdd8c8: Make backdrop blur more pronounced
+
+## 6.0.0-next.16
+
+### Patch Changes
+
+- cd9443a: tick() before getting element
+
+## 6.0.0-next.15
+
+### Patch Changes
+
+- 637073a: fix: horrifically stupid bug with scrolling to IDs
+
+## 6.0.0-next.14
+
+### Patch Changes
+
+- 1f883c9: Wait for hash element to be created
+
+## 6.0.0-next.13
+
+### Patch Changes
+
+- d997ad9: Fallthrough headings like Kit
+
+## 6.0.0-next.12
+
+### Patch Changes
+
+- 3640de4: fix: body & html height 100%
+
+## 6.0.0-next.11
+
+### Patch Changes
+
+- 88568b0: Only look at h2, OnThisPage
+
+## 6.0.0-next.10
+
+### Patch Changes
+
+- 9cd354a: fix: remove debug logging
+
+## 6.0.0-next.9
+
+### Minor Changes
+
+- 4c4d4f0: feat: markdown renderer
+
+### Patch Changes
+
+- 47075f4: fix: manually scroll to URL hash
+- 0f4a684: fix: external links
+
 ## 6.0.0-next.8
 
 ### Patch Changes

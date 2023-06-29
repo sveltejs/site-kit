@@ -4,6 +4,7 @@
 		"allowJs": true,
 		"checkJs": true,
 		"strict": true,
-		"noEmit": true
+		"noEmit": true,
+		"allowSyntheticDefaultImports": true
 	}
 }
