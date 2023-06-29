@@ -21,6 +21,9 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0(svelte@3.59.1)
     devDependencies:
+      '@orama/orama':
+        specifier: ^1.0.8
+        version: 1.0.8
       '@sveltejs/kit':
         specifier: ^1.20.4
         version: 1.20.4(svelte@3.59.1)(vite@4.3.9)
@@ -36,9 +39,6 @@ importers:
       '@types/prettier':
         specifier: ^2.7.3
         version: 2.7.3
-      flexsearch:
-        specifier: ^0.7.31
-        version: 0.7.31
       magic-string:
         specifier: ^0.30.0
         version: 0.30.0
@@ -516,6 +516,11 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
+    dev: true
+
+  /@orama/orama@1.0.8:
+    resolution: {integrity: sha512-UJvfnhCL4m4NQZFTs2kUDel67HHkzWCZJqF6Q4Dsx8hROXP82OXvPXsTXfHhHIyxtETdliEEkub1c6k6+36Gqw==}
+    engines: {node: '>= 16.0.0'}
     dev: true
 
   /@polka/url@1.0.0-next.21:
@@ -1164,10 +1169,6 @@ packages:
     dependencies:
       micromatch: 4.0.5
       pkg-dir: 4.2.0
-    dev: true
-
-  /flexsearch@0.7.31:
-    resolution: {integrity: sha512-XGozTsMPYkm+6b5QL3Z9wQcJjNYxp0CYn3U1gO7dwD6PAqU1SVWZxI9CCg3z+ml3YfqdPnrBehaBrnH2AGKbNA==}
     dev: true
 
   /for-each@0.3.3:

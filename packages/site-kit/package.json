@@ -23,12 +23,12 @@
 		"svelte-local-storage-store": "^0.5.0"
 	},
 	"devDependencies": {
+		"@orama/orama": "^1.0.8",
 		"@sveltejs/kit": "^1.20.4",
 		"@sveltejs/package": "^2.0.2",
 		"@types/marked": "^5.0.0",
 		"@types/node": "^20.3.1",
 		"@types/prettier": "^2.7.3",
-		"flexsearch": "^0.7.31",
 		"magic-string": "^0.30.0",
 		"marked": "^5.1.0",
 		"prettier": "^2.8.8",

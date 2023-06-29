@@ -1,13 +1,10 @@
-import flexsearch from 'flexsearch';
-
-// @ts-expect-error
-const Index = /** @type {import('flexsearch').Index} */ (flexsearch.Index) ?? flexsearch;
+import { create, insertMultiple, search as orama_search } from '@orama/orama';
 
 /** If the search is already initialized */
 export let inited = false;
 
-/** @type {import('flexsearch').Index<any>[]} */
-let indexes;
+/** @type {import('@orama/orama').Orama} */
+let index;
 
 /** @type {Map<string, import('./types').Block>} */
 const map = new Map();
@@ -19,27 +16,25 @@ const hrefs = new Map();
  * Initialize the search index
  * @param {import('./types').Block[]} blocks
  */
-export function init(blocks) {
+export async function init(blocks) {
 	if (inited) return;
 
-	// we have multiple indexes, so we can rank sections (migration guide comes last)
-	const max_rank = Math.max(...blocks.map((block) => block.rank ?? 0));
+	index = await create({
+		schema: {
+			title: 'string',
+			content: 'string',
+			breadcrumbs: 'string[]'
+		},
+		components: {
+			tokenizer: { language: 'english', stemming: false }
+		}
+	});
 
-	indexes = Array.from({ length: max_rank + 1 }, () => new Index({ tokenize: 'forward' }));
+	// @ts-ignore Block[] is the right type
+	await insertMultiple(index, blocks);
 
 	for (const block of blocks) {
-		const title = block.breadcrumbs.at(-1);
 		map.set(block.href, block);
-		// NOTE: we're not using a number as the ID here, but it is recommended:
-		// https://github.com/nextapps-de/flexsearch#use-numeric-ids
-		// If we were to switch to a number we would need a second map from ID to block
-		// We need to keep the existing one to allow looking up recent searches by URL even if docs change
-		// It's unclear how much browsers do string interning and how this might affect memory
-		// We'd probably want to test both implementations across browsers if memory usage becomes an issue
-		// TODO: fix the type by updating flexsearch after
-		// https://github.com/nextapps-de/flexsearch/pull/364 is merged and released
-		indexes[block.rank ?? 0].add(block.href, `${title} ${block.content}`);
-
 		hrefs.set(block.breadcrumbs.join('::'), block.href);
 	}
 
@@ -49,31 +44,42 @@ export function init(blocks) {
 /**
  * Search for a given query in the existing index
  * @param {string} query
- * @returns {import('./types').Tree[]}
+ * @returns {Promise<import('./types').Tree[]>}
  */
-export function search(query) {
+export async function search(query) {
 	const escaped = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 	const regex = new RegExp(`(^|\\b)${escaped}`, 'i');
 
-	const blocks = indexes
-		.flatMap((index) => index.search(query))
-		.map(lookup)
-		.map((block, rank) => ({ block: /** @type{import('./types').Block} */ (block), rank }))
-		.sort((a, b) => {
-			const a_title_matches = regex.test(/** @type {string} */ (a.block.breadcrumbs.at(-1)));
-			const b_title_matches = regex.test(/** @type {string} */ (b.block.breadcrumbs.at(-1)));
+	const search_results = (await orama_search(index, { term: query })).hits.map(
+		({ document }) => document
+	);
 
-			// massage the order a bit, so that title matches
-			// are given higher priority
-			if (a_title_matches !== b_title_matches) {
-				return a_title_matches ? -1 : 1;
-			}
+	/** @type {import('./types').Block[]} */
+	const blocks = [];
 
-			return a.block.breadcrumbs.length - b.block.breadcrumbs.length || a.rank - b.rank;
-		})
-		.map(({ block }) => block);
+	for (const result of search_results) {
+		// @ts-ignore
+		const block = /** @type {import('./types').Block} */ (result);
+
+		blocks.push(block);
+	}
+
+	blocks.sort((a, b) => {
+		const a_title_matches = regex.test(/** @type {string} */ (a.breadcrumbs.at(-1)));
+		const b_title_matches = regex.test(/** @type {string} */ (b.breadcrumbs.at(-1)));
+
+		// massage the order a bit, so that title matches
+		// are given higher priority
+		if (a_title_matches !== b_title_matches) {
+			return a_title_matches ? -1 : 1;
+		}
+
+		return a.breadcrumbs.length - b.breadcrumbs.length || a.rank - b.rank;
+	});
 
 	const results = tree([], blocks).children;
+
+	console.log(results);
 
 	return results;
 }
