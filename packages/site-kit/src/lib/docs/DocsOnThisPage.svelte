@@ -5,7 +5,10 @@
 	import { page } from '$app/stores';
 	import { root_scroll } from '$lib/actions';
 	import Icon from '$lib/components/Icon.svelte';
+	import { mql } from '$lib/stores';
 	import { afterUpdate, createEventDispatcher, onMount, tick } from 'svelte';
+	import { expoOut } from 'svelte/easing';
+	import { slide } from 'svelte/transition';
 
 	/** @type {import('./types').Page} */
 	export let details;
@@ -32,10 +35,18 @@
 
 	let show_contents = false;
 
+	const is_mobile = mql('(max-width: 1200px)');
+
+	let mobile_menu_open = false;
+
 	onMount(async () => {
 		await document.fonts.ready;
 		update();
 		highlight();
+	});
+
+	afterNavigate(() => {
+		mobile_menu_open = false;
 	});
 
 	$: pathname = $page.url.pathname;
@@ -142,31 +153,42 @@
 />
 
 <aside class="on-this-page" bind:this={containerEl}>
-	<h2><Icon name="contents" size="1em" /> <span>On this page</span></h2>
-	<nav aria-label="On this page">
-		<ul>
-			<li>
-				<a
-					href="{base}/docs/{details.slug}"
-					class:active={hash === ''}
-					on:click={() => dispatch('select')}>{details.title}</a
-				>
-			</li>
-			{#each details.sections as { title, slug }}
+	<button class="heading" on:click={() => (mobile_menu_open = !mobile_menu_open)}>
+		<!-- <Icon name="contents" /> -->
+
+		<h2>On this page</h2>
+
+		<button class="expand-icon" class:inverted={mobile_menu_open}>
+			<Icon name="chevron-down" />
+		</button>
+	</button>
+
+	{#if (browser && !$is_mobile) || ($is_mobile && mobile_menu_open)}
+		<nav aria-label="On this page" transition:slide={{ axis: 'y', easing: expoOut, duration: 400 }}>
+			<ul>
 				<li>
 					<a
-						href={`#${slug}`}
-						class:active={`#${slug}` === hash}
-						on:click={() => dispatch('select')}
+						href="{base}/docs/{details.slug}"
+						class:active={hash === ''}
+						on:click={() => dispatch('select')}>{details.title}</a
 					>
-						{title}
-					</a>
-
-					<hr />
 				</li>
-			{/each}
-		</ul>
-	</nav>
+				{#each details.sections as { title, slug }}
+					<li>
+						<a
+							href={`#${slug}`}
+							class:active={`#${slug}` === hash}
+							on:click={() => dispatch('select')}
+						>
+							{title}
+						</a>
+
+						<hr />
+					</li>
+				{/each}
+			</ul>
+		</nav>
+	{/if}
 </aside>
 
 <style>
@@ -181,22 +203,42 @@
 		overflow-y: auto;
 	}
 
-	h2 {
-		display: flex;
+	.heading {
+		position: relative;
+
+		width: 100%;
+
+		display: grid;
 		align-items: center;
+		grid-template-columns: 1fr auto;
 		gap: 0.75rem;
+
+		padding: 1rem 0.75rem;
+	}
+
+	h2 {
 		text-transform: uppercase;
 		font-size: 1.4rem !important;
 		font-weight: 400;
-		margin: 0 0 1rem 0 !important;
-		padding: 0 0 0 0.6rem;
+		margin: 0 !important;
+		padding: 0 !important;
 		color: var(--sk-text-3);
+		text-align: start;
 	}
 
-	h2 :global(svg) {
+	.heading :global(svg) {
 		display: none;
 
 		transform: translateY(-1px);
+	}
+
+	.expand-icon :global(svg) {
+		transition: transform 0.4s var(--quint-out);
+		transform-origin: center;
+	}
+
+	.expand-icon.inverted :global(svg) {
+		transform: rotate3d(0, 0, 1, 180deg);
 	}
 
 	ul {
@@ -246,7 +288,7 @@
 			display: block;
 
 			width: 100%;
-			height: max-content;
+			height: auto;
 
 			margin-top: 3rem;
 			padding: 0.5rem;
@@ -259,17 +301,14 @@
 
 		h2 {
 			font-size: var(--sk-text-s) !important;
+			line-height: 1;
 
 			padding: 0.8rem 1rem;
 
 			border: none;
 		}
 
-		h2 span {
-			line-height: 1;
-		}
-
-		h2 :global(svg) {
+		.heading :global(svg) {
 			display: block;
 		}
 
