@@ -61,7 +61,8 @@ export async function init(blocks, priority_map) {
 		},
 		components: {
 			tokenizer: { language: 'english', stemming: false }
-		}
+		},
+		sort: { enabled: false }
 	});
 
 	// @ts-ignore Block[] is the right type
