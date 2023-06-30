@@ -6,7 +6,7 @@ addEventListener('message', async (event) => {
 	if (type === 'init') {
 		const res = await fetch(`${payload.origin}/content.json`);
 		const { blocks } = await res.json();
-		await init(blocks);
+		await init(blocks, payload.priority_map);
 
 		postMessage({ type: 'ready' });
 	}
