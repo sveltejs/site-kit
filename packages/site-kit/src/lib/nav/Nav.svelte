@@ -196,7 +196,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	.home-link {
-		justify-self: start;
+		max-width: max-content;
 		height: 100%;
 		display: flex;
 		background-image: url(../branding/svelte-logo.svg);
