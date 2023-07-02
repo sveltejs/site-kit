@@ -38,7 +38,9 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 		const scroll = root_scroll_element.scrollTop;
 		if (!hash_changed) {
-			visible = scroll < 50 || scroll < last_scroll;
+			visible = scroll === last_scroll
+				? visible
+				: scroll < 50 || scroll < last_scroll;
 		}
 
 		last_scroll = scroll;
