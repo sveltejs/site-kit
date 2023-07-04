@@ -154,13 +154,11 @@
 
 <aside class="on-this-page" bind:this={containerEl}>
 	<button class="heading" on:click={() => (mobile_menu_open = !mobile_menu_open)}>
-		<!-- <Icon name="contents" /> -->
+		<span class="h2">On this page</span>
 
-		<h2>On this page</h2>
-
-		<button class="expand-icon" class:inverted={mobile_menu_open}>
+		<span class="expand-icon" class:inverted={mobile_menu_open}>
 			<Icon name="chevron-down" />
-		</button>
+		</span>
 	</button>
 
 	{#if (browser && !$is_mobile) || ($is_mobile && mobile_menu_open)}
@@ -220,7 +218,7 @@
 		padding: 1rem 0.75rem;
 	}
 
-	h2 {
+	.h2 {
 		text-transform: uppercase;
 		font-size: 1.4rem !important;
 		font-weight: 400;
@@ -303,7 +301,7 @@
 			background-color: var(--sk-back-3);
 		}
 
-		h2 {
+		.h2 {
 			font-size: var(--sk-text-s) !important;
 			line-height: 1;
 
@@ -318,6 +316,13 @@
 
 		ul {
 			margin: 0;
+
+			display: grid;
+			gap: 0.5rem;
+		}
+
+		li {
+			margin: 0rem !important;
 		}
 
 		li:first-child {
