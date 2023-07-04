@@ -26,13 +26,13 @@ export async function init(blocks, priority_map) {
 	for (const { breadcrumbs, href, content } of blocks) {
 		const new_block = /** @type {import('./types').SearchAppropriateBlock} */ ({});
 
-		if (breadcrumbs.length >= 1 && breadcrumbs[0]) {
+		if (breadcrumbs.length >= 1 && breadcrumbs?.[0]) {
 			new_block.h1 = breadcrumbs[0];
 		}
-		if (breadcrumbs.length >= 2 && breadcrumbs[1]) {
+		if (breadcrumbs.length >= 2 && breadcrumbs?.[1]) {
 			new_block.h2 = breadcrumbs[1];
 		}
-		if (breadcrumbs.length >= 3 && breadcrumbs[2]) {
+		if (breadcrumbs.length >= 3 && breadcrumbs?.[2]) {
 			new_block.h3 = breadcrumbs[2];
 		}
 
@@ -60,7 +60,7 @@ export async function init(blocks, priority_map) {
 			priority: 'number'
 		},
 		components: {
-			tokenizer: { language: 'english', stemming: false }
+			tokenizer: { language: 'english', stemming: true }
 		},
 		sort: { enabled: false }
 	});
@@ -84,25 +84,27 @@ export async function init(blocks, priority_map) {
  * @returns {Promise<import('./types').Tree[]>}
  */
 export async function search(query) {
-	const search_results = (
-		await orama_search(index, {
-			term: query,
-			sortBy: (a, b) => {
-				const [_docIdA, scoreA, docA] = a;
-				const [_docIdB, scoreB, docB] = b;
+	const search_results = /** @type {any[]} */ (
+		(
+			await orama_search(index, {
+				term: query,
+				sortBy: (a, b) => {
+					const [_docIdA, scoreA, docA] = a;
+					const [_docIdB, scoreB, docB] = b;
 
-				// @ts-ignore
-				return docB.priority * 1000 + scoreB - (docA.priority * 1000 + scoreA);
-			},
-			boost: {
-				h1: 3,
-				h2: 2,
-				h3: 1
-			},
+					// @ts-ignore
+					return docB.priority * 1000 + scoreB - (docA.priority * 1000 + scoreA);
+				},
+				boost: {
+					h1: 3,
+					h2: 2,
+					h3: 1
+				},
 
-			limit: search_appropriate_blocks.length
-		})
-	).hits.map(({ document }) => document);
+				limit: search_appropriate_blocks.length
+			})
+		).hits.map(({ document }) => document)
+	);
 
 	/** @type {import('./types').SearchAppropriateBlock[]} */
 	const blocks = [];
@@ -114,9 +116,12 @@ export async function search(query) {
 		blocks.push(block);
 	}
 
-	const results = /** @type {import('./types').Tree[]} */ (convertToTrees(blocks));
+	// console.log(search_results);
+	// console.log(results);
 
-	return results;
+	console.log(buildBlockTree(blocks));
+
+	return buildBlockTree(blocks);
 }
 
 /**
@@ -128,66 +133,61 @@ export function lookup(href) {
 }
 
 /**
- * @param {string[]} breadcrumbs
- * @param {import('./types').SearchAppropriateBlock[]} blocks
- * @returns {import('./types').Tree | null}
+ * @param {SearchAppropriateBlock[]} blocks
+ * @returns {Tree[]}
  */
-function createTree(breadcrumbs, blocks) {
-	const depth = breadcrumbs.length;
+function buildBlockTree(blocks) {
+	// Group blocks by h1
+	const groupedByH1 = blocks.reduce((acc, block) => {
+		if (block.h1) {
+			acc[block.h1] = acc[block.h1] || [];
+			acc[block.h1].push(block);
+		}
+		return acc;
+	}, {});
 
-	const node = blocks.find((block) => {
-		let { h1, h2, h3 } = block;
-		/** @type {(string|undefined)[]} */
-		let blockBreadcrumbs = [];
-		if (h3) blockBreadcrumbs = [h1, h2, h3];
-		else if (h2) blockBreadcrumbs = [h1, h2];
-		else if (h1) blockBreadcrumbs = [h1];
+	// Create trees
+	return Object.entries(groupedByH1).map(([h1, group]) => {
+		// Create a node for h1
+		const h1Node = group.find((block) => !block.h2) || { ...group[0], content: '' };
 
-		if (blockBreadcrumbs.length !== depth) return false;
-		return breadcrumbs.every((part, i) => blockBreadcrumbs[i] === part);
+		// Group h2s under h1
+		const groupedByH2 = group.reduce((acc, block) => {
+			if (block.h2) {
+				acc[block.h2] = acc[block.h2] || [];
+				acc[block.h2].push(block);
+			}
+			return acc;
+		}, {});
+
+		// Create children for h1 node
+		const children = Object.entries(groupedByH2).map(([h2, group]) => {
+			// Create a node for h2
+			const h2Node = group.find((block) => !block.h3) || { ...group[0], content: '' };
+
+			// h3 blocks under h2
+			const h3Children = group
+				.filter((block) => block.h3)
+				.map((block) => ({
+					breadcrumbs: [h1, h2, block.h3],
+					href: block.href,
+					node: { header: block.h3, content: block.content },
+					children: []
+				}));
+
+			return {
+				breadcrumbs: [h1, h2],
+				href: h2Node.href,
+				node: { header: h2, content: h2Node.content },
+				children: h3Children
+			};
+		});
+
+		return {
+			breadcrumbs: [h1],
+			href: h1Node.href,
+			node: { header: h1, content: h1Node.content },
+			children
+		};
 	});
-
-	if (!node) return null;
-
-	const descendants = blocks.filter((block) => {
-		let { h1, h2, h3 } = block;
-		/** @type {(string)[]} */
-		let blockBreadcrumbs = [];
-		if (h3) blockBreadcrumbs = /** @type {string[]} */ ([h1, h2, h3].filter(Boolean));
-		else if (h2) blockBreadcrumbs = [h1, h2];
-		else if (h1) blockBreadcrumbs = [h1];
-
-		if (blockBreadcrumbs.length <= depth) return false;
-		return breadcrumbs.every((part, i) => blockBreadcrumbs[i] === part);
-	});
-
-	const childParts = Array.from(
-		new Set(
-			descendants.map((block) => {
-				let { h1, h2, h3 } = block;
-				return h3 || h2 || h1;
-			})
-		)
-	);
-
-	return {
-		breadcrumbs,
-		href: node ? node.href : '',
-		node: {
-			content: node?.content
-		},
-		children: /** @type {import('./types').Tree[]} */ (
-			childParts.map((part) => createTree([...breadcrumbs, part], descendants)).filter(Boolean)
-		)
-	};
-}
-
-/**
- *
- * @param {import('./types').SearchAppropriateBlock[]} blocks
- * @returns {(import('./types').Tree | null)[]}
- */
-function convertToTrees(blocks) {
-	let topHeaders = Array.from(new Set(blocks.map((block) => block.h1).filter(Boolean)));
-	return topHeaders.map((header) => createTree([header], blocks)).filter(Boolean);
 }
