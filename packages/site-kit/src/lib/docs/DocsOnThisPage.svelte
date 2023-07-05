@@ -144,8 +144,6 @@
 			}
 		}
 	});
-
-	$: console.log($reduced_motion);
 </script>
 
 <svelte:window
