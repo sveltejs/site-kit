@@ -199,10 +199,6 @@
 </aside>
 
 <style>
-	* {
-		box-sizing: border-box;
-	}
-
 	.on-this-page {
 		display: var(--on-this-page-display);
 		position: fixed;
