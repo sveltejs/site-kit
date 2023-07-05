@@ -3,6 +3,7 @@ import { writable } from 'svelte/store';
 
 export const overlay_open = writable(false);
 export const should_nav_autohide = writable(false);
+export const nav_open = writable(false);
 
 overlay_open.subscribe((value) => {
 	if (!browser) return;
