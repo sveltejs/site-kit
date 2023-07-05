@@ -153,13 +153,19 @@
 />
 
 <aside class="on-this-page" bind:this={containerEl}>
-	<button class="heading" on:click={() => (mobile_menu_open = !mobile_menu_open)}>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<svelte:element
+		this={$is_mobile ? 'button' : 'div'}
+		class="heading"
+		aria-expanded={mobile_menu_open}
+		on:click={() => (mobile_menu_open = !mobile_menu_open)}
+	>
 		<span class="h2">On this page</span>
 
 		<span class="expand-icon" class:inverted={mobile_menu_open}>
 			<Icon name="chevron-down" />
 		</span>
-	</button>
+	</svelte:element>
 
 	{#if (browser && !$is_mobile) || ($is_mobile && mobile_menu_open)}
 		<nav
@@ -170,7 +176,7 @@
 				<li>
 					<a
 						href="{base}/docs/{details.slug}"
-						class:active={hash === ''}
+						aria-current={hash === '' ? 'page' : false}
 						on:click={() => dispatch('select')}>{details.title}</a
 					>
 				</li>
@@ -178,7 +184,7 @@
 					<li>
 						<a
 							href={`#${slug}`}
-							class:active={`#${slug}` === hash}
+							aria-current={`#${slug}` === hash ? 'page' : false}
 							on:click={() => dispatch('select')}
 						>
 							{title}
@@ -283,7 +289,7 @@
 		background: var(--sk-back-3);
 	}
 
-	a.active {
+	a[aria-current='page'] {
 		background: var(--sk-back-3);
 		border-left-color: var(--sk-theme-1);
 	}
@@ -312,7 +318,7 @@
 			font-size: var(--sk-text-s);
 			line-height: 1;
 
-			padding: 0.8rem 1rem;
+			padding: 0.8rem 0.5rem;
 
 			border: none;
 		}
@@ -343,7 +349,7 @@
 			color: var(--sk-text-2);
 		}
 
-		a.active {
+		a[aria-current='page'] {
 			background-color: transparent;
 			border-left: 0;
 		}
