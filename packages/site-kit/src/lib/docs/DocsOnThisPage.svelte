@@ -5,7 +5,14 @@
 	import { page } from '$app/stores';
 	import { click_outside, focus_outside, root_scroll } from '$lib/actions';
 	import Icon from '$lib/components/Icon.svelte';
-	import { mql, nav_open, overlay_open, reduced_motion } from '$lib/stores';
+	import {
+		mql,
+		nav_open,
+		on_this_page_open,
+		overlay_open,
+		reduced_motion,
+		theme
+	} from '$lib/stores';
 	import { afterUpdate, createEventDispatcher, onMount, tick } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
@@ -44,8 +51,6 @@
 
 	const is_mobile = mql('(max-width: 1200px)');
 
-	let mobile_menu_open = false;
-
 	$: pathname = $page.url.pathname;
 
 	$: {
@@ -55,7 +60,7 @@
 	}
 
 	$: {
-		$overlay_open = mobile_menu_open;
+		$overlay_open = $on_this_page_open;
 	}
 
 	onMount(async () => {
@@ -94,7 +99,7 @@
 		update();
 		highlight();
 
-		mobile_menu_open = false;
+		$on_this_page_open = false;
 	});
 
 	async function emulate_autoscroll() {
@@ -155,7 +160,7 @@
 	}
 
 	function on_link_click() {
-		mobile_menu_open = false;
+		$on_this_page_open = false;
 		dispatch('select');
 	}
 </script>
@@ -168,38 +173,39 @@
 
 <aside
 	class="on-this-page"
+	class:dark={$theme.current === 'dark'}
 	style:z-index={mobile_z_index}
 	bind:this={containerEl}
-	use:click_outside={() => $is_mobile && (mobile_menu_open = false)}
-	use:focus_outside={() => $is_mobile && (mobile_menu_open = false)}
+	use:click_outside={() => $is_mobile && ($on_this_page_open = false)}
+	use:focus_outside={() => $is_mobile && ($on_this_page_open = false)}
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<svelte:element
 		this={$is_mobile ? 'button' : 'div'}
 		class="heading"
-		aria-expanded={mobile_menu_open}
-		on:click={() => (mobile_menu_open = !mobile_menu_open)}
+		aria-expanded={$on_this_page_open}
+		on:click={() => ($on_this_page_open = !$on_this_page_open)}
 	>
 		<span class="h2">On this page</span>
 
-		<span class="expand-icon" class:inverted={mobile_menu_open}>
+		<span class="expand-icon" class:inverted={$on_this_page_open}>
 			<Icon name="chevron-down" />
 		</span>
 	</svelte:element>
 
-	{#if (browser && !$is_mobile) || ($is_mobile && mobile_menu_open)}
+	{#if (browser && !$is_mobile) || ($is_mobile && $on_this_page_open)}
 		<nav
 			aria-label="On this page"
 			transition:slide={{ axis: 'y', easing: expoOut, duration: $reduced_motion ? 0 : 400 }}
-			on:introstart={() => mobile_menu_open && (mobile_z_index = Z_INDICES.OPEN)}
+			on:introstart={() => $on_this_page_open && (mobile_z_index = Z_INDICES.OPEN)}
 			on:outrostart={async () => {
 				await tick();
 
-				if (!mobile_menu_open && $nav_open) {
+				if (!$on_this_page_open && $nav_open) {
 					mobile_z_index = Z_INDICES.BASE;
 				}
 			}}
-			on:outroend={() => !mobile_menu_open && (mobile_z_index = Z_INDICES.BASE)}
+			on:outroend={() => !$on_this_page_open && (mobile_z_index = Z_INDICES.BASE)}
 		>
 			<ul>
 				<li>
@@ -247,7 +253,7 @@
 		grid-template-columns: 1fr auto;
 		gap: 0.75rem;
 
-		padding: 0.25rem 0.25rem;
+		padding: 0.75rem 0.75rem;
 	}
 
 	.h2 {
@@ -304,7 +310,7 @@
 	}
 
 	a:hover {
-		text-decoration: none;
+		box-shadow: none;
 		background: var(--sk-back-3);
 	}
 
@@ -315,6 +321,7 @@
 
 	@media screen and (max-width: 1200px) {
 		.on-this-page {
+			--shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
 			position: relative;
 			top: 0;
 			left: 0;
@@ -324,15 +331,28 @@
 
 			width: 100%;
 			height: auto;
+			padding: 0;
 
-			margin-top: 3rem;
-			padding: 0.5rem;
-
-			border-radius: var(--sk-border-radius);
+			margin: 5rem 0;
 
 			overflow-y: initial;
+		}
 
-			background-color: var(--sk-back-4);
+		.on-this-page.dark {
+			--shadow: 0 0 0 1px var(--sk-back-4);
+		}
+
+		.heading {
+			z-index: 2;
+
+			box-shadow: var(--shadow);
+			border-radius: var(--sk-border-radius);
+
+			background-color: var(--sk-back-3);
+		}
+
+		.heading[aria-expanded='true'] {
+			border-radius: var(--sk-border-radius) var(--sk-border-radius) 0 0;
 		}
 
 		.h2 {
@@ -350,15 +370,18 @@
 
 		nav {
 			position: absolute;
-			top: 48px;
+			top: 45px;
 			left: 0;
 
 			width: 100%;
-			padding-bottom: 1rem;
+			max-height: 50vh;
 
-			background-color: var(--sk-back-4);
+			overflow-y: auto;
+
+			background-color: var(--sk-back-3);
 
 			border-radius: 0 0 var(--sk-border-radius) var(--sk-border-radius);
+			box-shadow: var(--shadow);
 		}
 
 		ul {
@@ -376,8 +399,16 @@
 			display: none;
 		}
 
+		li:nth-child(2) {
+			margin-top: 0.75rem;
+		}
+
+		li:last-child {
+			margin-bottom: 0.75rem;
+		}
+
 		a {
-			padding: 0.4rem 0.75rem;
+			padding: 0.4rem 1.25rem;
 			box-sizing: border-box;
 
 			color: var(--sk-text-2);

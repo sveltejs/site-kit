@@ -5,7 +5,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 <script>
 	import { root_scroll } from '$lib/actions';
 	import { root_scroll_element } from '$lib/actions/root-scroll';
-	import { overlay_open, searching, theme, nav_open } from '$lib/stores';
+	import { overlay_open, searching, theme, nav_open, on_this_page_open } from '$lib/stores';
 	import Icon from '../components/Icon.svelte';
 	import { page } from '$app/stores';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -62,7 +62,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	class:visible={visible || $nav_open}
 	class:$nav_open
 	class:dark={$theme.current === 'dark'}
-	style:z-index={$overlay_open && $searching ? 80 : null}
+	style:z-index={$overlay_open && ($searching || $on_this_page_open) ? 80 : null}
 	aria-label="Primary"
 >
 	<a class="home-link" href="/" title={home_title}>
