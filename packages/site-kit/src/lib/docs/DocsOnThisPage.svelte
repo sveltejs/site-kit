@@ -35,7 +35,12 @@
 
 	let show_contents = false;
 
-	let mobile_z_index = 2;
+	const Z_INDICES = {
+		BASE: 2,
+		OPEN: 101
+	};
+
+	let mobile_z_index = Z_INDICES.BASE;
 
 	const is_mobile = mql('(max-width: 1200px)');
 
@@ -168,37 +173,49 @@
 	use:click_outside={() => $is_mobile && (mobile_menu_open = false)}
 	use:focus_outside={() => $is_mobile && (mobile_menu_open = false)}
 >
-	<button class="heading" on:click={() => (mobile_menu_open = !mobile_menu_open)}>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<svelte:element
+		this={$is_mobile ? 'button' : 'div'}
+		class="heading"
+		aria-expanded={mobile_menu_open}
+		on:click={() => (mobile_menu_open = !mobile_menu_open)}
+	>
 		<span class="h2">On this page</span>
 
 		<span class="expand-icon" class:inverted={mobile_menu_open}>
 			<Icon name="chevron-down" />
 		</span>
-	</button>
+	</svelte:element>
 
 	{#if (browser && !$is_mobile) || ($is_mobile && mobile_menu_open)}
 		<nav
 			aria-label="On this page"
 			transition:slide={{ axis: 'y', easing: expoOut, duration: $reduced_motion ? 0 : 400 }}
-			on:introstart={() => mobile_menu_open && (mobile_z_index = 101)}
+			on:introstart={() => mobile_menu_open && (mobile_z_index = Z_INDICES.OPEN)}
 			on:outrostart={async () => {
 				await tick();
 
 				if (!mobile_menu_open && $nav_open) {
-					mobile_z_index = 2;
+					mobile_z_index = Z_INDICES.BASE;
 				}
 			}}
-			on:outroend={() => !mobile_menu_open && (mobile_z_index = 2)}
+			on:outroend={() => !mobile_menu_open && (mobile_z_index = Z_INDICES.BASE)}
 		>
 			<ul>
 				<li>
-					<a href="{base}/docs/{details.slug}" class:active={hash === ''} on:click={on_link_click}
-						>{details.title}</a
+					<a
+						href="{base}/docs/{details.slug}"
+						aria-current={hash === '' ? 'page' : false}
+						on:click={on_link_click}>{details.title}</a
 					>
 				</li>
 				{#each details.sections as { title, slug }}
 					<li>
-						<a href={`#${slug}`} class:active={`#${slug}` === hash} on:click={on_link_click}>
+						<a
+							href={`#${slug}`}
+							aria-current={`#${slug}` === hash ? 'page' : false}
+							on:click={on_link_click}
+						>
 							{title}
 						</a>
 					</li>
@@ -209,10 +226,6 @@
 </aside>
 
 <style>
-	* {
-		box-sizing: border-box;
-	}
-
 	.on-this-page {
 		display: var(--on-this-page-display);
 		position: fixed;
@@ -295,7 +308,7 @@
 		background: var(--sk-back-3);
 	}
 
-	a.active {
+	a[aria-current='page'] {
 		background: var(--sk-back-3);
 		border-left-color: var(--sk-theme-1);
 	}
@@ -316,7 +329,6 @@
 			padding: 0.5rem;
 
 			border-radius: var(--sk-border-radius);
-			/* box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.1); */
 
 			overflow-y: initial;
 
@@ -327,7 +339,7 @@
 			font-size: var(--sk-text-s);
 			line-height: 1;
 
-			padding: 0.8rem 1rem;
+			padding: 0.8rem 0.5rem;
 
 			border: none;
 		}
@@ -371,7 +383,7 @@
 			color: var(--sk-text-2);
 		}
 
-		a.active {
+		a[aria-current='page'] {
 			background-color: transparent;
 			border-left: 0;
 		}
