@@ -234,15 +234,15 @@
 		grid-template-columns: 1fr auto;
 		gap: 0.75rem;
 
-		padding: 1rem 0.75rem;
+		padding: 0.25rem 0.25rem;
 	}
 
 	.h2 {
 		text-transform: uppercase;
-		font-size: 1.4rem !important;
+		font-size: 1.4rem;
 		font-weight: 400;
-		margin: 0 !important;
-		padding: 0 !important;
+		margin: 0;
+		padding: 0;
 		color: var(--sk-text-3);
 		text-align: start;
 	}
@@ -251,6 +251,10 @@
 		display: none;
 
 		transform: translateY(-1px);
+	}
+
+	.expand-icon {
+		padding: 0.5rem;
 	}
 
 	.expand-icon :global(svg) {
@@ -263,26 +267,26 @@
 	}
 
 	ul {
-		list-style: none !important;
-		margin-left: 0 !important;
+		list-style: none;
+		margin-left: 0;
 	}
 
 	li {
-		margin: 0.2rem !important;
+		margin: 0.2rem;
 	}
 
 	li::before {
-		content: none !important;
+		content: none;
 	}
 
 	a {
 		display: block;
 		padding: 0.3rem 0.5rem;
-		color: var(--sk-text-3) !important;
+		color: var(--sk-text-3);
 		border-left: 2px solid transparent;
-		box-shadow: none !important;
+		box-shadow: none;
 
-		transition: 0.4s var(--quint-out) !important;
+		transition: 0.4s var(--quint-out);
 		transition-property: background, border-left;
 	}
 
@@ -320,7 +324,7 @@
 		}
 
 		.h2 {
-			font-size: var(--sk-text-s) !important;
+			font-size: var(--sk-text-s);
 			line-height: 1;
 
 			padding: 0.8rem 1rem;
@@ -353,7 +357,7 @@
 		}
 
 		li {
-			margin: 0rem !important;
+			margin: 0rem;
 		}
 
 		li:first-child {
@@ -364,7 +368,7 @@
 			padding: 0.4rem 0.75rem;
 			box-sizing: border-box;
 
-			color: var(--sk-text-2) !important;
+			color: var(--sk-text-2);
 		}
 
 		a.active {
