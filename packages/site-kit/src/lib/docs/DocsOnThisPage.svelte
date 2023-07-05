@@ -3,9 +3,16 @@
 	import { afterNavigate } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { page } from '$app/stores';
-	import { root_scroll } from '$lib/actions';
+	import { click_outside, focus_outside, root_scroll } from '$lib/actions';
 	import Icon from '$lib/components/Icon.svelte';
-	import { mql, reduced_motion } from '$lib/stores';
+	import {
+		mql,
+		nav_open,
+		on_this_page_open,
+		overlay_open,
+		reduced_motion,
+		theme
+	} from '$lib/stores';
 	import { afterUpdate, createEventDispatcher, onMount, tick } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
@@ -35,19 +42,14 @@
 
 	let show_contents = false;
 
+	const Z_INDICES = {
+		BASE: 2,
+		OPEN: 101
+	};
+
+	let mobile_z_index = Z_INDICES.BASE;
+
 	const is_mobile = mql('(max-width: 1200px)');
-
-	let mobile_menu_open = false;
-
-	onMount(async () => {
-		await document.fonts.ready;
-		update();
-		highlight();
-	});
-
-	afterNavigate(() => {
-		mobile_menu_open = false;
-	});
 
 	$: pathname = $page.url.pathname;
 
@@ -56,6 +58,49 @@
 
 		emulate_autoscroll();
 	}
+
+	$: {
+		$overlay_open = $on_this_page_open;
+	}
+
+	onMount(async () => {
+		await document.fonts.ready;
+		update();
+		highlight();
+	});
+
+	afterUpdate(() => {
+		// bit of a hack — prevent sidebar scrolling if
+		// TOC is open on mobile, or scroll came from within sidebar
+		if (show_contents && window.innerWidth < 832) return;
+		const active = containerEl.querySelector('.active');
+		if (active) {
+			const { top, bottom } = active.getBoundingClientRect();
+			const min = 100;
+			const max = window.innerHeight - 100;
+
+			if (top > max) {
+				containerEl.scrollBy({
+					top: top - max,
+					left: 0,
+					behavior: 'smooth'
+				});
+			} else if (bottom < min) {
+				containerEl.scrollBy({
+					top: bottom - min,
+					left: 0,
+					behavior: 'smooth'
+				});
+			}
+		}
+	});
+
+	afterNavigate(() => {
+		update();
+		highlight();
+
+		$on_this_page_open = false;
+	});
 
 	async function emulate_autoscroll() {
 		if (browser) {
@@ -68,11 +113,6 @@
 			el?.scrollIntoView({ behavior: 'auto', block: 'start' });
 		}
 	}
-
-	afterNavigate(() => {
-		update();
-		highlight();
-	});
 
 	async function update() {
 		const contentEl = /** @type {HTMLElement | null} */ (document.querySelector('.content'));
@@ -119,31 +159,10 @@
 		);
 	}
 
-	afterUpdate(() => {
-		// bit of a hack — prevent sidebar scrolling if
-		// TOC is open on mobile, or scroll came from within sidebar
-		if (show_contents && window.innerWidth < 832) return;
-		const active = containerEl.querySelector('.active');
-		if (active) {
-			const { top, bottom } = active.getBoundingClientRect();
-			const min = 100;
-			const max = window.innerHeight - 100;
-
-			if (top > max) {
-				containerEl.scrollBy({
-					top: top - max,
-					left: 0,
-					behavior: 'smooth'
-				});
-			} else if (bottom < min) {
-				containerEl.scrollBy({
-					top: bottom - min,
-					left: 0,
-					behavior: 'smooth'
-				});
-			}
-		}
-	});
+	function on_link_click() {
+		$on_this_page_open = false;
+		dispatch('select');
+	}
 </script>
 
 <svelte:window
@@ -152,32 +171,48 @@
 	on:hashchange={() => select($page.url)}
 />
 
-<aside class="on-this-page" bind:this={containerEl}>
+<aside
+	class="on-this-page"
+	class:dark={$theme.current === 'dark'}
+	style:z-index={mobile_z_index}
+	bind:this={containerEl}
+	use:click_outside={() => $is_mobile && ($on_this_page_open = false)}
+	use:focus_outside={() => $is_mobile && ($on_this_page_open = false)}
+>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<svelte:element
 		this={$is_mobile ? 'button' : 'div'}
 		class="heading"
-		aria-expanded={mobile_menu_open}
-		on:click={() => (mobile_menu_open = !mobile_menu_open)}
+		aria-expanded={$on_this_page_open}
+		on:click={() => ($on_this_page_open = !$on_this_page_open)}
 	>
 		<span class="h2">On this page</span>
 
-		<span class="expand-icon" class:inverted={mobile_menu_open}>
+		<span class="expand-icon" class:inverted={$on_this_page_open}>
 			<Icon name="chevron-down" />
 		</span>
 	</svelte:element>
 
-	{#if (browser && !$is_mobile) || ($is_mobile && mobile_menu_open)}
+	{#if (browser && !$is_mobile) || ($is_mobile && $on_this_page_open)}
 		<nav
 			aria-label="On this page"
 			transition:slide={{ axis: 'y', easing: expoOut, duration: $reduced_motion ? 0 : 400 }}
+			on:introstart={() => $on_this_page_open && (mobile_z_index = Z_INDICES.OPEN)}
+			on:outrostart={async () => {
+				await tick();
+
+				if (!$on_this_page_open && $nav_open) {
+					mobile_z_index = Z_INDICES.BASE;
+				}
+			}}
+			on:outroend={() => !$on_this_page_open && (mobile_z_index = Z_INDICES.BASE)}
 		>
 			<ul>
 				<li>
 					<a
 						href="{base}/docs/{details.slug}"
 						aria-current={hash === '' ? 'page' : false}
-						on:click={() => dispatch('select')}>{details.title}</a
+						on:click={on_link_click}>{details.title}</a
 					>
 				</li>
 				{#each details.sections as { title, slug }}
@@ -185,12 +220,10 @@
 						<a
 							href={`#${slug}`}
 							aria-current={`#${slug}` === hash ? 'page' : false}
-							on:click={() => dispatch('select')}
+							on:click={on_link_click}
 						>
 							{title}
 						</a>
-
-						<hr />
 					</li>
 				{/each}
 			</ul>
@@ -220,7 +253,7 @@
 		grid-template-columns: 1fr auto;
 		gap: 0.75rem;
 
-		padding: 0.25rem 0.25rem;
+		padding: 0.75rem 0.75rem;
 	}
 
 	.h2 {
@@ -265,10 +298,6 @@
 		content: none;
 	}
 
-	hr {
-		display: none;
-	}
-
 	a {
 		display: block;
 		padding: 0.3rem 0.5rem;
@@ -281,7 +310,7 @@
 	}
 
 	a:hover {
-		text-decoration: none;
+		box-shadow: none;
 		background: var(--sk-back-3);
 	}
 
@@ -292,22 +321,38 @@
 
 	@media screen and (max-width: 1200px) {
 		.on-this-page {
+			--shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
 			position: relative;
 			top: 0;
 			left: 0;
+			z-index: 99;
 
 			display: block;
 
 			width: 100%;
 			height: auto;
+			padding: 0;
 
-			margin-top: 3rem;
-			padding: 0.5rem;
+			margin: 5rem 0;
 
+			overflow-y: initial;
+		}
+
+		.on-this-page.dark {
+			--shadow: 0 0 0 1px var(--sk-back-4);
+		}
+
+		.heading {
+			z-index: 2;
+
+			box-shadow: var(--shadow);
 			border-radius: var(--sk-border-radius);
-			box-shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
 
 			background-color: var(--sk-back-3);
+		}
+
+		.heading[aria-expanded='true'] {
+			border-radius: var(--sk-border-radius) var(--sk-border-radius) 0 0;
 		}
 
 		.h2 {
@@ -323,8 +368,24 @@
 			display: block;
 		}
 
+		nav {
+			position: absolute;
+			top: 45px;
+			left: 0;
+
+			width: 100%;
+			max-height: 50vh;
+
+			overflow-y: auto;
+
+			background-color: var(--sk-back-3);
+
+			border-radius: 0 0 var(--sk-border-radius) var(--sk-border-radius);
+			box-shadow: var(--shadow);
+		}
+
 		ul {
-			margin: 0;
+			margin: 0 !important;
 
 			display: grid;
 			gap: 0.5rem;
@@ -338,8 +399,16 @@
 			display: none;
 		}
 
+		li:nth-child(2) {
+			margin-top: 0.75rem;
+		}
+
+		li:last-child {
+			margin-bottom: 0.75rem;
+		}
+
 		a {
-			padding: 0.4rem 0.75rem;
+			padding: 0.4rem 1.25rem;
 			box-sizing: border-box;
 
 			color: var(--sk-text-2);
@@ -353,20 +422,6 @@
 		a:hover {
 			text-decoration: none;
 			background-color: initial;
-		}
-
-		hr {
-			display: block;
-			border: none;
-
-			background-color: var(--sk-back-4);
-
-			height: 1px;
-			widows: 100%;
-		}
-
-		li:last-child hr {
-			display: none;
 		}
 	}
 </style>

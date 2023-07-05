@@ -68,7 +68,7 @@
 
 		return {
 			css: (t, u) =>
-				$reduced_motion.current
+				$reduced_motion
 					? `opacity: ${t}`
 					: `transform: translate3d(0, ${height * u}px, 0) scale3d(${0.9 + 0.1 * t}, ${
 							0.9 + 0.1 * t
@@ -171,7 +171,7 @@
 				>
 					<div
 						class="viewport"
-						class:reduced-motion={$reduced_motion.current}
+						class:reduced-motion={$reduced_motion}
 						class:offset={show_context_menu}
 						bind:clientHeight={menu_height}
 					>
