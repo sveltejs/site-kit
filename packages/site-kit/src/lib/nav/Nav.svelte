@@ -5,7 +5,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 <script>
 	import { root_scroll } from '$lib/actions';
 	import { root_scroll_element } from '$lib/actions/root-scroll';
-	import { overlay_open, searching, theme } from '$lib/stores';
+	import { overlay_open, searching, theme, nav_open, on_this_page_open } from '$lib/stores';
 	import Icon from '../components/Icon.svelte';
 	import { page } from '$app/stores';
 	import ThemeToggle from '../components/ThemeToggle.svelte';
@@ -20,7 +20,6 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	/** @type {import('../types').NavigationLink[]} */
 	export let links;
 
-	let open = false;
 	let visible = true;
 
 	/** @type {HTMLElement} */
@@ -46,8 +45,8 @@ Top navigation bar for the application. It provides a slot for the left side, th
 	}
 
 	function handle_focus() {
-		if (open && !nav.contains(document.activeElement)) {
-			open = false;
+		if ($nav_open && !nav.contains(document.activeElement)) {
+			$nav_open = false;
 		}
 	}
 </script>
@@ -60,10 +59,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 
 <nav
 	bind:this={nav}
-	class:visible={visible || open}
-	class:open
+	class:visible={visible || $nav_open}
+	class:$nav_open
 	class:dark={$theme.current === 'dark'}
-	style:z-index={$overlay_open && $searching ? 80 : null}
+	style:z-index={$overlay_open && ($searching || $on_this_page_open) ? 80 : null}
 	aria-label="Primary"
 >
 	<a class="home-link" href="/" title={home_title}>
@@ -117,7 +116,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 			<Icon name="search" size=".6em" />
 		</button>
 
-		<Menu bind:open {links}>
+		<Menu bind:open={$nav_open} {links}>
 			<Separator />
 
 			<slot name="external-links" />
@@ -144,7 +143,7 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		background-color: var(--sk-back-2);
 		font-family: var(--sk-font);
 		user-select: none;
-		transition: 0.5s var(--quint-out);
+		transition: 0.4s var(--quint-out);
 		transition-property: transform, background;
 		isolation: isolate;
 	}
