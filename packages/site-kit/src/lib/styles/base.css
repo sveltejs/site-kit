@@ -83,12 +83,7 @@ h1 {
 	font-size: var(--sk-text-xxl);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+:where(h1, h2, h3, h4, h5, h6) {
 	position: relative;
 	font-weight: 400;
 	line-height: 1.35;
@@ -144,8 +139,7 @@ blockquote {
 	max-width: var(--sk-line-max-width);
 }
 
-blockquote p,
-blockquote ul {
+blockquote :where(p, ul) {
 	font-size: var(--sk-text-s);
 }
 
@@ -196,8 +190,7 @@ th {
 	padding: 0.4rem 0.8rem 0.4rem 0;
 }
 
-table code,
-table span {
+table :where(code, span) {
 	white-space: pre;
 }
 
