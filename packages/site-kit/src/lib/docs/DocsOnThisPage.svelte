@@ -5,7 +5,7 @@
 	import { page } from '$app/stores';
 	import { root_scroll } from '$lib/actions';
 	import Icon from '$lib/components/Icon.svelte';
-	import { mql } from '$lib/stores';
+	import { mql, reduced_motion } from '$lib/stores';
 	import { afterUpdate, createEventDispatcher, onMount, tick } from 'svelte';
 	import { expoOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
@@ -144,6 +144,8 @@
 			}
 		}
 	});
+
+	$: console.log($reduced_motion);
 </script>
 
 <svelte:window
@@ -162,7 +164,10 @@
 	</button>
 
 	{#if (browser && !$is_mobile) || ($is_mobile && mobile_menu_open)}
-		<nav aria-label="On this page" transition:slide={{ axis: 'y', easing: expoOut, duration: 400 }}>
+		<nav
+			aria-label="On this page"
+			transition:slide={{ axis: 'y', easing: expoOut, duration: $reduced_motion ? 0 : 400 }}
+		>
 			<ul>
 				<li>
 					<a

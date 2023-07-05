@@ -1,12 +1,4 @@
-import { BROWSER } from 'esm-env';
-import { persisted } from 'svelte-local-storage-store';
+import { mql } from './mql';
 
-/**
- * @typedef {{ preference: 'system' | 'user', current: boolean }} ReducedMotion
- */
-
-/** @type {import('svelte/store').Writable<ReducedMotion>} */
-export const reduced_motion = persisted('svelte:reduced-motion', {
-	preference: 'system',
-	current: BROWSER ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false
-});
+/** @type {import('svelte/store').Readable<boolean>} */
+export const reduced_motion = mql('(prefers-reduced-motion: reduce)');
