@@ -179,19 +179,23 @@
 	use:click_outside={() => $is_mobile && ($on_this_page_open = false)}
 	use:focus_outside={() => $is_mobile && ($on_this_page_open = false)}
 >
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<svelte:element
-		this={$is_mobile ? 'button' : 'div'}
-		class="heading"
-		aria-expanded={$on_this_page_open}
-		on:click={() => ($on_this_page_open = !$on_this_page_open)}
-	>
-		<span class="h2">On this page</span>
+	<h2>
+		{#if $is_mobile}
+			<button
+				class="heading"
+				aria-expanded={$on_this_page_open}
+				on:click={() => ($on_this_page_open = !$on_this_page_open)}
+			>
+				<span class="h2">On this page</span>
 
-		<span class="expand-icon" class:inverted={$on_this_page_open}>
-			<Icon name="chevron-down" />
-		</span>
-	</svelte:element>
+				<span class="expand-icon" class:inverted={$on_this_page_open}>
+					<Icon name="chevron-down" />
+				</span>
+			</button>
+		{:else}
+			<span class="h2">On this page</span>
+		{/if}
+	</h2>
 
 	{#if (browser && !$is_mobile) || ($is_mobile && $on_this_page_open)}
 		<nav
@@ -254,6 +258,12 @@
 		gap: 0.75rem;
 
 		padding: 0.75rem 0.75rem;
+	}
+
+	h2 {
+		/* override global styles */
+		margin: 0;
+		border: none;
 	}
 
 	.h2 {
