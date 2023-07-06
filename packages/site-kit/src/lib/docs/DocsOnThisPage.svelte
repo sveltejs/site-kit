@@ -241,6 +241,10 @@
 		top: var(--sk-nav-height);
 		left: calc(100vw - (var(--sidebar-width)));
 		overflow-y: auto;
+		scrollbar-width: none;
+	}
+	.on-this-page::-webkit-scrollbar {
+		display: none;
 	}
 
 	.heading {
