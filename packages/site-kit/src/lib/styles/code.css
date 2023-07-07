@@ -59,8 +59,7 @@ body.dark {
 	display: none;
 }
 
-pre.twoslash .error,
-pre.twoslash .error-behind {
+pre.twoslash :where(.error, .error-behind) {
 	display: none;
 }
 

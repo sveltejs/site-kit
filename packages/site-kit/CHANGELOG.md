@@ -1,5 +1,17 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.20
+
+### Patch Changes
+
+- 5b9f8ec: Prevent triggering "On this page" overlay on desktop
+
+## 6.0.0-next.19
+
+### Patch Changes
+
+- dd347a9: OnThisPage for mobile
+
 ## 6.0.0-next.18
 
 ### Minor Changes
