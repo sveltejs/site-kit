@@ -10,6 +10,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 	import Icon from '../components/Icon.svelte';
 	import SearchResults from './SearchResults.svelte';
 	import SearchWorker from './search-worker.js?worker';
+	import { page } from '$app/stores';
 
 	/** @type {HTMLElement} */
 	let modal;
@@ -48,7 +49,8 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		worker.postMessage({
 			type: 'init',
 			payload: {
-				origin: location.origin
+				origin: location.origin,
+				priority_map: $page.data.search.priority_map
 			}
 		});
 	});
@@ -125,6 +127,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 {#if $searching && ready}
 	<div class="pseudo-overlay" aria-hidden="true" on:click={close} />
 
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		bind:this={modal}
 		class="modal"
@@ -174,6 +177,8 @@ It appears when the user clicks on the `Search` component or presses the corresp
 
 			<div class="results">
 				{#if search?.query}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<div class="results-container" on:click={() => ($searching = false)}>
 						<SearchResults
 							results={search.results}

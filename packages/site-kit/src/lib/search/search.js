@@ -1,13 +1,10 @@
-import flexsearch from 'flexsearch';
-
-// @ts-expect-error
-const Index = /** @type {import('flexsearch').Index} */ (flexsearch.Index) ?? flexsearch;
+import { create, insertMultiple, search as orama_search } from '@orama/orama';
 
 /** If the search is already initialized */
 export let inited = false;
 
-/** @type {import('flexsearch').Index<any>[]} */
-let indexes;
+/** @type {import('@orama/orama').Orama} */
+let index;
 
 /** @type {Map<string, import('./types').Block>} */
 const map = new Map();
@@ -15,31 +12,66 @@ const map = new Map();
 /** @type {Map<string, string>} */
 const hrefs = new Map();
 
+/** @type {import('./types').SearchAppropriateBlock[]} */
+const search_appropriate_blocks = [];
+
 /**
  * Initialize the search index
  * @param {import('./types').Block[]} blocks
+ * @param {Record<string, number>} priority_map
  */
-export function init(blocks) {
+export async function init(blocks, priority_map) {
 	if (inited) return;
 
-	// we have multiple indexes, so we can rank sections (migration guide comes last)
-	const max_rank = Math.max(...blocks.map((block) => block.rank ?? 0));
+	for (const { breadcrumbs, href, content } of blocks) {
+		const new_block = /** @type {import('./types').SearchAppropriateBlock} */ ({});
 
-	indexes = Array.from({ length: max_rank + 1 }, () => new Index({ tokenize: 'forward' }));
+		if (breadcrumbs.length >= 1 && breadcrumbs?.[0]) {
+			new_block.h1 = breadcrumbs[0];
+		}
+		if (breadcrumbs.length >= 2 && breadcrumbs?.[1]) {
+			new_block.h2 = breadcrumbs[1];
+		}
+		if (breadcrumbs.length >= 3 && breadcrumbs?.[2]) {
+			new_block.h3 = breadcrumbs[2];
+		}
+
+		// Add priorities
+		for (const [regex_str, priority] of Object.entries(priority_map)) {
+			const regex = new RegExp(regex_str);
+			if (regex.test(href)) {
+				new_block.priority = priority;
+				break;
+			}
+		}
+
+		new_block.href = href;
+		new_block.content = content;
+
+		search_appropriate_blocks.push(new_block);
+	}
+
+	index = await create({
+		schema: {
+			content: 'string',
+			h1: 'string',
+			h2: 'string',
+			h3: 'string',
+			priority: 'number'
+		},
+		components: {
+			tokenizer: { language: 'english', stemming: true }
+		},
+		sort: { enabled: false }
+	});
+
+	// @ts-ignore Block[] is the right type
+	await insertMultiple(index, search_appropriate_blocks);
+
+	console.log(search_appropriate_blocks);
 
 	for (const block of blocks) {
-		const title = block.breadcrumbs.at(-1);
 		map.set(block.href, block);
-		// NOTE: we're not using a number as the ID here, but it is recommended:
-		// https://github.com/nextapps-de/flexsearch#use-numeric-ids
-		// If we were to switch to a number we would need a second map from ID to block
-		// We need to keep the existing one to allow looking up recent searches by URL even if docs change
-		// It's unclear how much browsers do string interning and how this might affect memory
-		// We'd probably want to test both implementations across browsers if memory usage becomes an issue
-		// TODO: fix the type by updating flexsearch after
-		// https://github.com/nextapps-de/flexsearch/pull/364 is merged and released
-		indexes[block.rank ?? 0].add(block.href, `${title} ${block.content}`);
-
 		hrefs.set(block.breadcrumbs.join('::'), block.href);
 	}
 
@@ -49,33 +81,47 @@ export function init(blocks) {
 /**
  * Search for a given query in the existing index
  * @param {string} query
- * @returns {import('./types').Tree[]}
+ * @returns {Promise<import('./types').Tree[]>}
  */
-export function search(query) {
-	const escaped = query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-	const regex = new RegExp(`(^|\\b)${escaped}`, 'i');
+export async function search(query) {
+	const search_results = /** @type {any[]} */ (
+		(
+			await orama_search(index, {
+				term: query,
+				sortBy: (a, b) => {
+					const [_docIdA, scoreA, docA] = a;
+					const [_docIdB, scoreB, docB] = b;
 
-	const blocks = indexes
-		.flatMap((index) => index.search(query))
-		.map(lookup)
-		.map((block, rank) => ({ block: /** @type{import('./types').Block} */ (block), rank }))
-		.sort((a, b) => {
-			const a_title_matches = regex.test(/** @type {string} */ (a.block.breadcrumbs.at(-1)));
-			const b_title_matches = regex.test(/** @type {string} */ (b.block.breadcrumbs.at(-1)));
+					// @ts-ignore
+					return docB.priority * 1000 + scoreB - (docA.priority * 1000 + scoreA);
+				},
+				boost: {
+					h1: 3,
+					h2: 2,
+					h3: 1
+				},
 
-			// massage the order a bit, so that title matches
-			// are given higher priority
-			if (a_title_matches !== b_title_matches) {
-				return a_title_matches ? -1 : 1;
-			}
+				limit: search_appropriate_blocks.length
+			})
+		).hits.map(({ document }) => document)
+	);
 
-			return a.block.breadcrumbs.length - b.block.breadcrumbs.length || a.rank - b.rank;
-		})
-		.map(({ block }) => block);
+	/** @type {import('./types').SearchAppropriateBlock[]} */
+	const blocks = [];
 
-	const results = tree([], blocks).children;
+	for (const result of search_results) {
+		// @ts-ignore
+		const block = /** @type {import('./types').SearchAppropriateBlock} */ (result);
 
-	return results;
+		blocks.push(block);
+	}
+
+	// console.log(search_results);
+	// console.log(results);
+
+	console.log(buildBlockTree(blocks));
+
+	return buildBlockTree(blocks);
 }
 
 /**
@@ -87,29 +133,61 @@ export function lookup(href) {
 }
 
 /**
- * @param {string[]} breadcrumbs
- * @param {import('./types').Block[]} blocks
- * @returns {import('./types').Tree}
+ * @param {SearchAppropriateBlock[]} blocks
+ * @returns {Tree[]}
  */
-function tree(breadcrumbs, blocks) {
-	const depth = breadcrumbs.length;
+function buildBlockTree(blocks) {
+	// Group blocks by h1
+	const groupedByH1 = blocks.reduce((acc, block) => {
+		if (block.h1) {
+			acc[block.h1] = acc[block.h1] || [];
+			acc[block.h1].push(block);
+		}
+		return acc;
+	}, {});
 
-	const node = blocks.find((block) => {
-		if (block.breadcrumbs.length !== depth) return false;
-		return breadcrumbs.every((part, i) => block.breadcrumbs[i] === part);
+	// Create trees
+	return Object.entries(groupedByH1).map(([h1, group]) => {
+		// Create a node for h1
+		const h1Node = group.find((block) => !block.h2) || { ...group[0], content: '' };
+
+		// Group h2s under h1
+		const groupedByH2 = group.reduce((acc, block) => {
+			if (block.h2) {
+				acc[block.h2] = acc[block.h2] || [];
+				acc[block.h2].push(block);
+			}
+			return acc;
+		}, {});
+
+		// Create children for h1 node
+		const children = Object.entries(groupedByH2).map(([h2, group]) => {
+			// Create a node for h2
+			const h2Node = group.find((block) => !block.h3) || { ...group[0], content: '' };
+
+			// h3 blocks under h2
+			const h3Children = group
+				.filter((block) => block.h3)
+				.map((block) => ({
+					breadcrumbs: [h1, h2, block.h3],
+					href: block.href,
+					node: { header: block.h3, content: block.content },
+					children: []
+				}));
+
+			return {
+				breadcrumbs: [h1, h2],
+				href: h2Node.href,
+				node: { header: h2, content: h2Node.content },
+				children: h3Children
+			};
+		});
+
+		return {
+			breadcrumbs: [h1],
+			href: h1Node.href,
+			node: { header: h1, content: h1Node.content },
+			children
+		};
 	});
-
-	const descendants = blocks.filter((block) => {
-		if (block.breadcrumbs.length <= depth) return false;
-		return breadcrumbs.every((part, i) => block.breadcrumbs[i] === part);
-	});
-
-	const child_parts = Array.from(new Set(descendants.map((block) => block.breadcrumbs[depth])));
-
-	return {
-		breadcrumbs,
-		href: /** @type {string} */ (hrefs.get(breadcrumbs.join('::'))),
-		node: /** @type {import('./types').Block} */ (node),
-		children: child_parts.map((part) => tree([...breadcrumbs, part], descendants))
-	};
 }
