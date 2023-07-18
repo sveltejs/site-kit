@@ -33,6 +33,7 @@
 }
 
 .text :where(pre) {
+	position: relative;
 	margin: 1em 0;
 	width: 100%;
 	padding: 1rem;
