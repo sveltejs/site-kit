@@ -21,7 +21,7 @@
 	}
 </script>
 
-<button id="copy-to-clipboard-button" on:click={copy} class:hidable={!copying}>
+<button id="copy-to-clipboard-button" on:click={copy}>
 	{#if copying}
 		<span transition:fade={{ easing: cubicOut, duration: 400 }}>
 			<Icon name="copy-to-clipboard-filled" />
@@ -34,14 +34,6 @@
 </button>
 
 <style>
-	:global(:where(pre.shiki, .code-block):hover #copy-to-clipboard-button.hidable) {
-		opacity: 1;
-	}
-
-	:global(.code-block #copy-to-clipboard-button) {
-		top: 5px;
-	}
-
 	button {
 		position: absolute;
 		top: 1rem;
@@ -52,6 +44,8 @@
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr;
 
+		opacity: 0.8;
+
 		height: 2.4rem;
 		width: 2.4rem;
 
@@ -60,8 +54,8 @@
 		transition: opacity 0.1s ease-in-out;
 	}
 
-	button.hidable {
-		opacity: 0;
+	button:hover {
+		opacity: 1;
 	}
 
 	span {
