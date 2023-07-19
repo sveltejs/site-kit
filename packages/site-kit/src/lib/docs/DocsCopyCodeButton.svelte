@@ -11,8 +11,6 @@
 	function copy() {
 		try {
 			navigator.clipboard.writeText(code);
-
-			copying = true;
 		} catch {
 			/**
 			 * This is the fallback deprecated way of copying text to the clipboard. Only runs if it can't find the clipboard API.
@@ -35,6 +33,8 @@
 
 			document.body.removeChild(element);
 		} finally {
+			copying = true;
+
 			setTimeout(() => {
 				copying = false;
 			}, 1000);
