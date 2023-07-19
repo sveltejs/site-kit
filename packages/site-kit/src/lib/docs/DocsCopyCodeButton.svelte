@@ -23,16 +23,7 @@
 			element.type = 'text';
 			element.disabled = true;
 
-			/**
-			 * @param {string} key
-			 * @param {string} value
-			 */
-			const set_style = (key, value) => element.style.setProperty(key, value);
-
-			set_style('position', 'fixed');
-			set_style('z-index', '-100');
-			set_style('pointer-events', 'none');
-			set_style('opacity', '0');
+			element.style.cssText = `position: fixed;z-index: -100;pointer-events: none;opacity: 0;`;
 
 			element.value = code;
 
