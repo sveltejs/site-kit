@@ -13,11 +13,41 @@
 			navigator.clipboard.writeText(code);
 
 			copying = true;
+		} catch {
+			/**
+			 * This is the fallback deprecated way of copying text to the clipboard. Only runs if it can't find the clipboard API.
+			 * Taken from https://github.com/ghostdevv/svelte-copy/blob/main/src/lib/copy.ts
+			 */
+			const element = document.createElement('input');
 
+			element.type = 'text';
+			element.disabled = true;
+
+			/**
+			 * @param {string} key
+			 * @param {string} value
+			 */
+			const set_style = (key, value) => element.style.setProperty(key, value);
+
+			set_style('position', 'fixed');
+			set_style('z-index', '-100');
+			set_style('pointer-events', 'none');
+			set_style('opacity', '0');
+
+			element.value = code;
+
+			document.body.appendChild(element);
+
+			element.click();
+			element.select();
+			document.execCommand('copy');
+
+			document.body.removeChild(element);
+		} finally {
 			setTimeout(() => {
 				copying = false;
 			}, 1000);
-		} catch {}
+		}
 	}
 </script>
 
