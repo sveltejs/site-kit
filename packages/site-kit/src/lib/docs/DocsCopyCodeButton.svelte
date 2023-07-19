@@ -55,6 +55,10 @@
 </button>
 
 <style>
+	:global(.code-block #copy-to-clipboard-button) {
+		top: 5px;
+	}
+
 	button {
 		position: absolute;
 		top: 1rem;
