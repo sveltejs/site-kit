@@ -1,5 +1,17 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.21
+
+### Minor Changes
+
+- 5498d82: Copy code button
+
+### Patch Changes
+
+- c31f579: (fix) reset search query when opening modal
+- 83a366a: hide scrollbar in aside
+- 1462fbe: Fix nav flickering on mobile
+
 ## 6.0.0-next.20
 
 ### Patch Changes
