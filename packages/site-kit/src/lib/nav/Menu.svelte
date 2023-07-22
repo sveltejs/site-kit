@@ -68,7 +68,7 @@
 
 		return {
 			css: (t, u) =>
-				$reduced_motion.current
+				$reduced_motion
 					? `opacity: ${t}`
 					: `transform: translate3d(0, ${height * u}px, 0) scale3d(${0.9 + 0.1 * t}, ${
 							0.9 + 0.1 * t
@@ -171,7 +171,7 @@
 				>
 					<div
 						class="viewport"
-						class:reduced-motion={$reduced_motion.current}
+						class:reduced-motion={$reduced_motion}
 						class:offset={show_context_menu}
 						bind:clientHeight={menu_height}
 					>
@@ -270,11 +270,13 @@
 		border-radius: 1rem 1rem 0 0;
 		background: var(--background, var(--sk-back-2));
 		will-change: height;
+		transition: 0.4s var(--quint-out);
+		transition-property: background;
 		box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.19);
 	}
 
 	.menu-background.ready {
-		transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+		transition-property: height, background;
 	}
 
 	.menu-background.dark {
