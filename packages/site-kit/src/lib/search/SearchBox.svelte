@@ -100,7 +100,10 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		document.body.style.position = 'fixed';
 
 		$overlay_open = true;
+		resetSearchQuery()
 	}
+
+	const resetSearchQuery = () => $search_query = '';
 </script>
 
 <svelte:window
