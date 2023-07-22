@@ -33,6 +33,7 @@
 }
 
 .text :where(pre) {
+	position: relative;
 	margin: 1em 0;
 	width: 100%;
 	padding: 1rem;
@@ -42,14 +43,17 @@
 	color: var(--sk-code-base);
 	border-radius: var(--sk-border-radius);
 	font-size: var(--sk-text-s);
-	overflow-x: auto;
+	overflow-x: hidden;
 }
 
 .text :where(pre code) {
+	display: block;
 	padding: 0;
 	margin: 0;
 	top: 0;
+	width: 100%;
 	background: transparent;
+	overflow-x: auto;
 }
 
 .text :where(p code) {
