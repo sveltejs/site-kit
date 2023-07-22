@@ -179,19 +179,20 @@
 	use:click_outside={() => $is_mobile && ($on_this_page_open = false)}
 	use:focus_outside={() => $is_mobile && ($on_this_page_open = false)}
 >
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<svelte:element
-		this={$is_mobile ? 'button' : 'div'}
-		class="heading"
-		aria-expanded={$on_this_page_open}
-		on:click={() => ($on_this_page_open = !$on_this_page_open)}
-	>
-		<span class="h2">On this page</span>
+	<h2>
+		<button
+			class="heading"
+			aria-expanded={$on_this_page_open}
+			on:click={() => ($on_this_page_open = !$on_this_page_open)}
+		>
+			<span class="h2">On this page</span>
 
-		<span class="expand-icon" class:inverted={$on_this_page_open}>
-			<Icon name="chevron-down" />
-		</span>
-	</svelte:element>
+			<span class="expand-icon" class:inverted={$on_this_page_open}>
+				<Icon name="chevron-down" />
+			</span>
+		</button>
+		<span class="h2 desktop-only-heading">On this page</span>
+	</h2>
 
 	{#if (browser && !$is_mobile) || ($is_mobile && $on_this_page_open)}
 		<nav
@@ -248,16 +249,13 @@
 	}
 
 	.heading {
-		position: relative;
+		display: none;
+	}
 
-		width: 100%;
-
-		display: grid;
-		align-items: center;
-		grid-template-columns: 1fr auto;
-		gap: 0.75rem;
-
-		padding: 0.75rem 0.75rem;
+	h2 {
+		/* override global styles */
+		margin: 0;
+		border: none;
 	}
 
 	.h2 {
@@ -270,9 +268,11 @@
 		text-align: start;
 	}
 
-	.heading :global(svg) {
-		display: none;
+	.desktop-only-heading {
+		display: inline;
+	}
 
+	.heading :global(svg) {
 		transform: translateY(-1px);
 	}
 
@@ -346,7 +346,20 @@
 			--shadow: 0 0 0 1px var(--sk-back-4);
 		}
 
+		.desktop-only-heading {
+			display: none;
+		}
+
 		.heading {
+			position: relative;
+			width: 100%;
+
+			display: grid;
+			align-items: center;
+			grid-template-columns: 1fr auto;
+			gap: 0.75rem;
+			padding: 0.75rem 0.75rem;
+
 			z-index: 2;
 
 			box-shadow: var(--shadow);
