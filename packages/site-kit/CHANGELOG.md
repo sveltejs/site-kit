@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.22
+
+### Patch Changes
+
+- 328e0aa: (fix) Await copy function in CopyCodeButton
+
 ## 6.0.0-next.21
 
 ### Minor Changes
