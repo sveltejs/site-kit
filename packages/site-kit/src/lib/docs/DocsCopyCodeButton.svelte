@@ -8,9 +8,9 @@
 
 	let copying = false;
 
-	function copy() {
+	async function copy() {
 		try {
-			navigator.clipboard.writeText(code);
+			await navigator.clipboard.writeText(code);
 		} catch {
 			/**
 			 * This is the fallback deprecated way of copying text to the clipboard. Only runs if it can't find the clipboard API.
