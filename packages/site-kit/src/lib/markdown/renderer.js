@@ -101,8 +101,6 @@ export async function render_content_markdown(
 			source = collect_options(source, options);
 			source = adjust_tab_indentation(source, language);
 
-			console.log(options);
-
 			let version_class = '';
 			if (/^generated-(ts|svelte)$/.test(language)) {
 				language = language.replace('generated-', '');
