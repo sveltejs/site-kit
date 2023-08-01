@@ -1,6 +1,6 @@
 import MagicString from 'magic-string';
 import { createHash } from 'node:crypto';
-import { mkdir, readdir, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { format } from 'prettier';
 import { createShikiHighlighter, renderCodeToHTML, runTwoSlash } from 'shiki-twoslash';
@@ -117,6 +117,7 @@ export async function render_content_markdown(
 		type_links,
 		code: (source, language, current) => {
 			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
+			console.log(CACHE_MAP);
 			if (cached_snippet.code) return cached_snippet.code;
 
 			/** @type {SnippetOptions} */
@@ -775,7 +776,7 @@ async function create_snippet_cache(should) {
 			const files = await readdir(snippet_cache);
 			for (const file of files) {
 				const uid = file.replace(/\.html$/, '');
-				CACHE_MAP.set(uid, `${snippet_cache}/${file}`);
+				CACHE_MAP.set(uid, await readFile(`${snippet_cache}/${file}`, 'utf-8'));
 			}
 		} catch {}
 	}
