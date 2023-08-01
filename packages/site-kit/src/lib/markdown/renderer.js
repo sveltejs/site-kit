@@ -95,11 +95,13 @@ export async function render_content_markdown(
 			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
 			if (cached_snippet.code) return cached_snippet.code;
 
-			/** @type {Record<MetadataKeys, any | null>} */
-			const options = { file: null, link: null, copy: 'true' };
+			/** @type {Record<MetadataKeys, any>} */
+			const options = { file: null, link: null, copy: false };
 
 			source = collect_options(source, options);
 			source = adjust_tab_indentation(source, language);
+
+			console.log(options);
 
 			let version_class = '';
 			if (/^generated-(ts|svelte)$/.test(language)) {
@@ -120,7 +122,13 @@ export async function render_content_markdown(
 			});
 
 			if (options.file) {
-				html = `<div class="code-block"><span class="filename">${options.file}</span>${html}</div>`;
+				html = `<div class="code-block ${
+					options.copy ? 'copy-code-block' : ''
+				}"><span class="filename">${options.file}</span>${html}</div>`;
+			}
+
+			if (options.copy && !options.file) {
+				html = html.replace(/class=('|")/, `class=$1 copy-code-block `);
 			}
 
 			if (version_class) {
@@ -133,7 +141,7 @@ export async function render_content_markdown(
 				html = html.replace(type_regex, (match, prefix, name, pos, str) => {
 					const char_after = str.slice(pos + match.length, pos + match.length + 1);
 
-					if (options.link === 'false' || name === current || /(\$|\d|\w)/.test(char_after)) {
+					if (!options.link || name === current || /(\$|\d|\w)/.test(char_after)) {
 						// we don't want e.g. RequestHandler to link to RequestHandler
 						return match;
 					}
@@ -710,7 +718,7 @@ async function find_nearest_node_modules(start_path) {
 }
 
 /**
- * Utility function to work code snippet caching.
+ * Utility function to work with code snippet caching.
  *
  * @example
  *
@@ -797,14 +805,20 @@ function create_type_links(modules, resolve_link) {
 
 /**
  * @param {string} source
- * @param {Record<MetadataKeys, any | null>} options
+ * @param {Record<MetadataKeys, any>} options
  */
 function collect_options(source, options) {
 	METADATA_REGEX.lastIndex = 0;
-	return source.replace(METADATA_REGEX, (_, key, value) => {
+
+	source = source.replace(METADATA_REGEX, (_, key, value) => {
 		options[/** @type {MetadataKeys} */ (key)] = value;
 		return '';
 	});
+
+	options.link = options.link === 'true';
+	options.copy = options.copy === 'true' || (options.file && options.copy !== 'false');
+
+	return source;
 }
 
 /**
