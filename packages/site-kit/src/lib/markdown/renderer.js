@@ -1018,7 +1018,6 @@ function indent_multiline_comments(str) {
 }
 
 /**
- *
  * @param {string} inputString
  * @param {RegExp} regex
  * @param {(match: RegExpExecArray) => Promise<string>} asyncCallback
