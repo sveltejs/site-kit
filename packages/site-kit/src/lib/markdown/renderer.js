@@ -1022,7 +1022,6 @@ function indent_multiline_comments(str) {
  * @param {string} inputString
  * @param {RegExp} regex
  * @param {(match: RegExpExecArray) => Promise<string>} asyncCallback
- * @returns
  */
 async function async_replace(inputString, regex, asyncCallback) {
 	let match;
