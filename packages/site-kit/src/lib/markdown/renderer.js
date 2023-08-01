@@ -807,7 +807,7 @@ async function create_snippet_cache(should) {
 
 		writeFile(`${snippet_cache}/${uid}.html`, content);
 
-		return CACHE_MAP.get(uid);
+		return CACHE_MAP.set(uid, content);
 	}
 
 	return { get, save };
