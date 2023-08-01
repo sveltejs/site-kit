@@ -9,7 +9,7 @@ export const copy_code_descendants = (node) => {
 	let code_blocks;
 
 	function update() {
-		code_blocks = node.querySelectorAll('.shiki');
+		code_blocks = node.querySelectorAll('.copy-code-block');
 
 		// Add a button to each code block
 		for (const block of code_blocks) {

@@ -1,6 +1,7 @@
 import MagicString from 'magic-string';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
+import { mkdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { format } from 'prettier';
 import { createShikiHighlighter, renderCodeToHTML, runTwoSlash } from 'shiki-twoslash';
@@ -8,11 +9,13 @@ import ts from 'typescript';
 import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils.js';
 
 /**
- * @typedef {Record<'file' | 'link', string | null>} SnippetOptions
+ * @typedef {Record<MetadataKeys, string | boolean | number | null>} SnippetOptions
  * @typedef {(filename: string, content: string, language: string, options: SnippetOptions) => string} TwoslashBanner
+ * @typedef {'file' | 'link' | 'copy'} MetadataKeys
  */
 
-const METADATA_REGEX = /(?:<!---\s*|\/\/\/\s*)(?<key>file|link):\s*(?<value>.*?)(?:\s*--->|$)\n/gm;
+const METADATA_REGEX =
+	/(?:<!---\s*|\/\/\/\s*)(?<key>file|link|copy):\s*(?<value>.*?)(?:\s*--->|$)\n/gm;
 
 /**
  * A super markdown renderer function. Renders svelte and kit docs specific specific markdown code to html.
@@ -36,6 +39,8 @@ const METADATA_REGEX = /(?:<!---\s*|\/\/\/\s*)(?<key>file|link):\s*(?<value>.*?)
  *  ```
  * ````
  *
+ * ---
+ *
  * For svelte snippets, we use HTML comments, with an additional dash at the opening and end
  *
  * ````md
@@ -48,6 +53,8 @@ const METADATA_REGEX = /(?:<!---\s*|\/\/\/\s*)(?<key>file|link):\s*(?<value>.*?)
  * Hello {a}
  * ```
  * ````
+ *
+ * ---
  *
  * ### link
  *
@@ -64,6 +71,24 @@ const METADATA_REGEX = /(?:<!---\s*|\/\/\/\s*)(?<key>file|link):\s*(?<value>.*?)
  * onMount(() => {
  * 	console.log('mounted');
  * });
+ * ```
+ * ````
+ *
+ * ---
+ *
+ * ### copy
+ *
+ * Explicitly specify whether the code snippet should have a copy button on it.
+ * By default, snippets with a `file` flag will get a copy button.
+ * Passing `copy: false` will take higher precedence
+ *
+ * ````md
+ * ```js
+ * /// file: some_file.js
+ * /// copy: false
+ * const a = 1;
+ *
+ * console.log(a);
  * ```
  * ````
  *
@@ -92,8 +117,8 @@ export async function render_content_markdown(
 			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
 			if (cached_snippet.code) return cached_snippet.code;
 
-			/** @type {Record<'file' | 'link', string | null>} */
-			const options = { file: null, link: null };
+			/** @type {SnippetOptions} */
+			const options = { file: null, link: null, copy: false };
 
 			source = collect_options(source, options);
 			source = adjust_tab_indentation(source, language);
@@ -120,6 +145,10 @@ export async function render_content_markdown(
 				html = `<div class="code-block"><span class="filename">${options.file}</span>${html}</div>`;
 			}
 
+			if (options.copy) {
+				html = html.replace(/class=('|")/, `class=$1copy-code-block `);
+			}
+
 			if (version_class) {
 				html = html.replace(/class=('|")/, `class=$1${version_class} `);
 			}
@@ -130,7 +159,7 @@ export async function render_content_markdown(
 				html = html.replace(type_regex, (match, prefix, name, pos, str) => {
 					const char_after = str.slice(pos + match.length, pos + match.length + 1);
 
-					if (options.link === 'false' || name === current || /(\$|\d|\w)/.test(char_after)) {
+					if (!options.link || name === current || /(\$|\d|\w)/.test(char_after)) {
 						// we don't want e.g. RequestHandler to link to RequestHandler
 						return match;
 					}
@@ -692,22 +721,22 @@ function stringify(member, lang = 'ts') {
 }
 
 /** @param {string} start_path */
-function find_nearest_node_modules(start_path) {
-	if (fs.existsSync(path.join(start_path, 'node_modules'))) {
-		return path.resolve(start_path, 'node_modules');
+async function find_nearest_node_modules(start_path) {
+	try {
+		if (await stat(path.join(start_path, 'node_modules'))) {
+			return path.resolve(start_path, 'node_modules');
+		}
+	} catch {
+		const parentDir = path.dirname(start_path);
+
+		if (start_path === parentDir) return null;
+
+		return find_nearest_node_modules(parentDir);
 	}
-
-	const parentDir = path.dirname(start_path);
-
-	if (start_path === parentDir) {
-		return null;
-	}
-
-	return find_nearest_node_modules(parentDir);
 }
 
 /**
- * Utility function to work code snippet caching.
+ * Utility function to work with code snippet caching.
  *
  * @example
  *
@@ -723,15 +752,13 @@ function find_nearest_node_modules(start_path) {
  * @param {boolean} should
  */
 async function create_snippet_cache(should) {
-	const snippet_cache = find_nearest_node_modules(import.meta.url) + '/.snippets';
+	const snippet_cache = (await find_nearest_node_modules(import.meta.url)) + '/.snippets';
 
 	try {
-		if (should) fs.mkdirSync(snippet_cache, { recursive: true });
+		if (should) await mkdir(snippet_cache, { recursive: true });
 	} catch {}
 
-	/**
-	 * @param {string} source
-	 */
+	/** @param {string} source */
 	function get(source) {
 		if (!should) return { uid: null, code: null };
 
@@ -756,7 +783,7 @@ async function create_snippet_cache(should) {
 	function save(uid, content) {
 		if (!should) return;
 
-		fs.writeFileSync(`${snippet_cache}/${uid}.html`, content);
+		writeFile(`${snippet_cache}/${uid}.html`, content);
 	}
 
 	return { get, save };
@@ -796,14 +823,20 @@ function create_type_links(modules, resolve_link) {
 
 /**
  * @param {string} source
- * @param {Record<'file' | 'link', string | null>} options
+ * @param {SnippetOptions} options
  */
 function collect_options(source, options) {
 	METADATA_REGEX.lastIndex = 0;
-	return source.replace(METADATA_REGEX, (_, key, value) => {
-		options[/** @type {'file' | 'link'} */ (key)] = value;
+
+	source = source.replace(METADATA_REGEX, (_, key, value) => {
+		options[/** @type {MetadataKeys} */ (key)] = value;
 		return '';
 	});
+
+	options.link = options.link === 'true';
+	options.copy = options.copy === 'true' || (options.file && options.copy !== 'false');
+
+	return source;
 }
 
 /**
