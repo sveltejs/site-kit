@@ -39,6 +39,8 @@ const METADATA_REGEX =
  *  ```
  * ````
  *
+ * ---
+ *
  * For svelte snippets, we use HTML comments, with an additional dash at the opening and end
  *
  * ````md
@@ -51,6 +53,8 @@ const METADATA_REGEX =
  * Hello {a}
  * ```
  * ````
+ *
+ * ---
  *
  * ### link
  *
@@ -67,6 +71,24 @@ const METADATA_REGEX =
  * onMount(() => {
  * 	console.log('mounted');
  * });
+ * ```
+ * ````
+ *
+ * ---
+ *
+ * ### copy
+ *
+ * Explicitly specify whether the code snippet should have a copy button on it.
+ * By default, snippets with a `file` flag will get a copy button.
+ * Passing `copy: false` will take higher precedence
+ *
+ * ````md
+ * ```js
+ * /// file: some_file.js
+ * /// copy: false
+ * const a = 1;
+ *
+ * console.log(a);
  * ```
  * ````
  *
@@ -120,13 +142,11 @@ export async function render_content_markdown(
 			});
 
 			if (options.file) {
-				html = `<div class="code-block ${
-					options.copy ? 'copy-code-block' : ''
-				}"><span class="filename">${options.file}</span>${html}</div>`;
+				html = `<div class="code-block"><span class="filename">${options.file}</span>${html}</div>`;
 			}
 
-			if (options.copy && !options.file) {
-				html = html.replace(/class=('|")/, `class=$1 copy-code-block `);
+			if (options.copy) {
+				html = html.replace(/class=('|")/, `class=$1copy-code-block `);
 			}
 
 			if (version_class) {
