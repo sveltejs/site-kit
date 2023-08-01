@@ -1,6 +1,7 @@
 import MagicString from 'magic-string';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
+import { mkdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { format } from 'prettier';
 import { createShikiHighlighter, renderCodeToHTML, runTwoSlash } from 'shiki-twoslash';
@@ -8,11 +9,13 @@ import ts from 'typescript';
 import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils.js';
 
 /**
- * @typedef {Record<'file' | 'link', string | null>} SnippetOptions
+ * @typedef {Record<'file' | 'link' | 'copy', string | null>} SnippetOptions
  * @typedef {(filename: string, content: string, language: string, options: SnippetOptions) => string} TwoslashBanner
+ * @typedef {'file' | 'link' | 'copy'} MetadataKeys
  */
 
-const METADATA_REGEX = /(?:<!---\s*|\/\/\/\s*)(?<key>file|link):\s*(?<value>.*?)(?:\s*--->|$)\n/gm;
+const METADATA_REGEX =
+	/(?:<!---\s*|\/\/\/\s*)(?<key>file|link|copy):\s*(?<value>.*?)(?:\s*--->|$)\n/gm;
 
 /**
  * A super markdown renderer function. Renders svelte and kit docs specific specific markdown code to html.
@@ -92,8 +95,8 @@ export async function render_content_markdown(
 			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
 			if (cached_snippet.code) return cached_snippet.code;
 
-			/** @type {Record<'file' | 'link', string | null>} */
-			const options = { file: null, link: null };
+			/** @type {Record<MetadataKeys, any | null>} */
+			const options = { file: null, link: null, copy: 'true' };
 
 			source = collect_options(source, options);
 			source = adjust_tab_indentation(source, language);
@@ -692,18 +695,18 @@ function stringify(member, lang = 'ts') {
 }
 
 /** @param {string} start_path */
-function find_nearest_node_modules(start_path) {
-	if (fs.existsSync(path.join(start_path, 'node_modules'))) {
-		return path.resolve(start_path, 'node_modules');
+async function find_nearest_node_modules(start_path) {
+	try {
+		if (await stat(path.join(start_path, 'node_modules'))) {
+			return path.resolve(start_path, 'node_modules');
+		}
+	} catch {
+		const parentDir = path.dirname(start_path);
+
+		if (start_path === parentDir) return null;
+
+		return find_nearest_node_modules(parentDir);
 	}
-
-	const parentDir = path.dirname(start_path);
-
-	if (start_path === parentDir) {
-		return null;
-	}
-
-	return find_nearest_node_modules(parentDir);
 }
 
 /**
@@ -723,15 +726,13 @@ function find_nearest_node_modules(start_path) {
  * @param {boolean} should
  */
 async function create_snippet_cache(should) {
-	const snippet_cache = find_nearest_node_modules(import.meta.url) + '/.snippets';
+	const snippet_cache = (await find_nearest_node_modules(import.meta.url)) + '/.snippets';
 
 	try {
-		if (should) fs.mkdirSync(snippet_cache, { recursive: true });
+		if (should) await mkdir(snippet_cache, { recursive: true });
 	} catch {}
 
-	/**
-	 * @param {string} source
-	 */
+	/** @param {string} source */
 	function get(source) {
 		if (!should) return { uid: null, code: null };
 
@@ -756,7 +757,7 @@ async function create_snippet_cache(should) {
 	function save(uid, content) {
 		if (!should) return;
 
-		fs.writeFileSync(`${snippet_cache}/${uid}.html`, content);
+		writeFile(`${snippet_cache}/${uid}.html`, content);
 	}
 
 	return { get, save };
@@ -796,12 +797,12 @@ function create_type_links(modules, resolve_link) {
 
 /**
  * @param {string} source
- * @param {Record<'file' | 'link', string | null>} options
+ * @param {Record<MetadataKeys, any | null>} options
  */
 function collect_options(source, options) {
 	METADATA_REGEX.lastIndex = 0;
 	return source.replace(METADATA_REGEX, (_, key, value) => {
-		options[/** @type {'file' | 'link'} */ (key)] = value;
+		options[/** @type {MetadataKeys} */ (key)] = value;
 		return '';
 	});
 }
