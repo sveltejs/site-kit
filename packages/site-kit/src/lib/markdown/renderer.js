@@ -9,7 +9,7 @@ import ts from 'typescript';
 import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils.js';
 
 /**
- * @typedef {Record<'file' | 'link' | 'copy', string | null>} SnippetOptions
+ * @typedef {Record<MetadataKeys, string | boolean | number | null>} SnippetOptions
  * @typedef {(filename: string, content: string, language: string, options: SnippetOptions) => string} TwoslashBanner
  * @typedef {'file' | 'link' | 'copy'} MetadataKeys
  */
@@ -95,7 +95,7 @@ export async function render_content_markdown(
 			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
 			if (cached_snippet.code) return cached_snippet.code;
 
-			/** @type {Record<MetadataKeys, any>} */
+			/** @type {SnippetOptions} */
 			const options = { file: null, link: null, copy: false };
 
 			source = collect_options(source, options);
@@ -805,7 +805,7 @@ function create_type_links(modules, resolve_link) {
 
 /**
  * @param {string} source
- * @param {Record<MetadataKeys, any>} options
+ * @param {SnippetOptions} options
  */
 function collect_options(source, options) {
 	METADATA_REGEX.lastIndex = 0;
