@@ -1,7 +1,6 @@
 import MagicString from 'magic-string';
 import { createHash } from 'node:crypto';
-import fs from 'node:fs';
-import { mkdir, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { format } from 'prettier';
 import { createShikiHighlighter, renderCodeToHTML, runTwoSlash } from 'shiki-twoslash';
@@ -16,6 +15,9 @@ import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils
 
 const METADATA_REGEX =
 	/(?:<!---\s*|\/\/\/\s*)(?<key>file|link|copy):\s*(?<value>.*?)(?:\s*--->|$)\n/gm;
+
+/** @type {Map<string, string>} */
+const CACHE_MAP = new Map();
 
 /**
  * A super markdown renderer function. Renders svelte and kit docs specific specific markdown code to html.
@@ -111,7 +113,7 @@ export async function render_content_markdown(
 	const SNIPPET_CACHE = await create_snippet_cache(cacheCodeSnippets);
 
 	return parse({
-		body: generate_ts_from_js(replace_export_type_placeholders(body, modules)),
+		body: await generate_ts_from_js(replace_export_type_placeholders(body, modules)),
 		type_links,
 		code: (source, language, current) => {
 			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
@@ -250,55 +252,57 @@ function parse({ body, code, codespan, type_links }) {
  * May replace the language labels (```js) to custom labels(```generated-ts, ```original-js, ```generated-svelte,```original-svelte)
  *  @param {string} markdown
  */
-function generate_ts_from_js(markdown) {
-	return markdown
-		.replaceAll(/```js\n([\s\S]+?)\n```/g, (match, code) => {
-			if (!code.includes('/// file:')) {
-				// No named file -> assume that the code is not meant to be shown in two versions
-				return match;
-			}
+async function generate_ts_from_js(markdown) {
+	markdown = await async_replace(markdown, /```js\n([\s\S]+?)\n```/g, async ([match, code]) => {
+		if (!code.includes('/// file:')) {
+			// No named file -> assume that the code is not meant to be shown in two versions
+			return match;
+		}
 
-			if (code.includes('/// file: svelte.config.js')) {
-				// svelte.config.js has no TS equivalent
-				return match;
-			}
+		if (code.includes('/// file: svelte.config.js')) {
+			// svelte.config.js has no TS equivalent
+			return match;
+		}
 
-			const ts = convert_to_ts(code);
+		const ts = await convert_to_ts(code);
 
-			if (!ts) {
-				// No changes -> don't show TS version
-				return match;
-			}
+		if (!ts) {
+			// No changes -> don't show TS version
+			return match;
+		}
 
-			return match.replace('js', 'original-js') + '\n```generated-ts\n' + ts + '```';
-		})
-		.replaceAll(/```svelte\n([\s\S]+?)\n```/g, (match, code) => {
-			METADATA_REGEX.lastIndex = 0;
+		return match.replace('js', 'original-js') + '\n```generated-ts\n' + ts + '```';
+	});
 
-			if (!METADATA_REGEX.test(code)) {
-				// No named file -> assume that the code is not meant to be shown in two versions
-				return match;
-			}
+	markdown = await async_replace(markdown, /```svelte\n([\s\S]+?)\n```/g, async ([match, code]) => {
+		METADATA_REGEX.lastIndex = 0;
 
-			// Assumption: no context="module" blocks
-			const script = code.match(/<script>([\s\S]+?)<\/script>/);
-			if (!script) return match;
+		if (!METADATA_REGEX.test(code)) {
+			// No named file -> assume that the code is not meant to be shown in two versions
+			return match;
+		}
 
-			const [outer, inner] = script;
-			const ts = convert_to_ts(inner, '\t', '\n');
+		// Assumption: no context="module" blocks
+		const script = code.match(/<script>([\s\S]+?)<\/script>/);
+		if (!script) return match;
 
-			if (!ts) {
-				// No changes -> don't show TS version
-				return match;
-			}
+		const [outer, inner] = script;
+		const ts = await convert_to_ts(inner, '\t', '\n');
 
-			return (
-				match.replace('svelte', 'original-svelte') +
-				'\n```generated-svelte\n' +
-				code.replace(outer, `<script lang="ts">\n\t${ts.trim()}\n</script>`) +
-				'\n```'
-			);
-		});
+		if (!ts) {
+			// No changes -> don't show TS version
+			return match;
+		}
+
+		return (
+			match.replace('svelte', 'original-svelte') +
+			'\n```generated-svelte\n' +
+			code.replace(outer, `<script lang="ts">\n\t${ts.trim()}\n</script>`) +
+			'\n```'
+		);
+	});
+
+	return markdown;
 }
 
 /**
@@ -308,7 +312,7 @@ function generate_ts_from_js(markdown) {
  * @param {string} [indent]
  * @param {string} [offset]
  */
-function convert_to_ts(js_code, indent = '', offset = '') {
+async function convert_to_ts(js_code, indent = '', offset = '') {
 	js_code = js_code
 		.replaceAll('// @filename: index.js', '// @filename: index.ts')
 		.replace(/(\/\/\/ .+?\.)js/, '$1ts')
@@ -328,7 +332,7 @@ function convert_to_ts(js_code, indent = '', offset = '') {
 	/**
 	 * @param {import('typescript').Node} node
 	 */
-	function walk(node) {
+	async function walk(node) {
 		// @ts-ignore
 		if (node.jsDoc) {
 			// @ts-ignore
@@ -338,7 +342,7 @@ function convert_to_ts(js_code, indent = '', offset = '') {
 				let count = 0;
 				for (const tag of comment.tags ?? []) {
 					if (ts.isJSDocTypeTag(tag)) {
-						const [name, generics] = get_type_info(tag);
+						const [name, generics] = await get_type_info(tag);
 
 						if (ts.isFunctionDeclaration(node)) {
 							const is_export = node.modifiers?.some(
@@ -440,7 +444,7 @@ function convert_to_ts(js_code, indent = '', offset = '') {
 		code.appendLeft(insertion_point, offset + import_statements + '\n');
 	}
 
-	let transformed = format(code.toString(), {
+	let transformed = await format(code.toString(), {
 		printWidth: 100,
 		parser: 'typescript',
 		useTabs: true,
@@ -456,16 +460,18 @@ function convert_to_ts(js_code, indent = '', offset = '') {
 	return transformed === js_code ? undefined : transformed.replace(/\n\s*\n\s*\n/g, '\n\n');
 
 	/** @param {ts.JSDocTypeTag | ts.JSDocParameterTag} tag */
-	function get_type_info(tag) {
+	async function get_type_info(tag) {
 		const type_text = tag.typeExpression?.getText();
 		let name = type_text?.slice(1, -1); // remove { }
 
-		const single_line_name = format(name ?? '', {
-			printWidth: 1000,
-			parser: 'typescript',
-			semi: false,
-			singleQuote: true
-		}).replace('\n', '');
+		const single_line_name = (
+			await format(name ?? '', {
+				printWidth: 1000,
+				parser: 'typescript',
+				semi: false,
+				singleQuote: true
+			})
+		).replace('\n', '');
 
 		const import_match = /import\('(.+?)'\)\.(\w+)(?:<(.+)>)?$/s.exec(single_line_name);
 
@@ -754,9 +760,21 @@ async function find_nearest_node_modules(start_path) {
 async function create_snippet_cache(should) {
 	const snippet_cache = (await find_nearest_node_modules(import.meta.url)) + '/.snippets';
 
-	try {
-		if (should) await mkdir(snippet_cache, { recursive: true });
-	} catch {}
+	// No local cache exists yet
+	if (!CACHE_MAP.size && should) {
+		try {
+			await mkdir(snippet_cache, { recursive: true });
+		} catch {}
+
+		// Read all the cache files and populate the CACHE_MAP
+		try {
+			const files = await readdir(snippet_cache);
+			for (const file of files) {
+				const uid = file.replace(/\.html$/, '');
+				CACHE_MAP.set(uid, await readFile(`${snippet_cache}/${file}`, 'utf-8'));
+			}
+		} catch {}
+	}
 
 	/** @param {string} source */
 	function get(source) {
@@ -769,7 +787,7 @@ async function create_snippet_cache(should) {
 		try {
 			return {
 				uid: digest,
-				code: fs.readFileSync(`${snippet_cache}/${digest}.html`, 'utf-8')
+				code: CACHE_MAP.get(digest)
 			};
 		} catch {}
 
@@ -781,8 +799,9 @@ async function create_snippet_cache(should) {
 	 * @param {string} content
 	 */
 	function save(uid, content) {
-		if (!should) return;
+		if (!should || !uid) return;
 
+		CACHE_MAP.set(uid, content);
 		writeFile(`${snippet_cache}/${uid}.html`, content);
 	}
 
@@ -991,4 +1010,37 @@ function indent_multiline_comments(str) {
 				.join('');
 		}
 	);
+}
+
+/**
+ * @param {string} inputString
+ * @param {RegExp} regex
+ * @param {(match: RegExpExecArray) => string | Promise<string>} asyncCallback
+ */
+async function async_replace(inputString, regex, asyncCallback) {
+	let match;
+	let previousLastIndex = 0;
+	let parts = [];
+
+	// While there is a match
+	while ((match = regex.exec(inputString)) !== null) {
+		// Add the text before the match
+		parts.push(inputString.slice(previousLastIndex, match.index));
+
+		// Perform the asynchronous operation for the match and add the result
+		parts.push(await asyncCallback(match));
+
+		// Update the previous last index
+		previousLastIndex = regex.lastIndex;
+
+		// Avoid infinite loops with zero-width matches
+		if (match.index === regex.lastIndex) {
+			regex.lastIndex++;
+		}
+	}
+
+	// Add the remaining text
+	parts.push(inputString.slice(previousLastIndex));
+
+	return parts.join('');
 }
