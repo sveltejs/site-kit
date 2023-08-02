@@ -765,9 +765,9 @@ async function create_snippet_cache(should) {
 	const snippet_cache = (await find_nearest_node_modules(import.meta.url)) + '/.snippets';
 
 	// No local cache exists yet
-	if (!CACHE_MAP.size) {
+	if (!CACHE_MAP.size && should) {
 		try {
-			if (should) await mkdir(snippet_cache, { recursive: true });
+			await mkdir(snippet_cache, { recursive: true });
 		} catch {}
 
 		// Read all the cache files and populate the CACHE_MAP
