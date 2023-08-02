@@ -117,7 +117,6 @@ export async function render_content_markdown(
 		type_links,
 		code: (source, language, current) => {
 			const cached_snippet = SNIPPET_CACHE.get(source + language + current);
-			console.log(CACHE_MAP);
 			if (cached_snippet.code) return cached_snippet.code;
 
 			/** @type {SnippetOptions} */
