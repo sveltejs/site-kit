@@ -253,9 +253,7 @@ function parse({ body, code, codespan, type_links }) {
  *  @param {string} markdown
  */
 async function generate_ts_from_js(markdown) {
-	markdown = await async_replace(markdown, /```js\n([\s\S]+?)\n```/g, async (result) => {
-		const [match, code] = result ?? [];
-
+	markdown = await async_replace(markdown, /```js\n([\s\S]+?)\n```/g, async ([match, code]) => {
 		if (!code.includes('/// file:')) {
 			// No named file -> assume that the code is not meant to be shown in two versions
 			return match;
@@ -276,10 +274,8 @@ async function generate_ts_from_js(markdown) {
 		return match.replace('js', 'original-js') + '\n```generated-ts\n' + ts + '```';
 	});
 
-	markdown = await async_replace(markdown, /```svelte\n([\s\S]+?)\n```/g, async (result) => {
+	markdown = await async_replace(markdown, /```svelte\n([\s\S]+?)\n```/g, async ([match, code]) => {
 		METADATA_REGEX.lastIndex = 0;
-
-		const [match, code] = result ?? [];
 
 		if (!METADATA_REGEX.test(code)) {
 			// No named file -> assume that the code is not meant to be shown in two versions
@@ -1019,7 +1015,7 @@ function indent_multiline_comments(str) {
 /**
  * @param {string} inputString
  * @param {RegExp} regex
- * @param {(match: RegExpExecArray) => Promise<string>} asyncCallback
+ * @param {(match: RegExpExecArray) => string | Promise<string>} asyncCallback
  */
 async function async_replace(inputString, regex, asyncCallback) {
 	let match;
