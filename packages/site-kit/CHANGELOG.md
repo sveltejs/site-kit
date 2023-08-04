@@ -1,5 +1,15 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.24
+
+### Minor Changes
+
+- e32c4d2: (feat) Add homepage Try section
+
+### Patch Changes
+
+- 5239b59: (fix) 10x faster code cache reads
+
 ## 6.0.0-next.23
 
 ### Minor Changes
