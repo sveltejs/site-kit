@@ -1,5 +1,12 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.23
+
+### Minor Changes
+
+- bbd1f7e: (feat) Async markdown renderer
+- 1831071: (feat) Copy code pragma
+
 ## 6.0.0-next.22
 
 ### Patch Changes
