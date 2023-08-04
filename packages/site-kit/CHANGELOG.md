@@ -1,5 +1,15 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.25
+
+### Minor Changes
+
+- e370935: (feat) Homepage footer
+
+### Patch Changes
+
+- c1cb24a: (fix) discs appearing on ordered lists
+
 ## 6.0.0-next.24
 
 ### Minor Changes
