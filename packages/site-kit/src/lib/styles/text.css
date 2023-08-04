@@ -273,7 +273,7 @@
 	margin: 0 0 0.5em 0;
 }
 
-.text :where(li)::before {
+.text :where(ul li)::before {
 	content: '';
 	position: absolute;
 	margin-top: 0.8rem;

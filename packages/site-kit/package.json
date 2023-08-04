@@ -1,6 +1,6 @@
 {
 	"name": "@sveltejs/site-kit",
-	"version": "6.0.0-next.22",
+	"version": "6.0.0-next.24",
 	"description": "Styles and components for use in *.svelte.dev websites",
 	"type": "module",
 	"scripts": {
@@ -23,19 +23,17 @@
 		"svelte-local-storage-store": "^0.5.0"
 	},
 	"devDependencies": {
-		"@sveltejs/kit": "^1.22.3",
+		"@sveltejs/kit": "^1.22.4",
 		"@sveltejs/package": "^2.2.0",
-		"@types/marked": "^5.0.1",
-		"@types/node": "^20.4.2",
-		"@types/prettier": "^2.7.3",
+		"@types/node": "^20.4.5",
 		"flexsearch": "^0.7.31",
-		"magic-string": "^0.30.1",
-		"marked": "^5.1.1",
-		"prettier": "^2.8.8",
+		"magic-string": "^0.30.2",
+		"marked": "^6.0.0",
+		"prettier": "^3.0.0",
 		"shiki-twoslash": "^3.1.2",
-		"svelte": "^4.0.5",
+		"svelte": "^4.1.2",
 		"typescript": "^5.1.6",
-		"vite": "^4.4.4"
+		"vite": "^4.4.8"
 	},
 	"publishConfig": {
 		"access": "public"
@@ -62,6 +60,11 @@
 			"types": "./dist/components/index.d.ts",
 			"default": "./dist/components/index.js",
 			"svelte": "./dist/components/index.js"
+		},
+		"./home": {
+			"types": "./dist/home/index.d.ts",
+			"default": "./dist/home/index.js",
+			"svelte": "./dist/home/index.js"
 		},
 		"./docs": {
 			"types": "./dist/docs/index.d.ts",
