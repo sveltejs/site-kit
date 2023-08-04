@@ -769,9 +769,17 @@ async function create_snippet_cache(should) {
 		// Read all the cache files and populate the CACHE_MAP
 		try {
 			const files = await readdir(snippet_cache);
-			for (const file of files) {
+
+			const file_contents = await Promise.all(
+				files.map(async (file) => ({
+					file,
+					content: await readFile(`${snippet_cache}/${file}`, 'utf-8')
+				}))
+			);
+
+			for (const { file, content } of file_contents) {
 				const uid = file.replace(/\.html$/, '');
-				CACHE_MAP.set(uid, await readFile(`${snippet_cache}/${file}`, 'utf-8'));
+				CACHE_MAP.set(uid, content);
 			}
 		} catch {}
 	}
