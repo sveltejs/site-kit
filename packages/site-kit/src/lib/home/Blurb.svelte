@@ -1,5 +1,5 @@
 <script>
-	import Section from './Section.svelte';
+	import Section from '../components/Section.svelte';
 </script>
 
 <Section --background="var(--sk-back-1)">

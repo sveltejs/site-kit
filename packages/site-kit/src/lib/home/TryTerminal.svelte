@@ -25,7 +25,7 @@
 
 	.terminal .chrome {
 		position: relative;
-		background: #666;
+		background: hsl(0, 0%, 10%);
 		color: #999;
 		display: flex;
 		align-items: center;

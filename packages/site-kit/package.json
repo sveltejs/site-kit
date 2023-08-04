@@ -1,6 +1,6 @@
 {
 	"name": "@sveltejs/site-kit",
-	"version": "6.0.0-next.23",
+	"version": "6.0.0-next.24",
 	"description": "Styles and components for use in *.svelte.dev websites",
 	"type": "module",
 	"scripts": {
@@ -60,6 +60,11 @@
 			"types": "./dist/components/index.d.ts",
 			"default": "./dist/components/index.js",
 			"svelte": "./dist/components/index.js"
+		},
+		"./home": {
+			"types": "./dist/home/index.d.ts",
+			"default": "./dist/home/index.js",
+			"svelte": "./dist/home/index.js"
 		},
 		"./docs": {
 			"types": "./dist/docs/index.d.ts",
