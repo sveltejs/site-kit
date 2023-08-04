@@ -61,6 +61,11 @@
 			"default": "./dist/components/index.js",
 			"svelte": "./dist/components/index.js"
 		},
+		"./home": {
+			"types": "./dist/home/index.d.ts",
+			"default": "./dist/home/index.js",
+			"svelte": "./dist/home/index.js"
+		},
 		"./docs": {
 			"types": "./dist/docs/index.d.ts",
 			"default": "./dist/docs/index.js",
