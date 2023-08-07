@@ -100,10 +100,10 @@ It appears when the user clicks on the `Search` component or presses the corresp
 		document.body.style.position = 'fixed';
 
 		$overlay_open = true;
-		resetSearchQuery()
+		resetSearchQuery();
 	}
 
-	const resetSearchQuery = () => $search_query = '';
+	const resetSearchQuery = () => ($search_query = '');
 </script>
 
 <svelte:window
@@ -128,6 +128,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 {#if $searching && ready}
 	<div class="pseudo-overlay" aria-hidden="true" on:click={close} />
 
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
 		bind:this={modal}
 		class="modal"
@@ -173,10 +174,13 @@ It appears when the user clicks on the `Search` component or presses the corresp
 				<Icon name="close" />
 			</button>
 
-			<span id="search-description" class="visually-hidden">Results will update as you type</span>
+			<span id="search-description" class="visually-hidden">
+				<slot name="search-description">Results will update as you type</slot>
+			</span>
 
 			<div class="results">
 				{#if search?.query}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div class="results-container" on:click={() => ($searching = false)}>
 						<SearchResults
 							results={search.results}
@@ -188,7 +192,9 @@ It appears when the user clicks on the `Search` component or presses the corresp
 					</div>
 				{:else}
 					<h2 class="info" class:empty={recent_searches.length === 0}>
-						{recent_searches.length ? 'Recent searches' : 'No recent searches'}
+						<slot name="idle">
+							{recent_searches.length ? 'Recent searches' : 'No recent searches'}
+						</slot>
 					</h2>
 					{#if recent_searches.length}
 						<div class="results-container">
@@ -224,7 +230,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 
 <div aria-live="assertive" class="visually-hidden">
 	{#if $searching && search?.results.length === 0}
-		<p>No results</p>
+		<p><slot name="no-results">No results</slot></p>
 	{/if}
 </div>
 

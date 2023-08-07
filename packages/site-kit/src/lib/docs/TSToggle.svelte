@@ -9,9 +9,9 @@
 </script>
 
 <div class="input-output-toggle">
-	<span aria-hidden="true">JavaScript</span>
+	<span aria-hidden="true"> <slot name="javascript">JavaScript</slot> </span>
 	<ToggleButton bind:pressed={$checked} label="TypeScript code examples" />
-	<span aria-hidden="true">TypeScript</span>
+	<span aria-hidden="true"> <slot name="typescript">TypeScript</slot> </span>
 </div>
 
 <style>

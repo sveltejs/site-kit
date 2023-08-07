@@ -222,7 +222,7 @@
 							inert={!show_context_menu}
 						>
 							<Icon name="arrow-left" size=".6em" />
-							<span>Back to main menu</span>
+							<span><slot name="back-button">Back to main menu</slot></span>
 						</button>
 					</div>
 				</div>

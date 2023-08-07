@@ -3,6 +3,8 @@
 	import { BROWSER } from 'esm-env';
 	import { onDestroy } from 'svelte';
 
+	export let label = 'Dark mode';
+
 	function toggle() {
 		const upcoming_theme = $theme.current === 'light' ? 'dark' : 'light';
 
@@ -45,7 +47,7 @@
 	on:click={toggle}
 	type="button"
 	aria-pressed={$theme.current === 'dark' ? 'true' : 'false'}
-	aria-label="Dark mode"
+	aria-label={label}
 >
 	<span class="check" class:checked={$theme.current === 'dark'}>
 		<span class="icon">
