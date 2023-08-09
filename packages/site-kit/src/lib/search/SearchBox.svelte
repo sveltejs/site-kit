@@ -188,7 +188,9 @@ It appears when the user clicks on the `Search` component or presses the corresp
 							on:select={(e) => {
 								navigate(e.detail.href);
 							}}
-						/>
+						>
+							<slot name="no-results">No results</slot>
+						</SearchResults>
 					</div>
 				{:else}
 					<h2 class="info" class:empty={recent_searches.length === 0}>
