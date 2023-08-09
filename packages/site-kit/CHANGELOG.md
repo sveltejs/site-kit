@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.27
+
+### Patch Changes
+
+- 9e0b164: add more i18n slots
+
 ## 6.0.0-next.26
 
 ### Patch Changes
