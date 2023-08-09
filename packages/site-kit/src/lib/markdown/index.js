@@ -1,7 +1,7 @@
 export {
 	render_content_markdown as renderContentMarkdown,
 	replace_export_type_placeholders as replaceExportTypePlaceholders
-} from './renderer';
+} from './renderer.js';
 
 export {
 	extract_frontmatter as extractFrontmatter,
@@ -10,7 +10,7 @@ export {
 	slugify,
 	removeMarkdown,
 	escape
-} from './utils';
+} from './utils.js';
 
 /**
  * @typedef {{
