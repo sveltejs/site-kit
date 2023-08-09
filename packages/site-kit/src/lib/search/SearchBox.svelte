@@ -192,7 +192,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 					</div>
 				{:else}
 					<h2 class="info" class:empty={recent_searches.length === 0}>
-						<slot name="idle">
+						<slot name="idle" has_recent_searches={recent_searches.length}>
 							{recent_searches.length ? 'Recent searches' : 'No recent searches'}
 						</slot>
 					</h2>
