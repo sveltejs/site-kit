@@ -305,6 +305,12 @@ async function generate_ts_from_js(markdown) {
 	return markdown;
 }
 
+/** @param {ts.Node} node */
+function get_jsdoc(node) {
+	const { jsDoc } = /** @type {{ jsDoc?: ts.JSDoc[] }} */ (/** @type {*} */ (node));
+	return jsDoc;
+}
+
 /**
  * Transforms a JS code block into a TS code block by turning JSDoc into type annotations.
  * Due to pragmatism only the cases currently used in the docs are implemented.
@@ -312,7 +318,7 @@ async function generate_ts_from_js(markdown) {
  * @param {string} [indent]
  * @param {string} [offset]
  */
-async function convert_to_ts(js_code, indent = '', offset = '') {
+export async function convert_to_ts(js_code, indent = '', offset = '') {
 	js_code = js_code
 		.replaceAll('// @filename: index.js', '// @filename: index.ts')
 		.replace(/(\/\/\/ .+?\.)js/, '$1ts')
@@ -333,10 +339,9 @@ async function convert_to_ts(js_code, indent = '', offset = '') {
 	 * @param {import('typescript').Node} node
 	 */
 	async function walk(node) {
-		// @ts-ignore
-		if (node.jsDoc) {
-			// @ts-ignore
-			for (const comment of node.jsDoc) {
+		const jsdoc = get_jsdoc(node);
+		if (jsdoc) {
+			for (const comment of jsdoc) {
 				let modified = false;
 
 				let count = 0;
@@ -418,10 +423,12 @@ async function convert_to_ts(js_code, indent = '', offset = '') {
 			}
 		}
 
-		ts.forEachChild(node, walk);
+		for (const child_node of node.getChildren()) {
+			await walk(child_node);
+		}
 	}
 
-	walk(ast);
+	await walk(ast);
 
 	if (imports.size) {
 		const import_statements = Array.from(imports.entries())
