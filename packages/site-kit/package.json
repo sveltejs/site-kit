@@ -1,6 +1,6 @@
 {
 	"name": "@sveltejs/site-kit",
-	"version": "6.0.0-next.25",
+	"version": "6.0.0-next.26",
 	"description": "Styles and components for use in *.svelte.dev websites",
 	"type": "module",
 	"scripts": {

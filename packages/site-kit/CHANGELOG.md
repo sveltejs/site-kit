@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.26
+
+### Patch Changes
+
+- d26f9b8: fix: js to ts transformation for code blocks
+
 ## 6.0.0-next.25
 
 ### Minor Changes
