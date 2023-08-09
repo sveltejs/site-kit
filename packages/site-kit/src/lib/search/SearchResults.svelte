@@ -14,7 +14,7 @@ Renders a list of search results
 {#if results.length > 0}
 	<SearchResultList {results} {query} on:select />
 {:else if query}
-	<p class="info">No results</p>
+	<p class="info"><slot name="no-results">No results</slot></p>
 {/if}
 
 <style>

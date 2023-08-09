@@ -6,6 +6,7 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 	import { search_query, searching } from '../stores/search.js';
 
 	export let q = '';
+	export let label = 'Search';
 </script>
 
 <form class="search-container" action="/search">
@@ -20,8 +21,8 @@ Renders a search widget which when clicked (or the corresponding keyboard shortc
 		on:touchend|preventDefault={() => ($searching = true)}
 		type="search"
 		name="q"
-		placeholder="Search"
-		aria-label="Search"
+		placeholder={label}
+		aria-label={label}
 		spellcheck="false"
 	/>
 
