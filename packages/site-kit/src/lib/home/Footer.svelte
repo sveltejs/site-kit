@@ -19,13 +19,15 @@
 		{/each}
 
 		<div class="copyright">
-			© 2023 <a href="https://github.com/sveltejs/svelte/graphs/contributors">
-				Svelte contributors
-			</a>
+			<slot name="copyright">
+				© 2023 <a href="https://github.com/sveltejs/svelte/graphs/contributors">
+					Svelte contributors
+				</a>
+			</slot>
 		</div>
 
 		<div class="open-source">
-			<slot name="copyright" />
+			<slot name="license" />
 		</div>
 	</footer>
 </Section>

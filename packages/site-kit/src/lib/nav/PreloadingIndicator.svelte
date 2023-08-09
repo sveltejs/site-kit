@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { linear, quadInOut } from 'svelte/easing';
+	import { quadInOut } from 'svelte/easing';
 	import { tweened } from 'svelte/motion';
 
 	const p = tweened(0, {

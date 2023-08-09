@@ -185,13 +185,13 @@
 			aria-expanded={$on_this_page_open}
 			on:click={() => ($on_this_page_open = !$on_this_page_open)}
 		>
-			<span class="h2">On this page</span>
+			<span class="h2"><slot>On this page</slot></span>
 
 			<span class="expand-icon" class:inverted={$on_this_page_open}>
 				<Icon name="chevron-down" />
 			</span>
 		</button>
-		<span class="h2 desktop-only-heading">On this page</span>
+		<span class="h2 desktop-only-heading"><slot>On this page</slot></span>
 	</h2>
 
 	{#if (browser && !$is_mobile) || ($is_mobile && $on_this_page_open)}
