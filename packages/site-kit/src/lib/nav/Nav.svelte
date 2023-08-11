@@ -239,6 +239,10 @@ Top navigation bar for the application. It provides a slot for the left side, th
 		display: none;
 	}
 
+	nav :global(.small) {
+		display: block;
+	}
+
 	button {
 		display: flex;
 		align-items: center;
