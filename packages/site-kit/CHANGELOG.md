@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.31
+
+### Patch Changes
+
+- 3748082: (chore) fix external link small disappearing
+
 ## 6.0.0-next.30
 
 ### Patch Changes
