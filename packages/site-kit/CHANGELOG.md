@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.28
+
+### Patch Changes
+
+- 114807a: chore: Lazy load non essential modules in renderer
+
 ## 6.0.0-next.27
 
 ### Patch Changes
