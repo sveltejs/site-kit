@@ -189,7 +189,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 								navigate(e.detail.href);
 							}}
 						>
-							<slot name="no-results">No results</slot>
+							<slot name="no-results" slot="no-results">No results</slot>
 						</SearchResults>
 					</div>
 				{:else}
