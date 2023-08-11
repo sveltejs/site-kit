@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.29
+
+### Patch Changes
+
+- e1f83f8: forward searchbox slot
+
 ## 6.0.0-next.28
 
 ### Patch Changes
