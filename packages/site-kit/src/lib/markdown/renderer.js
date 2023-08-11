@@ -2,8 +2,6 @@ import MagicString from 'magic-string';
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { format } from 'prettier';
-import { createShikiHighlighter, renderCodeToHTML, runTwoSlash } from 'shiki-twoslash';
 import ts from 'typescript';
 import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils.js';
 
@@ -18,6 +16,12 @@ const METADATA_REGEX =
 
 /** @type {Map<string, string>} */
 const CACHE_MAP = new Map();
+
+/** @type {import('shiki-twoslash')} */
+let twoslash_module;
+
+/** @type {import('prettier')} */
+let prettier_module;
 
 /**
  * A super markdown renderer function. Renders svelte and kit docs specific specific markdown code to html.
@@ -107,7 +111,10 @@ export async function render_content_markdown(
 	body,
 	{ twoslashBanner, modules = [], cacheCodeSnippets = true, resolveTypeLinks } = {}
 ) {
-	const highlighter = await createShikiHighlighter({ theme: 'css-variables' });
+	twoslash_module ??= await import('shiki-twoslash');
+	prettier_module ??= await import('prettier');
+
+	const highlighter = await twoslash_module.createShikiHighlighter({ theme: 'css-variables' });
 
 	const { type_links, type_regex } = create_type_links(modules, resolveTypeLinks);
 	const SNIPPET_CACHE = await create_snippet_cache(cacheCodeSnippets);
@@ -451,7 +458,7 @@ export async function convert_to_ts(js_code, indent = '', offset = '') {
 		code.appendLeft(insertion_point, offset + import_statements + '\n');
 	}
 
-	let transformed = await format(code.toString(), {
+	let transformed = await prettier_module.format(code.toString(), {
 		printWidth: 100,
 		parser: 'typescript',
 		useTabs: true,
@@ -472,7 +479,7 @@ export async function convert_to_ts(js_code, indent = '', offset = '') {
 		let name = type_text?.slice(1, -1); // remove { }
 
 		const single_line_name = (
-			await format(name ?? '', {
+			await prettier_module.format(name ?? '', {
 				printWidth: 1000,
 				parser: 'typescript',
 				semi: false,
@@ -913,7 +920,7 @@ function syntax_highlight({ source, filename, language, highlighter, twoslashBan
 
 	if (language === 'dts') {
 		html = replace_blank_lines(
-			renderCodeToHTML(
+			twoslash_module.renderCodeToHTML(
 				source,
 				'ts',
 				{ twoslash: false },
@@ -936,7 +943,7 @@ function syntax_highlight({ source, filename, language, highlighter, twoslashBan
 				}
 			}
 
-			const twoslash = runTwoSlash(source, language, {
+			const twoslash = twoslash_module.runTwoSlash(source, language, {
 				defaultCompilerOptions: {
 					allowJs: true,
 					checkJs: true,
@@ -945,7 +952,7 @@ function syntax_highlight({ source, filename, language, highlighter, twoslashBan
 				}
 			});
 
-			html = renderCodeToHTML(
+			html = twoslash_module.renderCodeToHTML(
 				twoslash.code,
 				'ts',
 				{ twoslash: true },
