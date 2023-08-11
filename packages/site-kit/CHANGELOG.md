@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.30
+
+### Patch Changes
+
+- 426118c: fix searchbox no-results slot forwarding
+
 ## 6.0.0-next.29
 
 ### Patch Changes
