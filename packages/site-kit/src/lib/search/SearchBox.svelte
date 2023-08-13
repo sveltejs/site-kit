@@ -11,6 +11,8 @@ It appears when the user clicks on the `Search` component or presses the corresp
 	import SearchResults from './SearchResults.svelte';
 	import SearchWorker from './search-worker.js?worker';
 
+	export let placeholder = 'Search';
+
 	/** @type {HTMLElement} */
 	let modal;
 
@@ -164,9 +166,9 @@ It appears when the user clicks on the `Search` component or presses the corresp
 					$search_query = e.currentTarget.value;
 				}}
 				value={$search_query}
-				placeholder="Search"
+				{placeholder}
 				aria-describedby="search-description"
-				aria-label="Search"
+				aria-label={placeholder}
 				spellcheck="false"
 			/>
 
