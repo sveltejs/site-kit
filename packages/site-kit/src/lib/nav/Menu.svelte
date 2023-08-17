@@ -191,9 +191,9 @@
 
 													show_context_menu = true;
 
-													nav_context_instance.scrollToActive();
-
 													await tick();
+
+													nav_context_instance.scrollToActive();
 												}}
 												aria-label="Show {link.title} submenu"
 											>
