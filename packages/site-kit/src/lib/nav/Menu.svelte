@@ -162,9 +162,7 @@
 						e.currentTarget.style.clipPath = '';
 
 						// whenever we transition from one menu to the other, we need to move focus to the first item in the new menu
-						if (show_context_menu) {
-							context_menu.querySelector('a')?.focus();
-						} else {
+						if (!show_context_menu) {
 							universal_menu.querySelector('a')?.focus();
 						}
 					}}
@@ -191,8 +189,11 @@
 
 													await tick();
 
-													nav_context_instance.reset();
 													show_context_menu = true;
+
+													nav_context_instance.scrollToActive();
+
+													await tick();
 												}}
 												aria-label="Show {link.title} submenu"
 											>
@@ -335,7 +336,8 @@
 
 	.context {
 		position: relative;
-		height: 100%;
+		height: 99%;
+		bottom: -7px;
 		padding-bottom: 2rem;
 	}
 
