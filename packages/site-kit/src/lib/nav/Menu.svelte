@@ -122,7 +122,7 @@
 					class="menu-background"
 					class:dark={$theme.current === 'dark'}
 					class:ready
-					style:height={show_context_menu ? '100%' : `${universal_menu_inner_height}px`}
+					style:height={show_context_menu ? '99%' : `${universal_menu_inner_height}px`}
 					style:--background={show_context_menu ? 'var(--sk-back-3)' : null}
 					use:mounted={(mounted) => (ready = mounted)}
 				/>
@@ -266,7 +266,7 @@
 		width: 100%;
 		left: 0;
 		bottom: 0;
-		height: 100%;
+		height: 99.5%;
 		border-radius: 1rem 1rem 0 0;
 		background: var(--background, var(--sk-back-2));
 		will-change: height;
@@ -299,6 +299,8 @@
 
 	.viewport {
 		position: relative;
+		bottom: -1px;
+
 		display: grid;
 		width: 200%;
 		height: 100%;
