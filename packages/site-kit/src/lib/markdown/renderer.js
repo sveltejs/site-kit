@@ -213,7 +213,7 @@ export async function render_content_markdown(
  *   codespan: (source: string) => string;
  * }} opts
  */
-function parse({ body, code, codespan, type_links }) {
+async function parse({ body, code, codespan, type_links }) {
 	/** @type {string[]} */
 	const headings = [];
 
@@ -222,7 +222,7 @@ function parse({ body, code, codespan, type_links }) {
 	let current = '';
 
 	/** @type {string} */
-	const content = transform(body, {
+	const content = await transform(body, {
 		heading(html, level, raw) {
 			const title = html
 				.replace(/<\/?code>/g, '')
