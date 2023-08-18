@@ -215,9 +215,6 @@ const default_renderer = {
 export async function transform(markdown, renderer = {}) {
 	const marked = new Marked({
 		renderer: {
-			// we have to jump through these hoops because of marked's API design choices —
-			// options are global, and merged in confusing ways. You can't do e.g.
-			// `new Marked(options).parse(markdown)`
 			...default_renderer,
 			...renderer
 		}
