@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 
 	/**
 	 * @type {import('../types').Section[]}
@@ -11,26 +11,24 @@
 	let nav;
 
 	onMount(() => {
-		const parent = /** @type {HTMLElement} */ (nav.parentElement);
-
-		const active = nav.querySelector('[aria-current="true"]');
-
-		if (active) {
-			const { top } = active.getBoundingClientRect();
-			const max = parent.scrollHeight - 50;
-
-			if (top > max) {
-				parent.scrollBy({
-					top: top - max,
-					left: 0,
-					behavior: 'auto'
-				});
-			}
-		}
+		scrollToActive();
 	});
 
-	export function reset() {
-		nav.parentElement?.scrollTo(0, 0);
+	export async function scrollToActive() {
+		const active = /** @type {HTMLElement} */ (nav.querySelector('[aria-current="true"]'));
+		if (!active) return;
+
+		const parent = nav.parentElement;
+		if (!parent) return;
+
+		const parentCenter = parent.offsetHeight / 2;
+		const childCenter = active.offsetHeight / 2;
+		const offsetTop = active.offsetTop;
+		const scrollPosition = offsetTop - parentCenter + childCenter;
+
+		const updateScroll = () => (parent.scrollTop = scrollPosition);
+
+		requestAnimationFrame(updateScroll);
 	}
 </script>
 

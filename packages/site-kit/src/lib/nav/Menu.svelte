@@ -122,7 +122,7 @@
 					class="menu-background"
 					class:dark={$theme.current === 'dark'}
 					class:ready
-					style:height={show_context_menu ? '100%' : `${universal_menu_inner_height}px`}
+					style:height={show_context_menu ? '99%' : `${universal_menu_inner_height}px`}
 					style:--background={show_context_menu ? 'var(--sk-back-3)' : null}
 					use:mounted={(mounted) => (ready = mounted)}
 				/>
@@ -162,9 +162,7 @@
 						e.currentTarget.style.clipPath = '';
 
 						// whenever we transition from one menu to the other, we need to move focus to the first item in the new menu
-						if (show_context_menu) {
-							context_menu.querySelector('a')?.focus();
-						} else {
+						if (!show_context_menu) {
 							universal_menu.querySelector('a')?.focus();
 						}
 					}}
@@ -191,8 +189,11 @@
 
 													await tick();
 
-													nav_context_instance.reset();
 													show_context_menu = true;
+
+													await tick();
+
+													nav_context_instance.scrollToActive();
 												}}
 												aria-label="Show {link.title} submenu"
 											>
@@ -266,7 +267,7 @@
 		width: 100%;
 		left: 0;
 		bottom: 0;
-		height: 100%;
+		height: 99.5%;
 		border-radius: 1rem 1rem 0 0;
 		background: var(--background, var(--sk-back-2));
 		will-change: height;
@@ -299,6 +300,8 @@
 
 	.viewport {
 		position: relative;
+		bottom: -1px;
+
 		display: grid;
 		width: 200%;
 		height: 100%;
@@ -333,7 +336,8 @@
 
 	.context {
 		position: relative;
-		height: 100%;
+		height: 99%;
+		bottom: -7px;
 		padding-bottom: 2rem;
 	}
 
