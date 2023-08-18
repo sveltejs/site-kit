@@ -112,6 +112,7 @@ export async function render_content_markdown(
 	{ twoslashBanner, modules = [], cacheCodeSnippets = true, resolveTypeLinks } = {}
 ) {
 	twoslash_module ??= await import('shiki-twoslash');
+	prettier_module ??= await import('prettier');
 
 	const highlighter = await twoslash_module.createShikiHighlighter({ theme: 'css-variables' });
 
@@ -456,8 +457,6 @@ export async function convert_to_ts(js_code, indent = '', offset = '') {
 		);
 		code.appendLeft(insertion_point, offset + import_statements + '\n');
 	}
-
-	prettier_module ??= await import('prettier');
 
 	let transformed = await prettier_module.format(code.toString(), {
 		printWidth: 100,
