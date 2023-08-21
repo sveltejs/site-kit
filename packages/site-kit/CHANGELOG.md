@@ -1,5 +1,14 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.32
+
+### Patch Changes
+
+- ecc020c: add searchbox placeholder as prop
+- 3be3255: fix: Use Marked constructor instead of global instance
+- acf2d83: (fix) Nav context menu autoscroll
+- 915ab09: fix: yaml code block rendering
+
 ## 6.0.0-next.31
 
 ### Patch Changes
