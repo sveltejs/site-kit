@@ -127,16 +127,16 @@
 	user-select: none;
 }
 
-.language-diff  :where(.inserted, .deleted)::before {
+.language-diff :where(.inserted, .deleted)::before {
 	position: absolute;
 	left: -1ch;
 }
 
-.language-diff  :where(.inserted)::before {
+.language-diff :where(.inserted)::before {
 	content: '+';
 }
 
-.language-diff  :where(.deleted)::before {
+.language-diff :where(.deleted)::before {
 	content: '-';
 }
 
