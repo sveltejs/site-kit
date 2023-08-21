@@ -1,4 +1,4 @@
-import { marked } from 'marked';
+import { Marked } from 'marked';
 
 const escapeTest = /[&<>"']/;
 const escapeReplace = /[&<>"']/g;
@@ -212,20 +212,15 @@ const default_renderer = {
  * @param {string} markdown
  * @param {Partial<import('marked').Renderer>} renderer
  */
-export function transform(markdown, renderer = {}) {
-	marked.use({
-		mangle: false,
-		headerIds: false,
+export async function transform(markdown, renderer = {}) {
+	const marked = new Marked({
 		renderer: {
-			// we have to jump through these hoops because of marked's API design choices —
-			// options are global, and merged in confusing ways. You can't do e.g.
-			// `new Marked(options).parse(markdown)`
 			...default_renderer,
 			...renderer
 		}
 	});
 
-	return marked(markdown);
+	return (await marked.parse(markdown)) ?? '';
 }
 
 /** @param {string} markdown */

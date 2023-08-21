@@ -112,6 +112,7 @@ export async function render_content_markdown(
 	{ twoslashBanner, modules = [], cacheCodeSnippets = true, resolveTypeLinks } = {}
 ) {
 	twoslash_module ??= await import('shiki-twoslash');
+	prettier_module ??= await import('prettier');
 
 	const highlighter = await twoslash_module.createShikiHighlighter({ theme: 'css-variables' });
 
@@ -213,7 +214,7 @@ export async function render_content_markdown(
  *   codespan: (source: string) => string;
  * }} opts
  */
-function parse({ body, code, codespan, type_links }) {
+async function parse({ body, code, codespan, type_links }) {
 	/** @type {string[]} */
 	const headings = [];
 
@@ -222,7 +223,7 @@ function parse({ body, code, codespan, type_links }) {
 	let current = '';
 
 	/** @type {string} */
-	const content = transform(body, {
+	const content = await transform(body, {
 		heading(html, level, raw) {
 			const title = html
 				.replace(/<\/?code>/g, '')
@@ -456,8 +457,6 @@ export async function convert_to_ts(js_code, indent = '', offset = '') {
 		);
 		code.appendLeft(insertion_point, offset + import_statements + '\n');
 	}
-
-	prettier_module ??= await import('prettier');
 
 	let transformed = await prettier_module.format(code.toString(), {
 		printWidth: 100,
