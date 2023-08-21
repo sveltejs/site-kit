@@ -885,18 +885,21 @@ function collect_options(source, options) {
  * @param {string} language
  */
 function adjust_tab_indentation(source, language) {
-	return source
-		.replace(/^([\-\+])?((?:    )+)/gm, (match, prefix = '', spaces) => {
-			if (prefix && language !== 'diff') return match;
+	return (
+		source
+			// TODO: what exactly is going on here? The regex finds spaces and replaces them with spaces again?
+			.replace(/^([\-\+])?((?:    )+)/gm, (match, prefix = '', spaces) => {
+				if (prefix && language !== 'diff') return match;
 
-			// for no good reason at all, marked replaces tabs with spaces
-			let tabs = '';
-			for (let i = 0; i < spaces.length; i += 4) {
-				tabs += '  ';
-			}
-			return prefix + tabs;
-		})
-		.replace(/\*\\\//g, '*/');
+				// for no good reason at all, marked replaces tabs with spaces
+				let tabs = '';
+				for (let i = 0; i < spaces.length; i += 4) {
+					tabs += '    ';
+				}
+				return prefix + tabs;
+			})
+			.replace(/\*\\\//g, '*/')
+	);
 }
 
 /** @param {string} html */
@@ -918,11 +921,11 @@ function replace_blank_lines(html) {
 function syntax_highlight({ source, filename, language, highlighter, twoslashBanner, options }) {
 	let html = '';
 
-	if (language === 'dts') {
+	if (language === 'dts' || language === 'yaml') {
 		html = replace_blank_lines(
 			twoslash_module.renderCodeToHTML(
 				source,
-				'ts',
+				language === 'dts' ? 'ts' : language,
 				{ twoslash: false },
 				{ themeName: 'css-variables' },
 				highlighter
@@ -978,8 +981,7 @@ function syntax_highlight({ source, filename, language, highlighter, twoslashBan
 			}
 		);
 
-		// preserve blank lines in output (maybe there's a more correct way to do this?)
-		html = html.replace(/<div class='line'><\/div>/g, '<div class="line"> </div>');
+		html = replace_blank_lines(html);
 	} else if (language === 'diff') {
 		const lines = source.split('\n').map((content) => {
 			let type = null;
@@ -1005,7 +1007,7 @@ function syntax_highlight({ source, filename, language, highlighter, twoslashBan
 			lang: SHIKI_LANGUAGE_MAP[/** @type {keyof typeof SHIKI_LANGUAGE_MAP} */ (language)]
 		});
 
-		html = highlighted.replace(/<div class='line'><\/div>/g, '<div class="line"> </div>');
+		html = replace_blank_lines(highlighted);
 	}
 
 	return html;
