@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.36
+
+### Patch Changes
+
+- 7adc6c2: fix: set font-display to swap
+
 ## 6.0.0-next.35
 
 ### Patch Changes
