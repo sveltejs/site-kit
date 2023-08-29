@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.35
+
+### Patch Changes
+
+- 0a13ec0: fix: update background color in other location
+
 ## 6.0.0-next.34
 
 ### Patch Changes
