@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.33
+
+### Patch Changes
+
+- 948e8e7: fix: accessibility heading levels in the footer
+
 ## 6.0.0-next.32
 
 ### Patch Changes
