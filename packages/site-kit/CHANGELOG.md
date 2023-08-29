@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.34
+
+### Patch Changes
+
+- 469a410: fix: tweak background color to address contrast issues
+
 ## 6.0.0-next.33
 
 ### Patch Changes
