@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.38
+
+### Patch Changes
+
+- 8e9e663: Wrap blockquote content on end of word, not every character
+
 ## 6.0.0-next.37
 
 ### Minor Changes
