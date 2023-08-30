@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 
 	/**
-	 * @type {import('../types').Section[]}
+	 * @type {import('../types').NavigationLink['sections']}
 	 */
 	export let contents = [];
 
@@ -16,60 +16,122 @@
 
 	export async function scrollToActive() {
 		const active = /** @type {HTMLElement} */ (nav.querySelector('[aria-current="true"]'));
-		if (!active) return;
 
-		const parent = nav.parentElement;
-		if (!parent) return;
+		if (!active) {
+			nav.scrollTop = 0;
+			return;
+		}
 
-		const parentCenter = parent.offsetHeight / 2;
-		const childCenter = active.offsetHeight / 2;
-		const offsetTop = active.offsetTop;
-		const scrollPosition = offsetTop - parentCenter + childCenter;
+		const nav_center = nav.offsetHeight / 2;
+		const child_center = active.offsetHeight / 2;
+		const offset_top = active.offsetTop;
+		const scroll_position = offset_top - nav_center + child_center;
 
-		const updateScroll = () => (parent.scrollTop = scrollPosition);
+		const update_scroll = () => (nav.scrollTop = scroll_position);
 
-		requestAnimationFrame(updateScroll);
+		requestAnimationFrame(update_scroll);
 	}
 </script>
 
 <nav bind:this={nav}>
-	{#each contents as { sections, title }}
+	{#each contents ?? [] as { sections, title }, index}
 		<section>
 			<h3>{title}</h3>
 
-			<ul>
-				{#each sections as { path, title, badge }}
-					<li>
-						<a href={path} aria-current={path === $page.url.pathname}>
-							{title}
-
-							{#if badge}
-								<span style="flex: 1 1 auto" />
-								<span class="badge">{badge}</span>
+			{#if sections.length !== 0}
+				<ul>
+					{#each sections as { title, sections: subsections }}
+						<li>
+							{#if title}
+								<h4>
+									{title}
+								</h4>
 							{/if}
-						</a>
-					</li>
-				{/each}
-			</ul>
+
+							<ul>
+								{#each subsections as { path, title, badge }}
+									<li>
+										<a href={path} aria-current={path === $page.url.pathname}>
+											{title}
+
+											{#if badge}
+												<span style="flex: 1 1 auto" />
+												<span class="badge">{badge}</span>
+											{/if}
+										</a>
+									</li>
+								{/each}
+							</ul>
+						</li>
+					{/each}
+				</ul>
+			{/if}
+
+			{#if index !== sections.length - 1}
+				<hr />
+			{/if}
 		</section>
 	{/each}
 </nav>
 
 <style>
 	nav {
-		padding: 2rem;
+		padding: 0.29rem;
+		padding-top: 0;
 		font-family: var(--sk-font);
 		overflow-y: auto;
+
+		height: 100%;
 	}
 
-	h3 {
+	section > ul {
+		padding: 1rem;
+		padding-bottom: 0rem;
+
+		margin-bottom: 0;
+	}
+
+	section:not(:first-child) {
+		padding-top: 1.5rem;
+	}
+
+	hr {
+		border: none;
+		border-top: 1px solid var(--sk-back-5);
+		margin: 0;
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		width: 95%;
+		transform: translateX(2.5%);
+	}
+
+	h3,
+	h4 {
 		display: block;
+
 		padding-bottom: 0.8rem;
+
 		font-size: var(--sk-text-xs);
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		font-weight: 600;
 		color: var(--sk-text-3);
+	}
+
+	h3 {
+		position: sticky;
+		top: -1px;
+		z-index: 1;
+
+		font-size: var(--sk-text-s);
+
+		background-color: var(--sk-back-3);
+
+		width: 98%;
+		padding: 1rem 1rem 1rem 4px;
+		margin-left: 4px;
+
+		border-radius: 1rem 1rem 0 0;
 	}
 
 	ul {
