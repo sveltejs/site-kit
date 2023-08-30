@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.37
+
+### Minor Changes
+
+- 1e675a8: (feat) Sections in context menu
+
 ## 6.0.0-next.36
 
 ### Patch Changes
