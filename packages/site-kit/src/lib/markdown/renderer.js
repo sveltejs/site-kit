@@ -214,7 +214,7 @@ export async function render_content_markdown(
  *   codespan: (source: string) => string;
  * }} opts
  */
-async function parse({ body, code, codespan, type_links }) {
+async function parse({ body, code, codespan }) {
 	/** @type {string[]} */
 	const headings = [];
 
@@ -240,12 +240,10 @@ async function parse({ body, code, codespan, type_links }) {
 
 			const slug = headings.filter(Boolean).join('-');
 
-			return `<h${level} id="${slug}">${html
-				.replace(/<\/?code>/g, '')
-				.replace(
-					/^\[TYPE\]:\s+(.+)/,
-					'$1'
-				)}<a href="#${slug}" class="permalink"><span class="visually-hidden">permalink</span></a></h${level}>`;
+			return `<h${level} id="${slug}">${html.replace(
+				/<\/?code>/g,
+				''
+			)}<a href="#${slug}" class="permalink"><span class="visually-hidden">permalink</span></a></h${level}>`;
 		},
 		code: (source, language) => code(source, language ?? 'js', current),
 		codespan
@@ -740,7 +738,10 @@ function stringify(member, lang = 'ts') {
 	);
 }
 
-/** @param {string} start_path */
+/**
+ * @param {string} start_path
+ * @return {Promise<string | null>}
+ */
 async function find_nearest_node_modules(start_path) {
 	try {
 		if (await stat(path.join(start_path, 'node_modules'))) {
@@ -753,6 +754,8 @@ async function find_nearest_node_modules(start_path) {
 
 		return find_nearest_node_modules(parentDir);
 	}
+
+	return null;
 }
 
 /**
@@ -921,7 +924,7 @@ function replace_blank_lines(html) {
 function syntax_highlight({ source, filename, language, highlighter, twoslashBanner, options }) {
 	let html = '';
 
-	if (language === 'dts' || language === 'yaml') {
+	if (/^(dts|yaml)/.test(language)) {
 		html = replace_blank_lines(
 			twoslash_module.renderCodeToHTML(
 				source,

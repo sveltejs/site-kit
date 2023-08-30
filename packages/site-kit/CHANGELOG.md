@@ -1,5 +1,35 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.37
+
+### Minor Changes
+
+- 1e675a8: (feat) Sections in context menu
+
+## 6.0.0-next.36
+
+### Patch Changes
+
+- 7adc6c2: fix: set font-display to swap
+
+## 6.0.0-next.35
+
+### Patch Changes
+
+- 0a13ec0: fix: update background color in other location
+
+## 6.0.0-next.34
+
+### Patch Changes
+
+- 469a410: fix: tweak background color to address contrast issues
+
+## 6.0.0-next.33
+
+### Patch Changes
+
+- 948e8e7: fix: accessibility heading levels in the footer
+
 ## 6.0.0-next.32
 
 ### Patch Changes
