@@ -391,7 +391,10 @@ export async function convert_to_ts(js_code, indent = '', offset = '') {
 							if (variable_statement.name.getText() === 'actions') {
 								code.appendLeft(variable_statement.getEnd(), ` satisfies ${name}`);
 							} else {
-								code.appendLeft(variable_statement.name.getEnd(), `: ${name}${generics ?? ''}`);
+								code.appendLeft(
+									variable_statement.name.getEnd(),
+									`: ${name}${generics ? `<${generics}>` : ''}`
+								);
 							}
 
 							modified = true;
