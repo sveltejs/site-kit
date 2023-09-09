@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.40
+
+### Patch Changes
+
+- 73138b3: fix: deprecated blockquote
+
 ## 6.0.0-next.39
 
 ### Minor Changes
