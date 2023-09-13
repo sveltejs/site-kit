@@ -22,10 +22,28 @@ The main shell of the application. It provides a slot for the top navigation, th
 
 	/** @type {HTMLElement} */
 	let main_el;
+	let scroll_restored = false;
 
 	afterNavigate(() => {
-		main_el.scrollTop = 0;
+		if (!scroll_restored) {
+			main_el.scrollTop = 0;
+		}
+		scroll_restored = false;
 	});
+
+	/** @type {import('@sveltejs/kit').Snapshot<number>} */
+	export const snapshot = {
+		capture() {
+			return main_el.scrollTop;
+		},
+		restore(scroll_top) {
+			main_el.scrollTop = scroll_top;
+
+			// Restore is not called for the first navigation to a page,
+			// use this flag to track whether to reset the scroll to top or not in afterNavigate
+			scroll_restored = true;
+		}
+	};
 </script>
 
 <Icons />
