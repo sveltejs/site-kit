@@ -43,7 +43,7 @@
 	color: var(--sk-code-base);
 	border-radius: var(--sk-border-radius);
 	font-size: var(--sk-text-s);
-	overflow-x: hidden;
+	overflow-x: auto;
 }
 
 .text :where(pre code) {
@@ -53,7 +53,6 @@
 	top: 0;
 	width: 100%;
 	background: transparent;
-	overflow-x: auto;
 }
 
 .text :where(p code) {
@@ -130,16 +129,14 @@
 
 .language-diff :where(.inserted, .deleted)::before {
 	position: absolute;
-	left: -0.6rem;
-	top: -0.2rem;
-	font-size: 1.2rem;
+	left: -1ch;
 }
 
-.language-diff :where(.inserted::before) {
+.language-diff :where(.inserted)::before {
 	content: '+';
 }
 
-.language-diff :where(.deleted::before) {
+.language-diff :where(.deleted)::before {
 	content: '-';
 }
 
@@ -248,7 +245,7 @@
 	}
 
 	.text :where(blockquote *) {
-		word-break: break-all;
+		word-break: break-word;
 	}
 }
 
