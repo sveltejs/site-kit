@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.41
+
+### Patch Changes
+
+- 038eb8b: fix: Make DocsOnThisPage respect page.path
+
 ## 6.0.0-next.40
 
 ### Patch Changes
