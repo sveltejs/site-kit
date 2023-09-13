@@ -1,5 +1,12 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.44
+
+### Patch Changes
+
+- 1103304: feat: expose a way to capture scroll state from Shell
+- 66a4aff: fix: renderer indent code snippets by 2 spaces only
+
 ## 6.0.0-next.43
 
 ### Patch Changes
