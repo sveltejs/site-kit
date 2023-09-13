@@ -1,5 +1,12 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.43
+
+### Patch Changes
+
+- c4c2d3b: fix: diff symbols
+- b951416: fix: generics missing angle brackets
+
 ## 6.0.0-next.42
 
 ### Patch Changes
