@@ -930,7 +930,6 @@ function syntax_highlight({ source, filename, language, highlighter, twoslashBan
 	let html = '';
 
 	if (/^(dts|yaml|yml)/.test(language)) {
-		// console.log(source.replace(/^\s{4}/gm, '🔍'));
 		html = replace_blank_lines(
 			twoslash_module.renderCodeToHTML(
 				source,
