@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.42
+
+### Patch Changes
+
+- a1f2c5b: fix: infinite loop error replace_type_placeholder
+
 ## 6.0.0-next.41
 
 ### Patch Changes
