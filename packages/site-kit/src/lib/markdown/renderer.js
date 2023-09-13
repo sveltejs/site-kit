@@ -900,10 +900,12 @@ function adjust_tab_indentation(source, language) {
 				if ((prefix && language !== 'diff') || language === 'yaml') return match;
 
 				// for no good reason at all, marked replaces tabs with spaces
+				let i = 0;
 				let tabs = '';
-				for (let i = 0; i < spaces.length; i += 4) {
-					tabs += '  ';
+				for (; i < spaces.length; i += 4) {
+					tabs += '\t';
 				}
+				tabs += ' '.repeat(i % 4);
 				return prefix + tabs;
 			})
 			.replace(/\*\\\//g, '*/')

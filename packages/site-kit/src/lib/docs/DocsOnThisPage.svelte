@@ -257,6 +257,7 @@
 		/* override global styles */
 		margin: 0;
 		border: none;
+		padding: 0 0.85rem;
 	}
 
 	.h2 {
@@ -372,6 +373,10 @@
 
 		.heading[aria-expanded='true'] {
 			border-radius: var(--sk-border-radius) var(--sk-border-radius) 0 0;
+		}
+
+		h2 {
+			padding: unset;
 		}
 
 		.h2 {
