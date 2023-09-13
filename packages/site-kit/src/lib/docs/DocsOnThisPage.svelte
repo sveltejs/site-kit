@@ -306,6 +306,7 @@
 		display: block;
 		padding: 0.3rem 0.5rem;
 		color: var(--sk-text-3);
+		font-size: var(--sk-text-s);
 		border-left: 2px solid transparent;
 		box-shadow: none;
 
