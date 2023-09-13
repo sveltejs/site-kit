@@ -901,7 +901,7 @@ function adjust_tab_indentation(source, language) {
 				// for no good reason at all, marked replaces tabs with spaces
 				let tabs = '';
 				for (let i = 0; i < spaces.length; i += 4) {
-					tabs += '    ';
+					tabs += '  ';
 				}
 				return prefix + tabs;
 			})
