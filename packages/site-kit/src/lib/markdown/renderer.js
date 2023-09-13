@@ -519,7 +519,7 @@ export async function replace_export_type_placeholders(content, modules) {
 		EXPANDED_TYPES: /> EXPANDED_TYPES: (.+?)#(.+)$/gm,
 		TYPES: /> TYPES: (.+?)(?:#(.+))?$/gm,
 		EXPORT_SNIPPET: /> EXPORT_SNIPPET: (.+?)#(.+)?$/gm,
-		MODULES: /> MODULES/,
+		MODULES: /> MODULES/g, //! /g is VERY IMPORTANT, OR WILL CAUSE INFINITE LOOP
 		EXPORTS: /> EXPORTS: (.+)/
 	};
 
@@ -531,7 +531,6 @@ export async function replace_export_type_placeholders(content, modules) {
 			.replace(REGEXES.MODULES, '')
 			.replace(REGEXES.EXPORTS, '');
 	}
-
 	content = await async_replace(content, REGEXES.EXPANDED_TYPES, async ([_, name, id]) => {
 		const module = modules.find((module) => module.name === name);
 		if (!module) throw new Error(`Could not find module ${name}`);
