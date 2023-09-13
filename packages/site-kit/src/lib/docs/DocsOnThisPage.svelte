@@ -243,6 +243,7 @@
 		left: calc(100vw - (var(--sidebar-width)));
 		overflow-y: auto;
 		scrollbar-width: none;
+		font-family: var(--sk-font);
 	}
 	.on-this-page::-webkit-scrollbar {
 		display: none;
