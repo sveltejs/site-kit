@@ -11,8 +11,9 @@ import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils
  * @typedef {'file' | 'link' | 'copy'} MetadataKeys
  */
 
+// Supports js, svelte, yaml files
 const METADATA_REGEX =
-	/(?:<!---\s*|\/\/\/\s*)(?<key>file|link|copy):\s*(?<value>.*?)(?:\s*--->|$)\n/gm;
+	/(?:<!---\s*|\/\/\/\s*|###\s*)(?<key>file|link|copy):\s*(?<value>.*?)(?:\s*--->|$)\n/gm;
 
 /** @type {Map<string, string>} */
 const CACHE_MAP = new Map();
@@ -899,13 +900,15 @@ function adjust_tab_indentation(source, language) {
 		source
 			// TODO: what exactly is going on here? The regex finds spaces and replaces them with spaces again?
 			.replace(/^([\-\+])?((?:    )+)/gm, (match, prefix = '', spaces) => {
-				if (prefix && language !== 'diff') return match;
+				if ((prefix && language !== 'diff') || language === 'yaml') return match;
 
 				// for no good reason at all, marked replaces tabs with spaces
+				let i = 0;
 				let tabs = '';
-				for (let i = 0; i < spaces.length; i += 4) {
-					tabs += '    ';
+				for (; i < spaces.length; i += 4) {
+					tabs += '\t';
 				}
+				tabs += ' '.repeat(i % 4);
 				return prefix + tabs;
 			})
 			.replace(/\*\\\//g, '*/')
@@ -931,7 +934,7 @@ function replace_blank_lines(html) {
 function syntax_highlight({ source, filename, language, highlighter, twoslashBanner, options }) {
 	let html = '';
 
-	if (/^(dts|yaml)/.test(language)) {
+	if (/^(dts|yaml|yml)/.test(language)) {
 		html = replace_blank_lines(
 			twoslash_module.renderCodeToHTML(
 				source,
