@@ -211,7 +211,7 @@
 			<ul>
 				<li>
 					<a
-						href="{base}/docs/{details.slug}"
+						href={details.path}
 						aria-current={hash === '' ? 'page' : false}
 						on:click={on_link_click}>{details.title}</a
 					>
@@ -243,6 +243,7 @@
 		left: calc(100vw - (var(--sidebar-width)));
 		overflow-y: auto;
 		scrollbar-width: none;
+		font-family: var(--sk-font);
 	}
 	.on-this-page::-webkit-scrollbar {
 		display: none;
@@ -306,6 +307,7 @@
 		display: block;
 		padding: 0.3rem 0.5rem;
 		color: var(--sk-text-3);
+		font-size: var(--sk-text-s);
 		border-left: 2px solid transparent;
 		box-shadow: none;
 

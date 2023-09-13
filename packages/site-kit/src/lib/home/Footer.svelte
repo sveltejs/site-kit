@@ -11,7 +11,7 @@
 
 		{#each Object.entries(links) as [title, inner_links]}
 			<div class="links">
-				<h4>{title}</h4>
+				<h2>{title}</h2>
 				{#each inner_links as { href, title }}
 					<a {href}>{title}</a>
 				{/each}
@@ -51,7 +51,7 @@
 		filter: grayscale(100%) opacity(84%);
 	}
 
-	footer h4 {
+	footer h2 {
 		font-size: var(--sk-text-m);
 		padding-bottom: 1rem;
 	}

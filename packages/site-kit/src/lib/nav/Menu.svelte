@@ -1,3 +1,28 @@
+<script context="module">
+	const open_store = writable(false);
+
+	/** @type {import('svelte/store').Writable<import('../types').NavigationLink | undefined>} */
+	const current_menu_view = writable(undefined);
+
+	const show_context_menu = writable(false);
+
+	/** @type {import('svelte/store').Writable<import('../types').NavigationLink[]>} */
+	const links_store = writable([]);
+
+	export function open_nav() {
+		if (get(open_store)) {
+			open_store.set(false);
+		} else {
+			open_store.set(true);
+
+			const segment = get(page).url.pathname.split('/')[1];
+			current_menu_view.set(get(links_store).find((link) => link.prefix === segment));
+
+			show_context_menu.set(!!get(current_menu_view)?.sections && !!get(current_menu_view));
+		}
+	}
+</script>
+
 <script>
 	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -5,6 +30,7 @@
 	import { overlay_open, reduced_motion, theme } from '$lib/stores';
 	import { tick } from 'svelte';
 	import { expoOut, quintOut } from 'svelte/easing';
+	import { get, writable } from 'svelte/store';
 	import Icon from '../components/Icon.svelte';
 	import NavContextMenu from './NavContextMenu.svelte';
 
@@ -14,8 +40,8 @@
 	/** @type {import('../types').NavigationLink[]} */
 	export let links;
 
-	/** @type {import('../types').NavigationLink | undefined} */
-	let current_menu_view = undefined;
+	$: $open_store = open;
+	$: $links_store = links;
 
 	/** @type {NavContextMenu} */
 	let nav_context_instance;
@@ -23,19 +49,16 @@
 	let menu_height = 0;
 	let universal_menu_inner_height = 0;
 	let ready = false;
-	let show_context_menu = false;
 
 	/** @type {HTMLElement} */
 	let universal_menu;
-
-	/** @type {HTMLElement} */
-	let context_menu;
 
 	/** @type {HTMLButtonElement} */
 	let menu_button;
 
 	function close() {
 		open = false;
+		$open_store = open;
 	}
 
 	afterNavigate(close);
@@ -64,7 +87,7 @@
 	 * @returns {import('svelte/transition').TransitionConfig}
 	 */
 	const slide = (node, { duration = 400, easing = expoOut } = {}) => {
-		const height = current_menu_view ? node.clientHeight : universal_menu_inner_height;
+		const height = $current_menu_view ? node.clientHeight : universal_menu_inner_height;
 
 		return {
 			css: (t, u) =>
@@ -78,7 +101,7 @@
 		};
 	};
 
-	$: $overlay_open = open;
+	$: $overlay_open = $open_store;
 </script>
 
 <svelte:window
@@ -95,35 +118,24 @@
 <div style="display: contents" use:click_outside={close} use:focus_outside={close}>
 	<button
 		aria-label="Toggle menu"
-		aria-expanded={open}
+		aria-expanded={$open_store}
 		class="menu-toggle"
 		class:open
 		bind:this={menu_button}
-		on:click={() => {
-			if (open) {
-				close();
-			} else {
-				open = true;
-
-				const segment = $page.url.pathname.split('/')[1];
-				current_menu_view = links.find((link) => link.prefix === segment);
-
-				show_context_menu = !!current_menu_view?.sections && !!current_menu_view;
-			}
-		}}
+		on:click={open_nav}
 	>
-		<Icon name={open ? 'close' : 'menu'} size="1em" />
+		<Icon name={$open_store ? 'close' : 'menu'} size="1em" />
 	</button>
 
-	{#if open}
+	{#if $open_store}
 		<div class="menu" use:trap={{ reset_focus: false }}>
 			<div class="mobile-main-menu" in:slide out:slide={{ duration: 500, easing: quintOut }}>
 				<div
 					class="menu-background"
 					class:dark={$theme.current === 'dark'}
 					class:ready
-					style:height={show_context_menu ? '99%' : `${universal_menu_inner_height}px`}
-					style:--background={show_context_menu ? 'var(--sk-back-3)' : null}
+					style:height={$show_context_menu ? '99%' : `${universal_menu_inner_height}px`}
+					style:--background={$show_context_menu ? 'var(--sk-back-3)' : null}
 					use:mounted={(mounted) => (ready = mounted)}
 				/>
 
@@ -142,8 +154,8 @@
 						const a = 'calc(var(--height-difference) + 1px)';
 						const b = '1px';
 
-						const start = show_context_menu ? a : b;
-						const end = show_context_menu ? b : a;
+						const start = $show_context_menu ? a : b;
+						const end = $show_context_menu ? b : a;
 
 						const container = e.currentTarget;
 
@@ -162,7 +174,7 @@
 						e.currentTarget.style.clipPath = '';
 
 						// whenever we transition from one menu to the other, we need to move focus to the first item in the new menu
-						if (!show_context_menu) {
+						if (!$show_context_menu) {
 							universal_menu.querySelector('a')?.focus();
 						}
 					}}
@@ -170,10 +182,10 @@
 					<div
 						class="viewport"
 						class:reduced-motion={$reduced_motion}
-						class:offset={show_context_menu}
+						class:offset={$show_context_menu}
 						bind:clientHeight={menu_height}
 					>
-						<div class="universal" inert={show_context_menu} bind:this={universal_menu}>
+						<div class="universal" inert={$show_context_menu} bind:this={universal_menu}>
 							<div class="contents" bind:clientHeight={universal_menu_inner_height}>
 								{#each links as link}
 									<div class="link-item" style:--button-width={link.sections ? '4rem' : '0'}>
@@ -185,11 +197,11 @@
 											<button
 												class="related-menu-arrow"
 												on:click|preventDefault={async () => {
-													current_menu_view = link;
+													$current_menu_view = link;
 
 													await tick();
 
-													show_context_menu = true;
+													$show_context_menu = true;
 
 													await tick();
 
@@ -207,11 +219,11 @@
 							</div>
 						</div>
 
-						<div class="context" inert={!show_context_menu} bind:this={context_menu}>
+						<div class="context" inert={!$show_context_menu}>
 							{#if current_menu_view}
 								<NavContextMenu
 									bind:this={nav_context_instance}
-									contents={current_menu_view.sections}
+									contents={$current_menu_view?.sections}
 								/>
 							{/if}
 						</div>
@@ -219,7 +231,7 @@
 						<button
 							class="back-button"
 							class:dark={$theme.current === 'dark'}
-							on:click={() => (show_context_menu = false)}
+							on:click={() => ($show_context_menu = false)}
 							inert={!show_context_menu}
 						>
 							<Icon name="arrow-left" size=".6em" />
