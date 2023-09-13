@@ -211,7 +211,7 @@
 			<ul>
 				<li>
 					<a
-						href="{base}/docs/{details.slug}"
+						href={details.path}
 						aria-current={hash === '' ? 'page' : false}
 						on:click={on_link_click}>{details.title}</a
 					>
