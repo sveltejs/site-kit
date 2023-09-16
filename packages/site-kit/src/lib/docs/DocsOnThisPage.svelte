@@ -1,7 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
-	import { base } from '$app/paths';
 	import { page } from '$app/stores';
 	import { click_outside, focus_outside, root_scroll } from '$lib/actions';
 	import Icon from '$lib/components/Icon.svelte';
@@ -15,10 +14,14 @@
 	} from '$lib/stores';
 	import { afterUpdate, createEventDispatcher, onMount, tick } from 'svelte';
 	import { expoOut } from 'svelte/easing';
+	import { readable } from 'svelte/store';
 	import { slide } from 'svelte/transition';
 
 	/** @type {import('./types').Page} */
 	export let details;
+
+	/** @type {'auto' | 'inline' | 'aside'} */
+	export let orientation = 'auto';
 
 	const dispatch = createEventDispatcher();
 
@@ -49,7 +52,8 @@
 
 	let mobile_z_index = Z_INDICES.BASE;
 
-	const is_mobile = mql('(max-width: 1200px)');
+	$: is_mobile =
+		orientation === 'auto' ? mql('(max-width: 1200px)') : readable(orientation === 'inline');
 
 	$: pathname = $page.url.pathname;
 
@@ -59,9 +63,7 @@
 		emulate_autoscroll();
 	}
 
-	$: {
-		$overlay_open = $on_this_page_open;
-	}
+	$: $overlay_open = $on_this_page_open;
 
 	onMount(async () => {
 		await document.fonts.ready;
@@ -173,6 +175,7 @@
 
 <aside
 	class="on-this-page"
+	class:mobile={$is_mobile}
 	class:dark={$theme.current === 'dark'}
 	style:z-index={mobile_z_index}
 	bind:this={containerEl}
@@ -326,126 +329,125 @@
 		border-left-color: var(--sk-theme-1);
 	}
 
-	@media screen and (max-width: 1200px) {
-		.on-this-page {
-			--shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
-			position: relative;
-			top: 0;
-			left: 0;
-			z-index: 99;
+	.on-this-page.mobile {
+		--shadow: 0px 0px 14px rgba(0, 0, 0, 0.1);
+		position: relative;
+		top: 0;
+		left: 0;
+		z-index: 99;
 
-			display: block;
+		display: block;
 
-			width: 100%;
-			height: auto;
-			padding: 0;
+		width: 100%;
+		height: auto;
+		padding: 0;
 
-			margin: 5rem 0;
+		margin: 5rem 0;
 
-			overflow-y: initial;
-		}
+		overflow-y: initial;
+	}
 
-		.on-this-page.dark {
-			--shadow: 0 0 0 1px var(--sk-back-4);
-		}
+	.on-this-page.mobile.dark {
+		--shadow: 0 0 0 1px var(--sk-back-4);
+	}
 
-		.desktop-only-heading {
-			display: none;
-		}
+	.on-this-page.mobile .desktop-only-heading {
+		display: none;
+	}
 
-		.heading {
-			position: relative;
-			width: 100%;
+	.on-this-page.mobile .heading {
+		position: relative;
+		width: 100%;
 
-			display: grid;
-			align-items: center;
-			grid-template-columns: 1fr auto;
-			gap: 0.75rem;
-			padding: 0.75rem 0.75rem;
+		display: grid;
+		align-items: center;
+		grid-template-columns: 1fr auto;
+		gap: 0.75rem;
+		padding: 0.75rem 0.75rem;
 
-			z-index: 2;
+		z-index: 2;
 
-			box-shadow: var(--shadow);
-			border-radius: var(--sk-border-radius);
+		box-shadow: var(--shadow);
+		border-radius: var(--sk-border-radius);
+		box-sizing: border-box;
 
-			background-color: var(--sk-back-3);
-		}
+		background-color: var(--sk-back-3);
+	}
 
-		.heading[aria-expanded='true'] {
-			border-radius: var(--sk-border-radius) var(--sk-border-radius) 0 0;
-		}
+	.on-this-page.mobile .heading[aria-expanded='true'] {
+		border-radius: var(--sk-border-radius) var(--sk-border-radius) 0 0;
+	}
 
-		h2 {
-			padding: unset;
-		}
+	.on-this-page.mobile h2 {
+		padding: unset;
+	}
 
-		.h2 {
-			font-size: var(--sk-text-s);
-			line-height: 1;
+	.on-this-page.mobile .h2 {
+		font-size: var(--sk-text-s);
+		line-height: 1;
 
-			padding: 0.8rem 0.5rem;
+		padding: 0.8rem 0.5rem;
 
-			border: none;
-		}
+		border: none;
+	}
 
-		.heading :global(svg) {
-			display: block;
-		}
+	.on-this-page.mobile .heading :global(svg) {
+		display: block;
+	}
 
-		nav {
-			position: absolute;
-			top: 45px;
-			left: 0;
+	.on-this-page.mobile nav {
+		position: absolute;
+		top: 45px;
+		left: 0;
 
-			width: 100%;
-			max-height: 50vh;
+		width: 100%;
+		max-height: 50vh;
 
-			overflow-y: auto;
+		overflow-y: auto;
 
-			background-color: var(--sk-back-3);
+		background-color: var(--sk-back-3);
 
-			border-radius: 0 0 var(--sk-border-radius) var(--sk-border-radius);
-			box-shadow: var(--shadow);
-		}
+		border-radius: 0 0 var(--sk-border-radius) var(--sk-border-radius);
+		box-shadow: var(--shadow);
+	}
 
-		ul {
-			margin: 0 !important;
+	.on-this-page.mobile ul {
+		margin: 0 !important;
 
-			display: grid;
-			gap: 0.5rem;
-		}
+		display: grid;
+		gap: 0.5rem;
+	}
 
-		li {
-			margin: 0rem;
-		}
+	.on-this-page.mobile li {
+		margin: 0rem;
+	}
 
-		li:first-child {
-			display: none;
-		}
+	.on-this-page.mobile li:first-child {
+		display: none;
+	}
 
-		li:nth-child(2) {
-			margin-top: 0.75rem;
-		}
+	.on-this-page.mobile li:nth-child(2) {
+		margin-top: 0.75rem;
+	}
 
-		li:last-child {
-			margin-bottom: 0.75rem;
-		}
+	.on-this-page.mobile li:last-child {
+		margin-bottom: 0.75rem;
+	}
 
-		a {
-			padding: 0.4rem 1.25rem;
-			box-sizing: border-box;
+	.on-this-page.mobile a {
+		padding: 0.4rem 1.25rem;
+		box-sizing: border-box;
 
-			color: var(--sk-text-2);
-		}
+		color: var(--sk-text-2);
+	}
 
-		a[aria-current='page'] {
-			background-color: transparent;
-			border-left: 0;
-		}
+	.on-this-page.mobile a[aria-current='page'] {
+		background-color: transparent;
+		border-left: 0;
+	}
 
-		a:hover {
-			text-decoration: none;
-			background-color: initial;
-		}
+	.on-this-page.mobile a:hover {
+		text-decoration: none;
+		background-color: initial;
 	}
 </style>
