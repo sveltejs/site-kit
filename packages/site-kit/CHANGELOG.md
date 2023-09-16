@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.46
+
+### Patch Changes
+
+- a563f98: feat: OnThisPage orientation
+
 ## 6.0.0-next.45
 
 ### Patch Changes
