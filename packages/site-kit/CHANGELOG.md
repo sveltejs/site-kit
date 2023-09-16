@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.45
+
+### Patch Changes
+
+- bc5adba: chore: copy true by default
+
 ## 6.0.0-next.44
 
 ### Patch Changes
