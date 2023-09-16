@@ -128,7 +128,7 @@ export async function render_content_markdown(
 			if (cached_snippet.code) return cached_snippet.code;
 
 			/** @type {SnippetOptions} */
-			const options = { file: null, link: null, copy: false };
+			const options = { file: null, link: null, copy: true };
 
 			source = collect_options(source, options);
 			source = adjust_tab_indentation(source, language);
@@ -880,13 +880,17 @@ function create_type_links(modules, resolve_link) {
 function collect_options(source, options) {
 	METADATA_REGEX.lastIndex = 0;
 
+	let copy_value = 'true';
 	source = source.replace(METADATA_REGEX, (_, key, value) => {
+		if (key === 'copy') {
+			copy_value = value;
+		}
 		options[/** @type {MetadataKeys} */ (key)] = value;
 		return '';
 	});
 
 	options.link = options.link === 'true';
-	options.copy = options.copy === 'true' || (options.file && options.copy !== 'false');
+	options.copy = copy_value === 'true' || (options.file && copy_value !== 'false');
 
 	return source;
 }

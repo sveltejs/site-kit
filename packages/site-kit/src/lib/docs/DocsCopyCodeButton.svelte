@@ -69,7 +69,7 @@
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr;
 
-		opacity: 0.8;
+		opacity: 0.5;
 
 		height: 2.4rem;
 		width: 2.4rem;
@@ -80,7 +80,7 @@
 	}
 
 	button:hover {
-		opacity: 1;
+		opacity: 0.7;
 	}
 
 	span {
