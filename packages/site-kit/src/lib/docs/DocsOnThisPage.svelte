@@ -74,8 +74,10 @@
 	afterUpdate(() => {
 		// bit of a hack — prevent sidebar scrolling if
 		// TOC is open on mobile, or scroll came from within sidebar
-		if (show_contents && window.innerWidth < 832) return;
-		const active = containerEl.querySelector('.active');
+		if ((show_contents && window.innerWidth < 832) || !content) return;
+
+		const active = containerEl?.querySelector('.active');
+
 		if (active) {
 			const { top, bottom } = active.getBoundingClientRect();
 			const min = 100;
@@ -133,6 +135,8 @@
 	}
 
 	function highlight() {
+		if (!content) return;
+
 		const { top, bottom } = content.getBoundingClientRect();
 		let i = headings.length;
 		while (i--) {
@@ -173,67 +177,69 @@
 	on:hashchange={() => select($page.url)}
 />
 
-<aside
-	class="on-this-page"
-	class:mobile={$is_mobile}
-	class:dark={$theme.current === 'dark'}
-	style:z-index={mobile_z_index}
-	bind:this={containerEl}
-	use:click_outside={() => $is_mobile && ($on_this_page_open = false)}
-	use:focus_outside={() => $is_mobile && ($on_this_page_open = false)}
->
-	<h2>
-		<button
-			class="heading"
-			aria-expanded={$on_this_page_open}
-			on:click={() => ($on_this_page_open = !$on_this_page_open)}
-		>
-			<span class="h2"><slot>On this page</slot></span>
+{#if $is_mobile && details.sections.length > 0}
+	<aside
+		class="on-this-page"
+		class:mobile={$is_mobile}
+		class:dark={$theme.current === 'dark'}
+		style:z-index={mobile_z_index}
+		bind:this={containerEl}
+		use:click_outside={() => $is_mobile && ($on_this_page_open = false)}
+		use:focus_outside={() => $is_mobile && ($on_this_page_open = false)}
+	>
+		<h2>
+			<button
+				class="heading"
+				aria-expanded={$on_this_page_open}
+				on:click={() => ($on_this_page_open = !$on_this_page_open)}
+			>
+				<span class="h2"><slot>On this page</slot></span>
 
-			<span class="expand-icon" class:inverted={$on_this_page_open}>
-				<Icon name="chevron-down" />
-			</span>
-		</button>
-		<span class="h2 desktop-only-heading"><slot>On this page</slot></span>
-	</h2>
+				<span class="expand-icon" class:inverted={$on_this_page_open}>
+					<Icon name="chevron-down" />
+				</span>
+			</button>
+			<span class="h2 desktop-only-heading"><slot>On this page</slot></span>
+		</h2>
 
-	{#if (browser && !$is_mobile) || ($is_mobile && $on_this_page_open)}
-		<nav
-			aria-label="On this page"
-			transition:slide={{ axis: 'y', easing: expoOut, duration: $reduced_motion ? 0 : 400 }}
-			on:introstart={() => $on_this_page_open && (mobile_z_index = Z_INDICES.OPEN)}
-			on:outrostart={async () => {
-				await tick();
+		{#if (browser && !$is_mobile) || ($is_mobile && $on_this_page_open)}
+			<nav
+				aria-label="On this page"
+				transition:slide={{ axis: 'y', easing: expoOut, duration: $reduced_motion ? 0 : 400 }}
+				on:introstart={() => $on_this_page_open && (mobile_z_index = Z_INDICES.OPEN)}
+				on:outrostart={async () => {
+					await tick();
 
-				if (!$on_this_page_open && $nav_open) {
-					mobile_z_index = Z_INDICES.BASE;
-				}
-			}}
-			on:outroend={() => !$on_this_page_open && (mobile_z_index = Z_INDICES.BASE)}
-		>
-			<ul>
-				<li>
-					<a
-						href={details.path}
-						aria-current={hash === '' ? 'page' : false}
-						on:click={on_link_click}>{details.title}</a
-					>
-				</li>
-				{#each details.sections as { title, slug }}
+					if (!$on_this_page_open && $nav_open) {
+						mobile_z_index = Z_INDICES.BASE;
+					}
+				}}
+				on:outroend={() => !$on_this_page_open && (mobile_z_index = Z_INDICES.BASE)}
+			>
+				<ul>
 					<li>
 						<a
-							href={`#${slug}`}
-							aria-current={`#${slug}` === hash ? 'page' : false}
-							on:click={on_link_click}
+							href={details.path}
+							aria-current={hash === '' ? 'page' : false}
+							on:click={on_link_click}>{details.title}</a
 						>
-							{title}
-						</a>
 					</li>
-				{/each}
-			</ul>
-		</nav>
-	{/if}
-</aside>
+					{#each details.sections as { title, slug }}
+						<li>
+							<a
+								href={`#${slug}`}
+								aria-current={`#${slug}` === hash ? 'page' : false}
+								on:click={on_link_click}
+							>
+								{title}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		{/if}
+	</aside>
+{/if}
 
 <style>
 	.on-this-page {
