@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.47
+
+### Patch Changes
+
+- 0b25750: fix: banner positioning
+
 ## 6.0.0-next.46
 
 ### Patch Changes
