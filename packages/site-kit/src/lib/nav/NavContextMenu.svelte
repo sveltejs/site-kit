@@ -34,44 +34,46 @@
 </script>
 
 <nav bind:this={nav}>
-	{#each contents ?? [] as { sections, title }, index}
-		<section>
-			<h3>{title}</h3>
+	{#if contents}
+		{#each contents as { sections, title }, index}
+			<section>
+				<h3>{title}</h3>
 
-			{#if sections.length !== 0}
-				<ul>
-					{#each sections as { title, sections: subsections }}
-						<li>
-							{#if title}
-								<h4>
-									{title}
-								</h4>
-							{/if}
+				{#if sections.length !== 0}
+					<ul>
+						{#each sections as { title, sections: subsections }}
+							<li>
+								{#if title}
+									<h4>
+										{title}
+									</h4>
+								{/if}
 
-							<ul>
-								{#each subsections as { path, title, badge }}
-									<li>
-										<a href={path} aria-current={path === $page.url.pathname}>
-											{title}
+								<ul>
+									{#each subsections as { path, title, badge }}
+										<li>
+											<a href={path} aria-current={path === $page.url.pathname}>
+												{title}
 
-											{#if badge}
-												<span style="flex: 1 1 auto" />
-												<span class="badge">{badge}</span>
-											{/if}
-										</a>
-									</li>
-								{/each}
-							</ul>
-						</li>
-					{/each}
-				</ul>
-			{/if}
+												{#if badge}
+													<span style="flex: 1 1 auto" />
+													<span class="badge">{badge}</span>
+												{/if}
+											</a>
+										</li>
+									{/each}
+								</ul>
+							</li>
+						{/each}
+					</ul>
+				{/if}
 
-			{#if index !== sections.length - 1}
-				<hr />
-			{/if}
-		</section>
-	{/each}
+				{#if contents.length !== 1 && index !== contents.length - 1}
+					<hr />
+				{/if}
+			</section>
+		{/each}
+	{/if}
 </nav>
 
 <style>
