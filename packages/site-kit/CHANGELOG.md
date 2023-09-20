@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.49
+
+### Patch Changes
+
+- 6423e38: fix: DocsOnThisPage not rendering on desktop
+
 ## 6.0.0-next.48
 
 ### Patch Changes
