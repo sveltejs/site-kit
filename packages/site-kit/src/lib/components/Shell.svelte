@@ -65,7 +65,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 </main>
 
 {#if banner_bottom_height !== '0px'}
-	<div style:--sk-banner-bottom-height={banner_bottom_height}>
+	<div class="banner-bottom" style:--sk-banner-bottom-height={banner_bottom_height}>
 		<slot name="banner-bottom" {banner_bottom_height} />
 	</div>
 {/if}
@@ -105,7 +105,22 @@ The main shell of the application. It provides a slot for the top navigation, th
 
 	@media (max-width: 800px) {
 		main {
-			padding-top: 0;
+			padding-top: var(--sk-banner-bottom-height);
+			padding-bottom: 0;
+		}
+	}
+
+	.banner-bottom {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+
+	@media (max-width: 800px) {
+		.banner-bottom {
+			bottom: initial;
+			top: 0;
 		}
 	}
 
