@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.48
+
+### Patch Changes
+
+- 31580c0: fix: Dont render empty DocsOnThisPage, remove the pesky hr in NavContextMenu
+
 ## 6.0.0-next.47
 
 ### Patch Changes
