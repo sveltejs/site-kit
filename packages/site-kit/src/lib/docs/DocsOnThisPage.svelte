@@ -177,7 +177,7 @@
 	on:hashchange={() => select($page.url)}
 />
 
-{#if $is_mobile && details.sections.length > 0}
+{#if !$is_mobile || ($is_mobile && details.sections.length > 0)}
 	<aside
 		class="on-this-page"
 		class:mobile={$is_mobile}
