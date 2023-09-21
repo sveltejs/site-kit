@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.50
+
+### Patch Changes
+
+- 10d9428: fix: take banner bottom height into account for ts toggle
+
 ## 6.0.0-next.49
 
 ### Patch Changes
