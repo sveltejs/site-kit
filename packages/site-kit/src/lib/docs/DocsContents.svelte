@@ -108,7 +108,7 @@
 	.ts-toggle {
 		position: fixed;
 		width: var(--sidebar-width);
-		bottom: 0;
+		bottom: var(--sk-banner-bottom-height);
 		left: 0;
 		z-index: 1;
 		margin-right: 0;
