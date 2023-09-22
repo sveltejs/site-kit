@@ -11,9 +11,14 @@
 	import { persisted } from 'svelte-local-storage-store';
 	import Icon from './Icon.svelte';
 
+	/** Whether to show an arrow at the end */
 	export let arrow = false;
 
-	/** @type {string} */
+	/** Required for dismissing behavior e.g `<Banner id="svelte-5-runes" />` will make sure the banner
+	 * hidden only for this ID. Later if another banner is added, that will be visible by default.
+	 *
+	 * @type {string}
+	 */
 	export let id;
 
 	let height = 0;
