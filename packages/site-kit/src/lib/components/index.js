@@ -3,3 +3,4 @@ export { default as Icons } from './Icons.svelte';
 export { default as Section } from './Section.svelte';
 export { default as Shell } from './Shell.svelte';
 export { default as ThemeToggle } from './ThemeToggle.svelte';
+export { default as Banner } from './Banner.svelte';
