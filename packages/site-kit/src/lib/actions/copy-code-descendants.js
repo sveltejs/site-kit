@@ -18,7 +18,17 @@ export const copy_code_descendants = (node) => {
 			// Exclude the ts-block properties and stuff
 			if (/ts-block/.test(parent_class)) continue;
 
-			const code = block.querySelector('code')?.innerText ?? '';
+			let code = '';
+			for (const node of block.querySelector('code')?.childNodes ?? []) {
+				if (node.nodeType === Node.ELEMENT_NODE) {
+					if (!(/** @type {HTMLElement} */ (node).classList.contains('deleted'))) {
+						code += node.textContent;
+					}
+				} else {
+					code += node.textContent;
+				}
+			}
+
 			if (!code) continue;
 
 			// This is to make sure that snippets with title get the button on their heading area
