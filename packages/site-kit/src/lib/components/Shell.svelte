@@ -96,7 +96,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 	main {
 		position: relative;
 		margin: 0 auto;
-		padding-top: var(--sk-nav-height);
+		margin-top: var(--sk-nav-height);
 		padding-bottom: var(--sk-banner-bottom-height);
 		overflow: hidden;
 		overflow-y: auto;
