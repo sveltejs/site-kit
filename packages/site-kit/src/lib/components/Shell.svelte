@@ -12,10 +12,6 @@ The main shell of the application. It provides a slot for the top navigation, th
 	import Icons from './Icons.svelte';
 
 	/**
-	 * Height of the bottom banner. If '0px', the banner is not visible.
-	 */
-	export let banner_bottom_height = '0px';
-	/**
 	 * Whether the navigation is visible.
 	 */
 	export let nav_visible = true;
@@ -60,15 +56,13 @@ The main shell of the application. It provides a slot for the top navigation, th
 
 <div class="modal-overlay" class:visible={$overlay_open} aria-hidden="true" />
 
-<main id="main" bind:this={main_el} style:--sk-banner-bottom-height={banner_bottom_height}>
+<main id="main" bind:this={main_el}>
 	<slot />
 </main>
 
-{#if banner_bottom_height !== '0px'}
-	<div class="banner-bottom" style:--sk-banner-bottom-height={banner_bottom_height}>
-		<slot name="banner-bottom" {banner_bottom_height} />
-	</div>
-{/if}
+<div class="banner-bottom">
+	<slot name="banner-bottom" />
+</div>
 
 <style>
 	.modal-overlay {
@@ -107,20 +101,6 @@ The main shell of the application. It provides a slot for the top navigation, th
 		main {
 			padding-top: var(--sk-banner-bottom-height);
 			padding-bottom: 0;
-		}
-	}
-
-	.banner-bottom {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-	}
-
-	@media (max-width: 800px) {
-		.banner-bottom {
-			bottom: initial;
-			top: 0;
 		}
 	}
 

@@ -17,6 +17,7 @@
 	--sk-thick-border-width: 0.3rem;
 	--sk-border-radius: 0.4rem;
 	--sk-page-main-width: 80rem;
+	--sk-banner-bottom-height: 0px;
 
 	/* typography */
 	--sk-font: 'Overpass', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
