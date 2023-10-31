@@ -10,6 +10,9 @@
 	let visible = false;
 
 	onMount(() => {
+		/** @type {any} */
+		let timeout;
+
 		function next() {
 			visible = true;
 
@@ -19,10 +22,14 @@
 				duration: remaining + 0.1 > 0.15 ? 250 : 500 / remaining
 			});
 
-			if (remaining > 0.15) setTimeout(next, 500 / remaining);
+			if (remaining > 0.15) {
+				timeout = setTimeout(next, 500 / remaining);
+			}
 		}
 
-		setTimeout(next, 250);
+		timeout = setTimeout(next, 250);
+
+		return () => clearTimeout(timeout);
 	});
 </script>
 
