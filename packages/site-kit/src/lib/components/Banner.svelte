@@ -1,10 +1,3 @@
-<script context="module">
-	const banner_preferences = persisted(
-		'svelte:banner-preferences',
-		/** @type {Record<string, boolean>} */ ({})
-	);
-</script>
-
 <script>
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
@@ -21,11 +14,39 @@
 	 */
 	export let id;
 
+	/**
+	 * Link to the event. It must be an absolute path (https://svelte.dev/blog/runes instead of /blog/runes)
+	 * @type {string}
+	 */
+	export let href;
+
+	/**
+	 * When to start showing the banner
+	 * @type {Date}
+	 */
+	export let start;
+
+	/**
+	 * When to stop showing the banner. Banner never goes away if this value is not provided
+	 * @type {Date}
+	 */
+	export let end = new Date(2123, 12, 1);
+
+	const banner_preferences = persisted(
+		'svelte:banner-preferences',
+		/** @type {Record<string, boolean>} */ ({})
+	);
+
 	let height = 0;
+
+	const time = new Date();
+
+	$: show = $banner_preferences[id] && time > start && time < end;
+
 	$: if (browser) {
 		document.documentElement.style.setProperty(
 			'--sk-banner-bottom-height',
-			($banner_preferences[id] ? height : 0) + 'px'
+			(show ? height : 0) + 'px'
 		);
 	}
 
@@ -34,42 +55,47 @@
 	});
 </script>
 
-{#if $banner_preferences[id]}
-	<div class="banner-bottom" bind:clientHeight={height}>
-		<div class="main-area">
+<div class="banner-bottom" bind:clientHeight={height} class:show>
+	<div class="main-area">
+		<a {href}>
 			<slot />
+		</a>
 
-			{#if arrow}
-				<Icon name="arrow-right" size="1.2em" />
-			{/if}
-		</div>
-
-		<button class="close-button" on:click={() => ($banner_preferences[id] = false)}>
-			<Icon name="close" />
-		</button>
+		{#if arrow}
+			<Icon name="arrow-right" size="1.2em" />
+		{/if}
 	</div>
-{/if}
+
+	<button class="close-button" on:click={() => ($banner_preferences[id] = false)}>
+		<Icon name="close" />
+	</button>
+</div>
 
 <style>
 	.banner-bottom {
-		position: relative;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 80;
 
 		display: flex;
 		justify-content: center;
 		align-items: center;
 
 		overflow-y: auto;
-	}
-
-	.banner-bottom {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		z-index: 80;
 
 		width: 100%;
 		height: max-content;
+
+		transition: opacity 0.2s 0.2s var(--quint-out);
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.show {
+		pointer-events: all;
+		opacity: 1;
 	}
 
 	.banner-bottom {
