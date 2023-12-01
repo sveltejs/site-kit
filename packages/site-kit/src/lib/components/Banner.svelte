@@ -1,3 +1,12 @@
+<script context="module">
+	/**
+	 * @typedef {'svelte.dev' | 'kit.svelte.dev' | 'learn.svelte.dev'} BannerScope
+	 * @typedef {(import('svelte').ComponentProps<import('./Banner.svelte').default> & {
+	 * content: string; scope?: BannerScope[]
+	 * })[]} BannerData
+	 */
+</script>
+
 <script>
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
