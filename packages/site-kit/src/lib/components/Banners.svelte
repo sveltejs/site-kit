@@ -3,6 +3,7 @@
 	 * Only to be used on non svelte.dev sites. Shouldn't be used inside svelte.dev codebase itself
 	 * @param {import('./Banner.svelte').BannerScope} scope
 	 * @param {import('@sveltejs/kit').RequestEvent['fetch']} fetch
+	 * @returns {Promise<import('./Banner.svelte').BannerData>}
 	 */
 	export async function fetchBanner(scope = 'svelte.dev', fetch) {
 		if (scope === 'svelte.dev') return fetch('/banner.json').then((r) => r.json());
