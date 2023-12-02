@@ -20,20 +20,20 @@
 	"homepage": "https://github.com/sveltejs/site-kit#readme",
 	"dependencies": {
 		"esm-env": "^1.0.0",
-		"svelte-local-storage-store": "^0.6.0"
+		"svelte-local-storage-store": "^0.6.4"
 	},
 	"devDependencies": {
-		"@sveltejs/kit": "^1.24.0",
-		"@sveltejs/package": "^2.2.2",
-		"@types/node": "^20.5.7",
+		"@sveltejs/kit": "^1.27.6",
+		"@sveltejs/package": "^2.2.3",
+		"@types/node": "^20.10.2",
 		"flexsearch": "^0.7.31",
-		"magic-string": "^0.30.3",
-		"marked": "^7.0.5",
-		"prettier": "^3.0.3",
+		"magic-string": "^0.30.5",
+		"marked": "^11.0.0",
+		"prettier": "^3.1.0",
 		"shiki-twoslash": "^3.1.2",
-		"svelte": "^4.2.0",
-		"typescript": "^5.2.2",
-		"vite": "^4.4.9"
+		"svelte": "^4.2.8",
+		"typescript": "^5.3.2",
+		"vite": "^4.5.0"
 	},
 	"publishConfig": {
 		"access": "public"
