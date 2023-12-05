@@ -1,5 +1,13 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.53
+
+### Patch Changes
+
+- 53b5034: feat: Time-bound banner
+- 0a700a2: fix: home link text alignment issue
+- d7d71ce: fix: cleanup timeout to prevent leak
+
 ## 6.0.0-next.52
 
 ### Minor Changes
