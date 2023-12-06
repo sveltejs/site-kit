@@ -1,26 +1,5 @@
-<script context="module">
-	/**
-	 * @typedef {'svelte.dev' | 'kit.svelte.dev' | 'learn.svelte.dev'} BannerScope
-	 * @typedef {{
-	 * id: string;
-	 * start: Date,
-	 * end?: Date,
-	 * arrow: boolean,
-	 * href: string;
-	 * content: string;
-	 * scope?: BannerScope[];
-	 * }[]} BannerData
-	 */
-
-	export const preferences = persisted(
-		'svelte:banner-preferences',
-		/** @type {Record<string, boolean>} */ ({})
-	);
-</script>
-
 <script>
-	import { onMount } from 'svelte';
-	import { persisted } from 'svelte-local-storage-store';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { quintOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
 	import Icon from './Icon.svelte';
@@ -28,18 +7,14 @@
 	/** Whether to show an arrow at the end */
 	export let arrow = false;
 
-	/** Required for dismissing behavior e.g `<Banner id="svelte-5-runes" />` will make sure the banner
-	 * hidden only for this ID. Later if another banner is added, that will be visible by default.
-	 *
-	 * @type {string}
-	 */
-	export let id;
-
 	/**
 	 * Link to the event. It must be an absolute path (https://svelte.dev/blog/runes instead of /blog/runes)
 	 * @type {string}
 	 */
 	export let href;
+
+	/** @type {import('svelte').EventDispatcher<{ close: undefined }>} */
+	const dispatch = createEventDispatcher();
 
 	let show = false;
 	onMount(() => {
@@ -61,7 +36,7 @@
 			{/if}
 		</div>
 
-		<button class="close-button" on:click={() => ($preferences[id] = false)}>
+		<button class="close-button" on:click={() => dispatch('close')}>
 			<Icon name="close" />
 		</button>
 	</div>

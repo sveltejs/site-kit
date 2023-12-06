@@ -1,12 +1,42 @@
 <script context="module">
 	/**
+	 * @typedef {'svelte.dev' | 'kit.svelte.dev' | 'learn.svelte.dev'} BannerScope
+	 *
+	 * @typedef {{
+	 * id: string;
+	 * start: number;
+	 * end: number;
+	 * arrow: boolean;
+	 * href: string;
+	 * content: string;
+	 * scope?: BannerScope[];
+	 * }[]} BannerData
+	 */
+
+	/**
 	 * Only to be used on non svelte.dev sites. Shouldn't be used inside svelte.dev codebase itself
-	 * @param {import('./Banner.svelte').BannerScope} scope
+	 * @param {BannerScope} scope
 	 * @param {import('@sveltejs/kit').RequestEvent['fetch']} fetch
-	 * @returns {Promise<import('./Banner.svelte').BannerData>}
+	 * @returns {Promise<BannerData>}
 	 */
 	export async function fetchBanner(scope = 'svelte.dev', fetch) {
-		if (scope === 'svelte.dev') return fetch('/banner.json').then((r) => r.json());
+		if (scope === 'svelte.dev') {
+			const data = /** @type {BannerData} */ (await fetch('/banner.json').then((r) => r.json()));
+
+			// Find out if any time overlap will happen in any banner.
+			// If so, throw an error.
+			// This is to prevent showing 2 banners at once at any point of time.
+			for (const banner of data) {
+				for (const other of data) {
+					if (banner.id === other.id) continue;
+					if (banner.start < other.end && banner.end > other.start) {
+						throw new Error(
+							`svelte.dev/banner.json: Banner with ID ${banner.id} and ${other.id} are overlapping.`
+						);
+					}
+				}
+			}
+		}
 
 		const req = await fetch('https://svelte.dev/banner.json');
 		if (!req.ok) {
@@ -14,7 +44,7 @@
 			return [];
 		}
 
-		return /** @type {import('./Banner.svelte').BannerData} */ (await req.json()).filter(
+		return /** @type {BannerData} */ (await req.json()).filter(
 			(banner) => !banner.scope || banner.scope?.includes(scope)
 		);
 	}
@@ -23,22 +53,25 @@
 <script>
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import Banner, { preferences } from './Banner.svelte';
+	import { persisted } from 'svelte-local-storage-store';
+	import Banner from './Banner.svelte';
 
-	/** @type {import('./Banner.svelte').BannerData} */
+	/** @type {BannerData} */
 	export let data;
 
-	const time = new Date();
-
-	$: showing = data.filter(
-		({ id, start, end }) =>
-			$preferences[id] && time > new Date(start) && time < new Date(end ?? new Date(2123, 12, 1))
+	const preferences = persisted(
+		'svelte:banner-preferences',
+		/** @type {Record<string, boolean>} */ ({})
 	);
+
+	const time = +new Date();
+
+	$: showing = data.filter(({ id, start, end }) => $preferences[id] && time > start && time < end);
 
 	$: if (browser) {
 		document.documentElement.style.setProperty(
 			'--sk-banner-bottom-height',
-			showing.length * 43 + 'px'
+			showing.length ? '43px' : '0px'
 		);
 	}
 
@@ -50,7 +83,7 @@
 </script>
 
 {#each showing as { content, href, id, arrow }}
-	<Banner {id} {arrow} {href}>
+	<Banner {arrow} {href} on:close={() => ($preferences[id] = false)}>
 		{@html content}
 	</Banner>
 {/each}
