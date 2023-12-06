@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.54
+
+### Minor Changes
+
+- 8db95a1: feat: Safer banners implementation, defineBanners, refactor
+
 ## 6.0.0-next.53
 
 ### Patch Changes
