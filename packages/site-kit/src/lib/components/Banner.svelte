@@ -1,16 +1,28 @@
 <script context="module">
 	/**
 	 * @typedef {'svelte.dev' | 'kit.svelte.dev' | 'learn.svelte.dev'} BannerScope
-	 * @typedef {(import('svelte').ComponentProps<import('./Banner.svelte').default> & {
-	 * content: string; scope?: BannerScope[]
-	 * })[]} BannerData
+	 * @typedef {{
+	 * id: string;
+	 * start: Date,
+	 * end?: Date,
+	 * arrow: boolean,
+	 * href: string;
+	 * content: string;
+	 * scope?: BannerScope[];
+	 * }[]} BannerData
 	 */
+
+	export const preferences = persisted(
+		'svelte:banner-preferences',
+		/** @type {Record<string, boolean>} */ ({})
+	);
 </script>
 
 <script>
-	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { persisted } from 'svelte-local-storage-store';
+	import { quintOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
 	import Icon from './Icon.svelte';
 
 	/** Whether to show an arrow at the end */
@@ -29,56 +41,31 @@
 	 */
 	export let href;
 
-	/**
-	 * When to start showing the banner
-	 * @type {Date}
-	 */
-	export let start;
-
-	/**
-	 * When to stop showing the banner. Banner never goes away if this value is not provided
-	 * @type {Date}
-	 */
-	export let end = new Date(2123, 12, 1);
-
-	const banner_preferences = persisted(
-		'svelte:banner-preferences',
-		/** @type {Record<string, boolean>} */ ({})
-	);
-
-	let height = 0;
-
-	const time = new Date();
-
-	$: show = $banner_preferences[id] && time > start && time < end;
-
-	$: if (browser) {
-		document.documentElement.style.setProperty(
-			'--sk-banner-bottom-height',
-			(show ? height : 0) + 'px'
-		);
-	}
-
+	let show = false;
 	onMount(() => {
-		$banner_preferences[id] ??= true;
+		setTimeout(() => {
+			show = true;
+		}, 300);
 	});
 </script>
 
-<div class="banner-bottom" bind:clientHeight={height} class:show>
-	<div class="main-area">
-		<a {href}>
-			<slot />
-		</a>
+{#if show}
+	<div class="banner-bottom" transition:fade={{ duration: 400, easing: quintOut }}>
+		<div class="main-area">
+			<a {href}>
+				<slot />
+			</a>
 
-		{#if arrow}
-			<Icon name="arrow-right" size="1.2em" />
-		{/if}
+			{#if arrow}
+				<Icon name="arrow-right" size="1.2em" />
+			{/if}
+		</div>
+
+		<button class="close-button" on:click={() => ($preferences[id] = false)}>
+			<Icon name="close" />
+		</button>
 	</div>
-
-	<button class="close-button" on:click={() => ($banner_preferences[id] = false)}>
-		<Icon name="close" />
-	</button>
-</div>
+{/if}
 
 <style>
 	.banner-bottom {
@@ -96,15 +83,6 @@
 
 		width: 100%;
 		height: max-content;
-
-		transition: opacity 0.2s 0.2s var(--quint-out);
-		opacity: 0;
-		pointer-events: none;
-	}
-
-	.show {
-		pointer-events: all;
-		opacity: 1;
 	}
 
 	.banner-bottom {
@@ -145,6 +123,7 @@
 
 	div :global(a[href]) {
 		text-decoration: none;
+		padding: 0;
 	}
 
 	@media screen and (max-width: 800px) {
