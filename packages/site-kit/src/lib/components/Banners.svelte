@@ -11,6 +11,8 @@
 	 * content: string;
 	 * scope?: BannerScope[];
 	 * }[]} BannerData
+	 *
+	 * @typedef {(Omit<BannerData[0], 'start' | 'end'> & { start: Date, end?: Date })[]} BannerDataInput
 	 */
 
 	/**
@@ -47,6 +49,18 @@
 		return /** @type {BannerData} */ (await req.json()).filter(
 			(banner) => !banner.scope || banner.scope?.includes(scope)
 		);
+	}
+
+	/**
+	 * @param {BannerDataInput} data
+	 * @returns {BannerData}
+	 */
+	export function defineBanner(data) {
+		return data.map((v) => ({
+			...v,
+			start: +v.start,
+			end: v.end ? +v.end : +new Date('2023-12-01')
+		}));
 	}
 </script>
 
