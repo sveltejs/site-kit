@@ -13,6 +13,9 @@
 	 */
 	export let href;
 
+	/** @type {{ lg?: string; sm?: string }} */
+	export let content;
+
 	/** @type {import('svelte').EventDispatcher<{ close: undefined }>} */
 	const dispatch = createEventDispatcher();
 
@@ -28,7 +31,13 @@
 	<div class="banner-bottom" transition:fade={{ duration: 400, easing: quintOut }}>
 		<div class="main-area">
 			<a {href}>
-				<slot />
+				{#if content.lg}
+					<span class="lg">{content.lg}</span>
+				{/if}
+
+				{#if content.sm}
+					<span class="sm">{content.sm}</span>
+				{/if}
 			</a>
 
 			{#if arrow}
@@ -101,6 +110,14 @@
 		padding: 0;
 	}
 
+	a .lg {
+		display: initial;
+	}
+
+	a .sm {
+		display: none;
+	}
+
 	@media screen and (max-width: 800px) {
 		.banner-bottom {
 			bottom: initial;
@@ -109,6 +126,14 @@
 
 		.main-area :global(svg) {
 			display: none;
+		}
+
+		a .lg {
+			display: none;
+		}
+
+		a .sm {
+			display: initial;
 		}
 	}
 </style>

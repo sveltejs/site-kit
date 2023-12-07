@@ -8,7 +8,10 @@
 	 * end: number;
 	 * arrow: boolean;
 	 * href: string;
-	 * content: string;
+	 * content: {
+	 *   lg?: string;
+	 *   sm?: string;
+	 * };
 	 * scope?: BannerScope[];
 	 * }[]} BannerData
 	 *
@@ -38,6 +41,8 @@
 					}
 				}
 			}
+
+			return data;
 		}
 
 		const req = await fetch('https://svelte.dev/banner.json');
@@ -97,7 +102,5 @@
 </script>
 
 {#each showing as { content, href, id, arrow }}
-	<Banner {arrow} {href} on:close={() => ($preferences[id] = false)}>
-		{@html content}
-	</Banner>
+	<Banner {arrow} {href} on:close={() => ($preferences[id] = false)} {content} />
 {/each}
