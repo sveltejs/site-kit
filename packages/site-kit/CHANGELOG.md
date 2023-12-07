@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.58
+
+### Patch Changes
+
+- f2887a7: fix: preserve white space wrap on `<code>`
+
 ## 6.0.0-next.57
 
 ### Patch Changes
