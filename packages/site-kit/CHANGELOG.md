@@ -1,5 +1,29 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.57
+
+### Patch Changes
+
+- 019122c: fix: ios DocsOnThisPage no longer under overlay
+
+## 6.0.0-next.56
+
+### Patch Changes
+
+- 3b7ba5e: fix: --sk-banner-bottom-height is 41.9px instead of 43px
+
+## 6.0.0-next.55
+
+### Patch Changes
+
+- 7f4bb6b: feat: Responsive banner
+
+## 6.0.0-next.54
+
+### Minor Changes
+
+- 8db95a1: feat: Safer banners implementation, defineBanners, refactor
+
 ## 6.0.0-next.53
 
 ### Patch Changes
