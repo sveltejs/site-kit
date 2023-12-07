@@ -32,6 +32,7 @@
 	@media (min-width: 832px) {
 		.input-output-toggle {
 			padding: 0rem;
+			transform: translateX(-1rem);
 			width: var(--sidebar-menu-width);
 			margin: 0 0 0 auto;
 		}
