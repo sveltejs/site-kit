@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.57
+
+### Patch Changes
+
+- 019122c: fix: ios DocsOnThisPage no longer under overlay
+
 ## 6.0.0-next.56
 
 ### Patch Changes
