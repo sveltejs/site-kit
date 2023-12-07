@@ -90,7 +90,7 @@
 	$: if (browser) {
 		document.documentElement.style.setProperty(
 			'--sk-banner-bottom-height',
-			showing.length ? '43px' : '0px'
+			showing.length ? '41.9px' : '0px'
 		);
 	}
 
