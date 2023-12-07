@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.55
+
+### Patch Changes
+
+- 7f4bb6b: feat: Responsive banner
+
 ## 6.0.0-next.54
 
 ### Minor Changes
