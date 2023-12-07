@@ -1,5 +1,12 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.59
+
+### Patch Changes
+
+- fc3a172: fix: Navbar Center positionin
+- 78138ab: fix: TS Toggle position
+
 ## 6.0.0-next.58
 
 ### Patch Changes
