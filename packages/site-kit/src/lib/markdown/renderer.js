@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import ts from 'typescript';
+import { highlight } from './shiki.js';
 import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils.js';
 
 /**
@@ -17,9 +18,6 @@ const METADATA_REGEX =
 
 /** @type {Map<string, string>} */
 const CACHE_MAP = new Map();
-
-/** @type {import('shiki-twoslash')} */
-let twoslash_module;
 
 /** @type {import('prettier')} */
 let prettier_module;
@@ -112,10 +110,7 @@ export async function render_content_markdown(
 	body,
 	{ twoslashBanner, modules = [], cacheCodeSnippets = true, resolveTypeLinks } = {}
 ) {
-	twoslash_module ??= await import('shiki-twoslash');
 	prettier_module ??= await import('prettier');
-
-	const highlighter = await twoslash_module.createShikiHighlighter({ theme: 'css-variables' });
 
 	const { type_links, type_regex } = create_type_links(modules, resolveTypeLinks);
 	const SNIPPET_CACHE = await create_snippet_cache(cacheCodeSnippets);
@@ -144,7 +139,6 @@ export async function render_content_markdown(
 
 			let html = syntax_highlight({
 				filename,
-				highlighter,
 				language,
 				source,
 				twoslashBanner,
@@ -930,23 +924,23 @@ function replace_blank_lines(html) {
  * source: string,
  * filename: string,
  * language: string,
- * highlighter: ReturnType<import('shiki-twoslash').createShikiHighlighter>
  * twoslashBanner?: TwoslashBanner
  * options: SnippetOptions
  * }} param0
  */
-function syntax_highlight({ source, filename, language, highlighter, twoslashBanner, options }) {
+function syntax_highlight({ source, filename, language, twoslashBanner, options }) {
 	let html = '';
 
 	if (/^(dts|yaml|yml)/.test(language)) {
 		html = replace_blank_lines(
-			twoslash_module.renderCodeToHTML(
-				source,
-				language === 'dts' ? 'ts' : language,
-				{ twoslash: false },
-				{ themeName: 'css-variables' },
-				highlighter
-			)
+			highlight(source, language === 'dts' ? 'ts' : language)
+			// twoslash_module.renderCodeToHTML(
+			// 	source,
+			// 	language === 'dts' ? 'ts' : language,
+			// 	{ twoslash: false },
+			// 	{ themeName: 'css-variables' },
+			// 	highlighter
+			// )
 		);
 	} else if (/^(js|ts)/.test(language)) {
 		try {
@@ -963,24 +957,26 @@ function syntax_highlight({ source, filename, language, highlighter, twoslashBan
 				}
 			}
 
-			const twoslash = twoslash_module.runTwoSlash(source, language, {
-				defaultCompilerOptions: {
-					allowJs: true,
-					checkJs: true,
-					target: ts.ScriptTarget.ES2022,
-					types: ['svelte', '@sveltejs/kit']
-				}
-			});
+			// const twoslash = twoslash_module.runTwoSlash(source, language, {
+			// 	defaultCompilerOptions: {
+			// 		allowJs: true,
+			// 		checkJs: true,
+			// 		target: ts.ScriptTarget.ES2022,
+			// 		types: ['svelte', '@sveltejs/kit']
+			// 	}
+			// });
 
-			html = twoslash_module.renderCodeToHTML(
-				twoslash.code,
-				'ts',
-				{ twoslash: true },
-				// @ts-ignore Why shiki-twoslash requires a theme name?
-				{},
-				highlighter,
-				twoslash
-			);
+			// html = twoslash_module.renderCodeToHTML(
+			// 	twoslash.code,
+			// 	'ts',
+			// 	{ twoslash: true },
+			// 	// @ts-ignore Why shiki-twoslash requires a theme name?
+			// 	{},
+			// 	highlighter,
+			// 	twoslash
+			// );
+
+			html = highlight(source, 'ts');
 		} catch (e) {
 			console.error(`Error compiling snippet in ${filename}`);
 			// @ts-ignore
@@ -1020,9 +1016,10 @@ function syntax_highlight({ source, filename, language, highlighter, twoslashBan
 			})
 			.join('')}</code></pre>`;
 	} else {
-		const highlighted = highlighter.codeToHtml(source, {
-			lang: SHIKI_LANGUAGE_MAP[/** @type {keyof typeof SHIKI_LANGUAGE_MAP} */ (language)]
-		});
+		const highlighted = highlight(
+			source,
+			SHIKI_LANGUAGE_MAP[/** @type {keyof typeof SHIKI_LANGUAGE_MAP} */ (language)]
+		);
 
 		html = replace_blank_lines(highlighted);
 	}
