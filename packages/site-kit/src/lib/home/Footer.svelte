@@ -20,7 +20,7 @@
 
 		<div class="copyright">
 			<slot name="copyright">
-				© 2023 <a href="https://github.com/sveltejs/svelte/graphs/contributors">
+				© 2024 <a href="https://github.com/sveltejs/svelte/graphs/contributors">
 					Svelte contributors
 				</a>
 			</slot>
