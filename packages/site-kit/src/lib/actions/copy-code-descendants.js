@@ -22,14 +22,16 @@ export const copy_code_descendants = (node) => {
 			for (const node of block.querySelector('code')?.childNodes ?? []) {
 				if (node.nodeType === Node.ELEMENT_NODE) {
 					if (!(/** @type {HTMLElement} */ (node).classList.contains('deleted'))) {
-						code += node.textContent;
+						code += node.textContent + '\n';
 					}
 				} else {
-					code += node.textContent;
+					code += node.textContent + '\n';
 				}
 			}
 
 			if (!code) continue;
+
+			code = code.slice(0, -1);
 
 			// This is to make sure that snippets with title get the button on their heading area
 			const target = /code-block/.test(parent_class) ? block.parentElement : block;
