@@ -134,7 +134,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 	<div
 		bind:this={modal}
 		class="modal"
-		on:keydown={(e) => {
+		on:keydown={(/** @type {KeyboardEvent} */ e) => {
 			if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
 				e.preventDefault();
 				const group = focusable_children(e.currentTarget);
@@ -182,8 +182,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 
 			<div class="results">
 				{#if search?.query}
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<div class="results-container" on:click={() => ($searching = false)}>
+					<div class="results-container">
 						<SearchResults
 							results={search.results}
 							query={search.query}
@@ -203,8 +202,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 					{#if recent_searches.length}
 						<div class="results-container">
 							<ul>
-								{#each recent_searches as search, i}
-									<!-- svelte-ignore a11y-mouse-events-have-key-events -->
+								{#each recent_searches as search}
 									<li class="recent">
 										<a on:click={() => navigate(search.href)} href={search.href}>
 											<small>{search.breadcrumbs.join('/')}</small>
