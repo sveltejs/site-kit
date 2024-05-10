@@ -72,7 +72,7 @@
 <script>
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { persisted } from 'svelte-local-storage-store';
+	import { persisted } from 'svelte-persisted-store';
 	import Banner from './Banner.svelte';
 
 	/** @type {BannerData} */
