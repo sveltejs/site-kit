@@ -1,5 +1,56 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.60
+
+### Patch Changes
+
+- 14a57eb: chore: Bumps deps, use svelte-persisted-store
+
+## 6.0.0-next.59
+
+### Patch Changes
+
+- fc3a172: fix: Navbar Center positionin
+- 78138ab: fix: TS Toggle position
+
+## 6.0.0-next.58
+
+### Patch Changes
+
+- f2887a7: fix: preserve white space wrap on `<code>`
+
+## 6.0.0-next.57
+
+### Patch Changes
+
+- 019122c: fix: ios DocsOnThisPage no longer under overlay
+
+## 6.0.0-next.56
+
+### Patch Changes
+
+- 3b7ba5e: fix: --sk-banner-bottom-height is 41.9px instead of 43px
+
+## 6.0.0-next.55
+
+### Patch Changes
+
+- 7f4bb6b: feat: Responsive banner
+
+## 6.0.0-next.54
+
+### Minor Changes
+
+- 8db95a1: feat: Safer banners implementation, defineBanners, refactor
+
+## 6.0.0-next.53
+
+### Patch Changes
+
+- 53b5034: feat: Time-bound banner
+- 0a700a2: fix: home link text alignment issue
+- d7d71ce: fix: cleanup timeout to prevent leak
+
 ## 6.0.0-next.52
 
 ### Minor Changes

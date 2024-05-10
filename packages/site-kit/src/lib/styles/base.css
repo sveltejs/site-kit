@@ -34,7 +34,6 @@ body {
 	padding: 0;
 	scrollbar-width: thin;
 	scrollbar-color: var(--sk-scrollbar) transparent;
-	-webkit-overflow-scrolling: touch;
 	-webkit-tap-highlight-color: hsla(var(--sk-theme-1-hsl), 0.1);
 
 	transition: 0.5s var(--quint-out);

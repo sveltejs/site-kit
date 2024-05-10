@@ -1,50 +1,51 @@
-<script context="module">
-	const banner_preferences = persisted(
-		'svelte:banner-preferences',
-		/** @type {Record<string, boolean>} */ ({})
-	);
-</script>
-
 <script>
-	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
-	import { persisted } from 'svelte-local-storage-store';
+	import { createEventDispatcher, onMount } from 'svelte';
+	import { quintOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
 	import Icon from './Icon.svelte';
 
 	/** Whether to show an arrow at the end */
 	export let arrow = false;
 
-	/** Required for dismissing behavior e.g `<Banner id="svelte-5-runes" />` will make sure the banner
-	 * hidden only for this ID. Later if another banner is added, that will be visible by default.
-	 *
+	/**
+	 * Link to the event. It must be an absolute path (https://svelte.dev/blog/runes instead of /blog/runes)
 	 * @type {string}
 	 */
-	export let id;
+	export let href;
 
-	let height = 0;
-	$: if (browser) {
-		document.documentElement.style.setProperty(
-			'--sk-banner-bottom-height',
-			($banner_preferences[id] ? height : 0) + 'px'
-		);
-	}
+	/** @type {{ lg?: string; sm?: string }} */
+	export let content;
 
+	/** @type {import('svelte').EventDispatcher<{ close: undefined }>} */
+	const dispatch = createEventDispatcher();
+
+	let show = false;
 	onMount(() => {
-		$banner_preferences[id] ??= true;
+		setTimeout(() => {
+			show = true;
+		}, 300);
 	});
 </script>
 
-{#if $banner_preferences[id]}
-	<div class="banner-bottom" bind:clientHeight={height}>
+{#if show}
+	<div class="banner-bottom" transition:fade={{ duration: 400, easing: quintOut }}>
 		<div class="main-area">
-			<slot />
+			<a {href}>
+				{#if content.lg}
+					<span class="lg">{content.lg}</span>
+				{/if}
+
+				{#if content.sm}
+					<span class="sm">{content.sm}</span>
+				{/if}
+			</a>
 
 			{#if arrow}
 				<Icon name="arrow-right" size="1.2em" />
 			{/if}
 		</div>
 
-		<button class="close-button" on:click={() => ($banner_preferences[id] = false)}>
+		<button class="close-button" on:click={() => dispatch('close')}>
 			<Icon name="close" />
 		</button>
 	</div>
@@ -52,21 +53,17 @@
 
 <style>
 	.banner-bottom {
-		position: relative;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 80;
 
 		display: flex;
 		justify-content: center;
 		align-items: center;
 
 		overflow-y: auto;
-	}
-
-	.banner-bottom {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		z-index: 80;
 
 		width: 100%;
 		height: max-content;
@@ -110,6 +107,15 @@
 
 	div :global(a[href]) {
 		text-decoration: none;
+		padding: 0;
+	}
+
+	a .lg {
+		display: initial;
+	}
+
+	a .sm {
+		display: none;
 	}
 
 	@media screen and (max-width: 800px) {
@@ -120,6 +126,14 @@
 
 		.main-area :global(svg) {
 			display: none;
+		}
+
+		a .lg {
+			display: none;
+		}
+
+		a .sm {
+			display: initial;
 		}
 	}
 </style>

@@ -1,6 +1,6 @@
 <script>
 	import { BROWSER } from 'esm-env';
-	import { persisted } from 'svelte-local-storage-store';
+	import { persisted } from 'svelte-persisted-store';
 	import ToggleButton from '../components/ToggleButton.svelte';
 
 	const checked = persisted('svelte:prefers-ts', false);
@@ -32,6 +32,7 @@
 	@media (min-width: 832px) {
 		.input-output-toggle {
 			padding: 0rem;
+			transform: translateX(-1rem);
 			width: var(--sidebar-menu-width);
 			margin: 0 0 0 auto;
 		}
