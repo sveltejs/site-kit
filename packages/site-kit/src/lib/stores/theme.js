@@ -1,5 +1,5 @@
 import { BROWSER } from 'esm-env';
-import { persisted } from 'svelte-local-storage-store';
+import { persisted } from 'svelte-persisted-store';
 
 /**
  * @typedef {{ preference: 'light' | 'dark' | 'system', current: 'light' | 'dark' }} Theme
