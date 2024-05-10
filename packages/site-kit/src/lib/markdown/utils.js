@@ -208,6 +208,19 @@ const default_renderer = {
 	}
 };
 
+/** @type {import('marked').TokenizerObject} */
+const tokenizer = {
+	url(src) {
+		// if `src` is a package version string, eg: adapter-auto@1.2.3
+		// do not tokenize it as email
+		if (/@\d+\.\d+\.\d+/.test(src)) {
+			return undefined;
+		}
+		// else, use the default tokenizer behavior
+		return false;
+	}
+};
+
 /**
  * @param {string} markdown
  * @param {Partial<import('marked').Renderer>} renderer
@@ -217,7 +230,8 @@ export async function transform(markdown, renderer = {}) {
 		renderer: {
 			...default_renderer,
 			...renderer
-		}
+		},
+		tokenizer
 	});
 
 	return (await marked.parse(markdown)) ?? '';
