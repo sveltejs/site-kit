@@ -115,6 +115,16 @@
 	color: var(--sk-code-diff-base);
 }
 
+.text :where(pre.shiki code) {
+	display: flex;
+	flex-direction: column;
+}
+
+.text :where(pre.shiki code .line) {
+	flex-grow: 1 1 auto;
+	min-height: 22.09px;
+}
+
 .language-diff :where(.inserted, .deleted) {
 	position: relative;
 }
