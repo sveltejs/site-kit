@@ -52,6 +52,7 @@
 			<Icon name="copy-to-clipboard-empty" />
 		</span>
 	{/if}
+	<span class="visually-hidden">copy to clipboard</span>
 </button>
 
 <style>
