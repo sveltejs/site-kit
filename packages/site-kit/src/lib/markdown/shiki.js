@@ -7,15 +7,24 @@ import lang_markdown from 'shikiji/langs/markdown.mjs';
 import lang_svelte from 'shikiji/langs/svelte.mjs';
 import lang_typescript from 'shikiji/langs/typescript.mjs';
 import lang_yaml from 'shikiji/langs/yaml.mjs';
-import shiki_nord from 'shikiji/themes/github-dark.mjs';
 import { getWasmInlined } from 'shikiji/wasm';
+import lang_bash from 'shikiji/langs/shellscript.mjs';
 
-import { rendererRich, transformerTwoSlash } from 'shikiji-twoslash';
+import { createCssVariablesTheme } from 'shikiji';
+import { rendererClassic, rendererRich, transformerTwoSlash } from 'shikiji-twoslash';
 import { getHighlighterCore } from 'shikiji/core';
+import 'shiki-twoslash/dist/index';
 import ts from 'typescript';
 
+const svelte_theme = createCssVariablesTheme({
+	name: 'css-variables',
+	variablePrefix: '--shiki-',
+	variableDefaults: {},
+	fontStyle: true
+});
+
 const shiki = await getHighlighterCore({
-	themes: [shiki_nord],
+	themes: [svelte_theme],
 	langs: [
 		lang_javascript,
 		lang_svelte,
@@ -25,7 +34,8 @@ const shiki = await getHighlighterCore({
 		lang_yaml,
 		lang_markdown,
 		lang_html,
-		lang_css
+		lang_css,
+		lang_bash
 	],
 	loadWasm: getWasmInlined
 });
@@ -33,21 +43,23 @@ const shiki = await getHighlighterCore({
 /**
  * @param {string} code
  * @param {string} lang
+ * @param {boolean} twoslash
  */
-export function highlight(code, lang) {
+export function highlight(code, lang, twoslash = false) {
 	return shiki.codeToHtml(code, {
 		lang,
-		themes: { light: 'github-dark' },
+		themes: { light: 'css-variables' },
 		theme: 'css-variables',
 		transformers: [
 			transformerTwoSlash({
-				renderer: rendererRich,
+				renderer: rendererClassic(),
+				filter: () => twoslash,
 				twoslashOptions: {
 					defaultCompilerOptions: {
 						allowJs: true,
 						checkJs: true,
 						target: ts.ScriptTarget.ES2022,
-						types: ['svelte', '@sveltejs/kit']
+						types: ['svelte', '@sveltejs/kit', '@types/node']
 					}
 				}
 			})

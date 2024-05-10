@@ -193,7 +193,7 @@ export async function render_content_markdown(
 								? `<a href="${type_links.get(name)?.relativeURL}">${name}</a>`
 								: '';
 							return `${prefix || ''}${link}`;
-					  })
+						})
 					: text) +
 				'</code>'
 			);
@@ -448,8 +448,8 @@ export async function convert_to_ts(js_code, indent = '', offset = '') {
 			js_code.includes('---cut---')
 				? js_code.indexOf('\n', js_code.indexOf('---cut---')) + 1
 				: js_code.includes('/// file:')
-				  ? js_code.indexOf('\n', js_code.indexOf('/// file:')) + 1
-				  : 0
+					? js_code.indexOf('\n', js_code.indexOf('/// file:')) + 1
+					: 0
 		);
 		code.appendLeft(insertion_point, offset + import_statements + '\n');
 	}
@@ -932,16 +932,7 @@ function syntax_highlight({ source, filename, language, twoslashBanner, options 
 	let html = '';
 
 	if (/^(dts|yaml|yml)/.test(language)) {
-		html = replace_blank_lines(
-			highlight(source, language === 'dts' ? 'ts' : language)
-			// twoslash_module.renderCodeToHTML(
-			// 	source,
-			// 	language === 'dts' ? 'ts' : language,
-			// 	{ twoslash: false },
-			// 	{ themeName: 'css-variables' },
-			// 	highlighter
-			// )
-		);
+		html = replace_blank_lines(highlight(source, language === 'dts' ? 'ts' : language));
 	} else if (/^(js|ts)/.test(language)) {
 		try {
 			const banner = twoslashBanner?.(filename, source, language, options);
@@ -957,26 +948,8 @@ function syntax_highlight({ source, filename, language, twoslashBanner, options 
 				}
 			}
 
-			// const twoslash = twoslash_module.runTwoSlash(source, language, {
-			// 	defaultCompilerOptions: {
-			// 		allowJs: true,
-			// 		checkJs: true,
-			// 		target: ts.ScriptTarget.ES2022,
-			// 		types: ['svelte', '@sveltejs/kit']
-			// 	}
-			// });
-
-			// html = twoslash_module.renderCodeToHTML(
-			// 	twoslash.code,
-			// 	'ts',
-			// 	{ twoslash: true },
-			// 	// @ts-ignore Why shiki-twoslash requires a theme name?
-			// 	{},
-			// 	highlighter,
-			// 	twoslash
-			// );
-
-			html = highlight(source, 'ts');
+			console.log(filename);
+			html = highlight(source, 'ts', !/^(tutorial)/.test(filename));
 		} catch (e) {
 			console.error(`Error compiling snippet in ${filename}`);
 			// @ts-ignore
