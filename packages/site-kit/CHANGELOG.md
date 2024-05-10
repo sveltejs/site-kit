@@ -1,5 +1,13 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.61
+
+### Patch Changes
+
+- 0a62dd8: chore: Bump copyright year
+- 5b13f8f: fix: url tokenizer to not treat package version string as email
+- 4ca8db0: fix: Accessible text for copy button
+
 ## 6.0.0-next.60
 
 ### Patch Changes
