@@ -54,7 +54,7 @@ The main shell of the application. It provides a slot for the top navigation, th
 	<slot name="top-nav" />
 {/if}
 
-<div class="modal-overlay" class:visible={$overlay_open} aria-hidden="true" />
+<div class="modal-overlay" class:visible={$overlay_open} aria-hidden="true"></div>
 
 <main id="main" bind:this={main_el}>
 	<slot />
