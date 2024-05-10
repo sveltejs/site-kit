@@ -208,6 +208,7 @@ const default_renderer = {
 	}
 };
 
+/** @type {import('marked').TokenizerObject} */
 const tokenizer = {
 	url(src) {
 		// if `src` is a package version string, eg: adapter-auto@1.2.3
