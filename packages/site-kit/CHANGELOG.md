@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.60
+
+### Patch Changes
+
+- 14a57eb: chore: Bumps deps, use svelte-persisted-store
+
 ## 6.0.0-next.59
 
 ### Patch Changes
