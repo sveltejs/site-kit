@@ -6,7 +6,7 @@
 	export let label;
 </script>
 
-<button aria-pressed={pressed} aria-label={label} on:click={() => (pressed = !pressed)} />
+<button aria-pressed={pressed} aria-label={label} on:click={() => (pressed = !pressed)}></button>
 
 <style>
 	button {

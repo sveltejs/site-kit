@@ -40,7 +40,7 @@
 {/if}
 
 {#if $p >= 0.4}
-	<div class="fade" />
+	<div class="fade"></div>
 {/if}
 
 <style>

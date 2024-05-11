@@ -128,7 +128,7 @@ It appears when the user clicks on the `Search` component or presses the corresp
 />
 
 {#if $searching && ready}
-	<div class="pseudo-overlay" aria-hidden="true" on:click={close} />
+	<div class="pseudo-overlay" aria-hidden="true" on:click={close}></div>
 
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div
