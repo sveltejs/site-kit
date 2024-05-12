@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.62
+
+### Patch Changes
+
+- 63e5575: fix: add explicit closing tags
+
 ## 6.0.0-next.61
 
 ### Patch Changes
