@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.64
+
+### Patch Changes
+
+- 06a2313: fix: remove more self-closing tags
+
 ## 6.0.0-next.63
 
 ### Patch Changes
