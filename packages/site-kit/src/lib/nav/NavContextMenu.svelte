@@ -56,7 +56,7 @@
 												{title}
 
 												{#if badge}
-													<span style="flex: 1 1 auto" />
+													<span style="flex: 1 1 auto"></span>
 													<span class="badge">{badge}</span>
 												{/if}
 											</a>

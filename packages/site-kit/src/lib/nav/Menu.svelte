@@ -137,7 +137,7 @@
 					style:height={$show_context_menu ? '99%' : `${universal_menu_inner_height}px`}
 					style:--background={$show_context_menu ? 'var(--sk-back-3)' : null}
 					use:mounted={(mounted) => (ready = mounted)}
-				/>
+				></div>
 
 				<div
 					class="clip"

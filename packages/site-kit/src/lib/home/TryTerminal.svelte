@@ -1,8 +1,8 @@
 <div class="terminal">
 	<div class="chrome">
-		<span class="dot" />
-		<span class="dot" />
-		<span class="dot" />
+		<span class="dot"></span>
+		<span class="dot"></span>
+		<span class="dot"></span>
 		<span class="title">terminal</span>
 	</div>
 	<pre><code

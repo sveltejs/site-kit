@@ -35,7 +35,7 @@
 
 {#if visible}
 	<div class="progress-container">
-		<div class="progress" style="width: {$p * 100}%" />
+		<div class="progress" style="width: {$p * 100}%"></div>
 	</div>
 {/if}
 
