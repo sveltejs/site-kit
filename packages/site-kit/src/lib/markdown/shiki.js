@@ -43,12 +43,12 @@ export function highlight(code, lang, twoslash = false) {
 			transformerTwoslash({
 				renderer: rendererClassic(),
 				filter: () => twoslash,
-				onTwoslashError: (error, code, lang) => {
-					console.error('Shiki twoslash error: ', { lang, code, error });
-				},
-				onShikiError: (error, code, lang) => {
-					console.error('Shiki error: ', { lang, code, error });
-				},
+				// onTwoslashError: (error, code, lang) => {
+				// 	console.error('Shiki twoslash error: ', { lang, code, error });
+				// },
+				// onShikiError: (error, code, lang) => {
+				// 	console.error('Shiki error: ', { lang, code, error });
+				// },
 				twoslashOptions: {
 					compilerOptions: {
 						allowJs: true,
