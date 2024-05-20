@@ -7,7 +7,7 @@
 
 <Section --background="var(--sk-back-4)">
 	<footer>
-		<div class="logo" />
+		<div class="logo"></div>
 
 		{#each Object.entries(links) as [title, inner_links]}
 			<div class="links">
