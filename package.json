@@ -4,9 +4,8 @@
 		"pnpm": ">=8"
 	},
 	"scripts": {
-		"package": "pnpm -r package",
 		"changeset": "changeset",
-		"ci:release": "changeset publish",
+		"ci:release": "pnpm -r package && changeset publish",
 		"ci:version": "changeset version"
 	},
 	"devDependencies": {
