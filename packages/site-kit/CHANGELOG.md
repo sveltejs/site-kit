@@ -1,5 +1,11 @@
 # @sveltejs/site-kit changelog
 
+## 6.0.0-next.63
+
+### Patch Changes
+
+- 0ec6b3f: chore: force version bump
+
 ## 6.0.0-next.62
 
 ### Patch Changes
