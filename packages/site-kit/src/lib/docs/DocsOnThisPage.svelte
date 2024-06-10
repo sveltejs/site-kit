@@ -238,7 +238,7 @@
 		position: fixed;
 		padding: var(--sk-page-padding-top) var(--sk-page-padding-side) 0 0;
 		width: min(280px, calc(var(--sidebar-width) - var(--sk-page-padding-side)));
-		height: max-content;
+		max-height: calc(100vh - var(--sk-nav-height) - var(--sk-page-padding-top));
 		top: var(--sk-nav-height);
 		left: calc(100vw - (var(--sidebar-width)));
 		overflow-y: auto;
