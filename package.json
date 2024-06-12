@@ -1,7 +1,8 @@
 {
+	"packageManager": "pnpm@9.3.0",
 	"engines": {
 		"node": ">=18",
-		"pnpm": ">=8"
+		"pnpm": ">=9.2.0"
 	},
 	"scripts": {
 		"changeset": "changeset",
