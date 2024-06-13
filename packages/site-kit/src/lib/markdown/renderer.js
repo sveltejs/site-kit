@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import ts from 'typescript';
-import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform } from './utils.js';
+import { SHIKI_LANGUAGE_MAP, escape, normalizeSlugify, transform, unescape } from './utils.js';
 
 /**
  * @typedef {Record<MetadataKeys, string | boolean | number | null>} SnippetOptions
@@ -225,7 +225,9 @@ async function parse({ body, code, codespan }) {
 
 	/** @type {string} */
 	const content = await transform(body, {
-		heading(html, level, raw) {
+		heading({ tokens, depth }) {
+			const html = this.parser?.parseInline(tokens) ?? '';
+			const raw = unescape(this.parser?.parseInline(tokens, this.parser?.textRenderer) ?? '');
 			const title = html
 				.replace(/<\/?code>/g, '')
 				.replace(/&quot;/g, '"')
@@ -236,18 +238,18 @@ async function parse({ body, code, codespan }) {
 
 			const normalized = normalizeSlugify(raw);
 
-			headings[level - 1] = normalized;
-			headings.length = level;
+			headings[depth - 1] = normalized;
+			headings.length = depth;
 
 			const slug = headings.filter(Boolean).join('-');
 
-			return `<h${level} id="${slug}">${html.replace(
+			return `<h${depth} id="${slug}">${html.replace(
 				/<\/?code>/g,
 				''
-			)}<a href="#${slug}" class="permalink"><span class="visually-hidden">permalink</span></a></h${level}>`;
+			)}<a href="#${slug}" class="permalink"><span class="visually-hidden">permalink</span></a></h${depth}>`;
 		},
-		code: (source, language) => code(source, language ?? 'js', current),
-		codespan
+		code: ({ text, lang }) => code(text, lang ?? 'js', current),
+		codespan: ({ text }) => codespan(text),
 	});
 
 	return content;

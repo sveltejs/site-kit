@@ -11,6 +11,7 @@ const escapeReplacements = {
 	'"': '&quot;',
 	"'": '&#39;'
 };
+const unescapeTest = /&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/ig;
 
 /**
  * @param {string} ch
@@ -50,6 +51,21 @@ export function escape(html, encode = false) {
 	return html;
 }
 
+/** @param {string} html */
+export function unescape(html) {
+  // explicitly match decimal, hex, and named HTML entities
+  return html.replace(unescapeTest, (_, n) => {
+    n = n.toLowerCase();
+    if (n === 'colon') return ':';
+    if (n.charAt(0) === '#') {
+      return n.charAt(1) === 'x'
+        ? String.fromCharCode(parseInt(n.substring(2), 16))
+        : String.fromCharCode(+n.substring(1));
+    }
+    return '';
+  });
+}
+
 /** @param {string} title */
 export function slugify(title) {
 	return title
@@ -77,6 +93,16 @@ export function removeMarkdown(markdown) {
 		.trim();
 }
 
+/** @param {string} href */
+function cleanUrl(href) {
+  try {
+    href = encodeURI(href).replace(/%25/g, '%');
+  } catch (e) {
+    return null;
+  }
+  return href;
+}
+
 /** @param {string} html */
 export function removeHTMLEntities(html) {
 	return html.replace(/&.+?;/g, '');
@@ -89,123 +115,198 @@ export const normalizeSlugify = (str) => {
 
 /** @type {Partial<import('marked').Renderer>} */
 const default_renderer = {
-	code(code, infostring, escaped) {
-		const lang = infostring?.match(/\S*/)?.[0];
 
-		code = code.replace(/\n$/, '') + '\n';
+  space() {
+    return '';
+  },
 
-		if (!lang) {
-			return '<pre><code>' + (escaped ? code : escape(code, true)) + '</code></pre>\n';
-		}
+  code({ text, lang, escaped }) {
+    const langString = (lang || '').match(/^\S*/)?.[0];
 
-		return (
-			'<pre><code class="language-' +
-			escape(lang, true) +
-			'">' +
-			(escaped ? code : escape(code, true)) +
-			'</code></pre>\n'
-		);
-	},
+    const code = text.replace(/\n$/, '') + '\n';
 
-	blockquote(quote) {
-		return '<blockquote>\n' + quote + '</blockquote>\n';
-	},
+    if (!langString) {
+      return '<pre><code>'
+        + (escaped ? code : escape(code, true))
+        + '</code></pre>\n';
+    }
 
-	html(html) {
-		return html;
-	},
+    return '<pre><code class="language-'
+      + escape(langString)
+      + '">'
+      + (escaped ? code : escape(code, true))
+      + '</code></pre>\n';
+  },
 
-	heading(text, level) {
-		return '<h' + level + '>' + text + '</h' + level + '>\n';
-	},
+  blockquote({ tokens }) {
+    const body = this.parser?.parse(tokens);
+    return `<blockquote>\n${body}</blockquote>\n`;
+  },
 
-	hr() {
-		return '<hr>\n';
-	},
+  html({ text }) {
+    return text;
+  },
 
-	list(body, ordered, start) {
-		const type = ordered ? 'ol' : 'ul',
-			startatt = ordered && start !== 1 ? ' start="' + start + '"' : '';
-		return '<' + type + startatt + '>\n' + body + '</' + type + '>\n';
-	},
+  heading({ tokens, depth }) {
+    return `<h${depth}>${this.parser?.parseInline(tokens)}</h${depth}>\n`;
+  },
 
-	listitem(text) {
-		return '<li>' + text + '</li>\n';
-	},
+  hr(token) {
+    return '<hr>\n';
+  },
 
-	checkbox(checked) {
-		return '<input ' + (checked ? 'checked="" ' : '') + 'disabled="" type="checkbox"' + '' + '> ';
-	},
+  list(token) {
+    const ordered = token.ordered;
+    const start = token.start;
 
-	paragraph(text) {
-		return '<p>' + text + '</p>\n';
-	},
+    let body = '';
+    for (let j = 0; j < token.items.length; j++) {
+      const item = token.items[j];
+      body += this.listitem?.(item);
+    }
 
-	table(header, body) {
-		if (body) body = '<tbody>' + body + '</tbody>';
+    const type = ordered ? 'ol' : 'ul';
+    const startAttr = (ordered && start !== 1) ? (' start="' + start + '"') : '';
+    return '<' + type + startAttr + '>\n' + body + '</' + type + '>\n';
+  },
 
-		return '<table>\n' + '<thead>\n' + header + '</thead>\n' + body + '</table>\n';
-	},
+  listitem(item) {
+    let itemBody = '';
+    if (item.task) {
+      const checkbox = this.checkbox?.({ checked: !!item.checked });
+      if (item.loose) {
+        if (item.tokens.length > 0 && item.tokens[0].type === 'paragraph') {
+          item.tokens[0].text = checkbox + ' ' + item.tokens[0].text;
+          if (item.tokens[0].tokens && item.tokens[0].tokens.length > 0 && item.tokens[0].tokens[0].type === 'text') {
+            item.tokens[0].tokens[0].text = checkbox + ' ' + item.tokens[0].tokens[0].text;
+          }
+        } else {
+          item.tokens.unshift({
+            type: 'text',
+            raw: checkbox + ' ',
+            text: checkbox + ' '
+          });
+        }
+      } else {
+        itemBody += checkbox + ' ';
+      }
+    }
 
-	tablerow(content) {
-		return '<tr>\n' + content + '</tr>\n';
-	},
+    itemBody += this.parser?.parse(item.tokens, !!item.loose);
 
-	tablecell(content, flags) {
-		const type = flags.header ? 'th' : 'td';
-		const tag = flags.align ? '<' + type + ' align="' + flags.align + '">' : '<' + type + '>';
-		return tag + content + '</' + type + '>\n';
-	},
+    return `<li>${itemBody}</li>\n`;
+  },
 
-	// span level renderer
-	strong(text) {
-		return '<strong>' + text + '</strong>';
-	},
+  checkbox({ checked }) {
+    return '<input '
+      + (checked ? 'checked="" ' : '')
+      + 'disabled="" type="checkbox">';
+  },
 
-	em(text) {
-		return '<em>' + text + '</em>';
-	},
+  paragraph({ tokens }) {
+    return `<p>${this.parser?.parseInline(tokens)}</p>\n`;
+  },
 
-	codespan(text) {
-		return '<code>' + text + '</code>';
-	},
+  table(token) {
+    let header = '';
 
-	br() {
-		return '<br>';
-	},
+    // header
+    let cell = '';
+    for (let j = 0; j < token.header.length; j++) {
+      cell += this.tablecell?.(token.header[j]);
+    }
+    header += this.tablerow?.({ text: cell });
 
-	del(text) {
-		return '<del>' + text + '</del>';
-	},
+    let body = '';
+    for (let j = 0; j < token.rows.length; j++) {
+      const row = token.rows[j];
 
-	link(href, title, text) {
-		if (href === null) {
-			return text;
-		}
-		let out = '<a href="' + escape(href) + '"';
-		if (title) {
-			out += ' title="' + title + '"';
-		}
-		out += '>' + text + '</a>';
-		return out;
-	},
+      cell = '';
+      for (let k = 0; k < row.length; k++) {
+        cell += this.tablecell?.(row[k]);
+      }
 
-	image(href, title, text) {
-		if (href === null) {
-			return text;
-		}
+      body += this.tablerow?.({ text: cell });
+    }
+    if (body) body = `<tbody>${body}</tbody>`;
 
-		let out = '<img src="' + href + '" alt="' + text + '"';
-		if (title) {
-			out += ' title="' + title + '"';
-		}
-		out += '>';
-		return out;
-	},
+    return '<table>\n'
+      + '<thead>\n'
+      + header
+      + '</thead>\n'
+      + body
+      + '</table>\n';
+  },
 
-	text(text) {
-		return text;
-	}
+  tablerow({ text }) {
+    return `<tr>\n${text}</tr>\n`;
+  },
+
+  tablecell(token) {
+    const content = this.parser?.parseInline(token.tokens);
+    const type = token.header ? 'th' : 'td';
+    const tag = token.align
+      ? `<${type} align="${token.align}">`
+      : `<${type}>`;
+    return tag + content + `</${type}>\n`;
+  },
+
+  /**
+   * span level renderer
+   */
+  strong({ tokens }) {
+    return `<strong>${this.parser?.parseInline(tokens)}</strong>`;
+  },
+
+  em({ tokens }) {
+    return `<em>${this.parser?.parseInline(tokens)}</em>`;
+  },
+
+  codespan({ text }) {
+    return `<code>${text}</code>`;
+  },
+
+  br(token) {
+    return '<br>';
+  },
+
+  del({ tokens }) {
+    return `<del>${this.parser?.parseInline(tokens)}</del>`;
+  },
+
+  link({ href, title, tokens }) {
+    const text = this.parser?.parseInline(tokens) || '';
+    const cleanHref = cleanUrl(href);
+    if (cleanHref === null) {
+      return text;
+    }
+    href = cleanHref;
+    let out = '<a href="' + href + '"';
+    if (title) {
+      out += ' title="' + title + '"';
+    }
+    out += '>' + text + '</a>';
+    return out;
+  },
+
+  image({ href, title, text }) {
+    const cleanHref = cleanUrl(href);
+    if (cleanHref === null) {
+      return text;
+    }
+    href = cleanHref;
+
+    let out = `<img src="${href}" alt="${text}"`;
+    if (title) {
+      out += ` title="${title}"`;
+    }
+    out += '>';
+    return out;
+  },
+
+  text(token) {
+    return 'tokens' in token && token.tokens ? this.parser?.parseInline(token.tokens) || '' : token.text;
+  }
 };
 
 /** @type {import('marked').TokenizerObject} */
