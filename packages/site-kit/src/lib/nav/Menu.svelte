@@ -33,6 +33,8 @@
 	import { get, writable } from 'svelte/store';
 	import Icon from '../components/Icon.svelte';
 	import NavContextMenu from './NavContextMenu.svelte';
+  import Separator from '../nav/Separator.svelte';
+  import TSToggle from '../docs/TSToggle.svelte';
 
 	/** @type {boolean} */
 	export let open;
@@ -226,17 +228,30 @@
 									contents={$current_menu_view?.sections}
 								/>
 							{/if}
+
 						</div>
 
-						<button
-							class="back-button"
-							class:dark={$theme.current === 'dark'}
-							on:click={() => ($show_context_menu = false)}
-							inert={!show_context_menu}
-						>
-							<Icon name="arrow-left" size=".6em" />
-							<span><slot name="back-button">Back to main menu</slot></span>
-						</button>
+            <div 
+              class="context-buttons"
+              class:dark={$theme.current === 'dark'}
+              inert={!show_context_menu}
+            >
+              <button
+                class="back-button"
+                on:click={() => ($show_context_menu = false)}
+              >
+                <Icon name="arrow-left" size=".6em" />
+                <span><slot name="back-button">Back to main menu</slot></span>
+              </button>
+
+              {#if $page.url.pathname.includes('docs')}
+                  <Separator />
+
+                <div>
+                  <TSToggle />
+                </div>
+              {/if}
+            </div>
 					</div>
 				</div>
 			</div>
@@ -350,35 +365,42 @@
 		position: relative;
 		height: 99%;
 		bottom: -7px;
-		padding-bottom: 2rem;
+		padding-bottom: 10rem;
 	}
 
-	.back-button {
+  .context-buttons {
 		position: absolute;
 		bottom: -1px;
 		right: 0;
 		z-index: 9;
 
+
+    display: grid;
+    grid-template-rows: 38px auto 38px;
+    align-items: center;
+
+		width: 50%;
+    height: max-content;
+    padding: 0.5rem 1.5rem; /* <Separator /> has 0.5rem margin-y */
+
+		font-size: 0.9em;
+		color: var(--sk-text-3);
+		background-color: var(--sk-back-3);
+		box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.19);
+  }
+
+  .context-buttons.dark {
+		border-top: solid 1px var(--sk-back-4);
+		box-shadow: none;
+  }
+
+	.back-button {
 		display: flex;
 		align-items: center;
 		justify-content: start;
 		gap: 1rem;
 
-		font-size: 0.9em;
-		color: var(--sk-text-3);
-
-		background-color: var(--sk-back-3);
-
-		box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.19);
-
-		width: 50%;
-		height: 48px;
-		padding: 0 1.5rem;
-	}
-
-	.back-button.dark {
-		border-top: solid 1px var(--sk-back-4);
-		box-shadow: none;
+		width: 100%;
 	}
 
 	.back-button :global(svg) {
@@ -397,7 +419,7 @@
 
 	.universal .contents,
 	.context,
-	.back-button {
+  .context-buttons {
 		pointer-events: all;
 	}
 
