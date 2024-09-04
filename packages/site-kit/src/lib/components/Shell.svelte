@@ -94,7 +94,6 @@ The main shell of the application. It provides a slot for the top navigation, th
 		padding-bottom: var(--sk-banner-bottom-height);
 		overflow: hidden;
 		overflow-y: auto;
-		height: 100%;
 	}
 
 	@media (max-width: 800px) {
