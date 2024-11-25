@@ -23,7 +23,7 @@ importers:
     devDependencies:
       '@sveltejs/kit':
         specifier: ^2.8.3
-        version: 2.8.3(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11)))(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11))
+        version: 2.8.3(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11)))(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11))
       '@sveltejs/package':
         specifier: ^2.3.1
         version: 2.3.1(svelte@4.2.19)(typescript@5.4.5)
@@ -52,8 +52,8 @@ importers:
         specifier: ^5.4.5
         version: 5.4.5
       vite:
-        specifier: ^5.2.11
-        version: 5.2.11(@types/node@20.12.11)
+        specifier: ^5.2.14
+        version: 5.2.14(@types/node@20.12.11)
 
 packages:
 
@@ -1515,8 +1515,8 @@ packages:
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
 
-  vite@5.2.11:
-    resolution: {integrity: sha512-HndV31LWW05i1BLPMUCE1B9E9GFbOu1MbenhS58FuK6owSO5qHm7GiCotrNY1YE5rMeQSFBGmT5ZaLEjFizgiQ==}
+  vite@5.2.14:
+    resolution: {integrity: sha512-TFQLuwWLPms+NBNlh0D9LZQ+HXW471COABxw/9TEUBrjuHMo9BrYBPrN/SYAwIuVL+rLerycxiLT41t4f5MZpA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -1953,9 +1953,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.17.2':
     optional: true
 
-  '@sveltejs/kit@2.8.3(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11)))(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11))':
+  '@sveltejs/kit@2.8.3(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11)))(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.0(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11))
+      '@sveltejs/vite-plugin-svelte': 3.1.0(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11))
       '@types/cookie': 0.6.0
       cookie: 0.6.0
       devalue: 5.1.1
@@ -1969,7 +1969,7 @@ snapshots:
       sirv: 3.0.0
       svelte: 4.2.19
       tiny-glob: 0.2.9
-      vite: 5.2.11(@types/node@20.12.11)
+      vite: 5.2.14(@types/node@20.12.11)
 
   '@sveltejs/package@2.3.1(svelte@4.2.19)(typescript@5.4.5)':
     dependencies:
@@ -1982,26 +1982,26 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11)))(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11))':
+  '@sveltejs/vite-plugin-svelte-inspector@2.1.0(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11)))(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 3.1.0(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11))
+      '@sveltejs/vite-plugin-svelte': 3.1.0(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11))
       debug: 4.3.4
       svelte: 4.2.19
-      vite: 5.2.11(@types/node@20.12.11)
+      vite: 5.2.14(@types/node@20.12.11)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11))':
+  '@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11)))(svelte@4.2.19)(vite@5.2.11(@types/node@20.12.11))
+      '@sveltejs/vite-plugin-svelte-inspector': 2.1.0(@sveltejs/vite-plugin-svelte@3.1.0(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11)))(svelte@4.2.19)(vite@5.2.14(@types/node@20.12.11))
       debug: 4.3.4
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.10
       svelte: 4.2.19
       svelte-hmr: 0.16.0(svelte@4.2.19)
-      vite: 5.2.11(@types/node@20.12.11)
-      vitefu: 0.2.5(vite@5.2.11(@types/node@20.12.11))
+      vite: 5.2.14(@types/node@20.12.11)
+      vitefu: 0.2.5(vite@5.2.14(@types/node@20.12.11))
     transitivePeerDependencies:
       - supports-color
 
@@ -3231,7 +3231,7 @@ snapshots:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
 
-  vite@5.2.11(@types/node@20.12.11):
+  vite@5.2.14(@types/node@20.12.11):
     dependencies:
       esbuild: 0.20.2
       postcss: 8.4.38
@@ -3240,9 +3240,9 @@ snapshots:
       '@types/node': 20.12.11
       fsevents: 2.3.3
 
-  vitefu@0.2.5(vite@5.2.11(@types/node@20.12.11)):
+  vitefu@0.2.5(vite@5.2.14(@types/node@20.12.11)):
     optionalDependencies:
-      vite: 5.2.11(@types/node@20.12.11)
+      vite: 5.2.14(@types/node@20.12.11)
 
   vscode-oniguruma@1.7.0: {}
 
